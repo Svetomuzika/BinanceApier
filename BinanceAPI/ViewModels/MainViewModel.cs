@@ -94,25 +94,19 @@ namespace BinanceAPI.ViewModels
                 DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
                 var color = data.Data.BuyerIsMaker ? "#0fb172" : "#e74359";
 
-                var price = data.Data.Price.ToString();
-                var quant = data.Data.Quantity.ToString();
-                var time = date1.AddHours(5).ToLongTimeString();
-
-                if (i == 0)
+                for (var e = 39; e >= 1; e--)
                 {
-                    DoSomeShit(price, quant, time, color, 0);
+                    allTrades[e].Price = allTrades[e - 1].Price;
+                    allTrades[e].QPrice = allTrades[e - 1].QPrice;
+                    AllTrades[e].Time = AllTrades[e - 1].Time;
+                    AllTrades[e].Color = AllTrades[e - 1].Color;
                 }
-                else
-                {
-                    for (var e = 39; e >= 1; e--)
-                    {
-                        DoSomeShitE(e);
-                    }
-                    DoSomeShit(price, quant, time, color, 0);
-                }
+                AllTrades[0].Price = data.Data.Price.ToString(); ;
+                AllTrades[0].QPrice = data.Data.Quantity.ToString(); ;
+                AllTrades[0].Time = date1.AddHours(5).ToLongTimeString(); ;
+                AllTrades[0].Color = color;
             });
         }
-
 
         private void ChangeSymbol()
         {
@@ -121,25 +115,6 @@ namespace BinanceAPI.ViewModels
                 Task.Run(() => GetTradeStream());
             }
         }
-
-        private void DoSomeShit(string price, string quant, string time, string color, int e)
-        {
-
-            AllTrades[e].Price = price;
-            AllTrades[e].QPrice = quant;
-            AllTrades[e].Time = time;
-            AllTrades[e].Color = color;
-        }
-
-        private void DoSomeShitE(int e)
-        {
-
-            allTrades[e].Price = allTrades[e - 1].Price;
-            allTrades[e].QPrice = allTrades[e - 1].QPrice;
-            AllTrades[e].Time = AllTrades[e - 1].Time;
-            AllTrades[e].Color = AllTrades[e - 1].Color;
-        }
-
     }
 }
 

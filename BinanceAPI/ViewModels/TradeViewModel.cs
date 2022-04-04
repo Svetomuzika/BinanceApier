@@ -1,6 +1,4 @@
-﻿using System;
-using Binance.Net.Enums;
-using BinanceApi.MVVM;
+﻿using BinanceApi.MVVM;
 
 namespace BinanceApi.ViewModels
 {
@@ -57,7 +55,5 @@ namespace BinanceApi.ViewModels
             this.qPrice = qprice;
             this.time = time;
         }
-
-
     }
 }

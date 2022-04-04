@@ -20,7 +20,6 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Price}" Foreground = "{Binding Color}" />
-                                
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                 </GridViewColumn>

@@ -1,24 +1,17 @@
 ﻿using Binance.Net.Clients;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using BinanceApi.MVVM;
 using BinanceApi.ViewModels;
-using Microsoft.Extensions.Logging;
-using CryptoExchange.Net.Authentication;
-using Binance.Net.Objects;
 
 namespace BinanceAPI.ViewModels
 {
-
     public class MainViewModel : ObservableObject
     {
         private BinanceSocketClient socketClient;
         private BinanceClient client;
-        private NewWindow newWindow;
 
         private ObservableCollection<BinanceSymbolViewModel> allPrices;
 
@@ -51,7 +44,7 @@ namespace BinanceAPI.ViewModels
             set
             {
                 selectedSymbol = value;
-                D.SelectedSymbol = selectedSymbol;
+                Slection.SelectedSymbol = selectedSymbol;
                 RaisePropertyChangedEvent("SymbolIsSelected");
                 RaisePropertyChangedEvent("SelectedSymbol");
                 ChangeSymbol();
@@ -63,7 +56,6 @@ namespace BinanceAPI.ViewModels
             get { return SelectedSymbol != null; }
         }
 
-
         public MainViewModel()
         {
             Task.Run(() => GetAllSymbols());
@@ -74,8 +66,6 @@ namespace BinanceAPI.ViewModels
             client = new BinanceClient();
             var result = await client.SpotApi.ExchangeData.GetPricesAsync();
             AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().Take(40).OrderByDescending(p => p.Price));
-
-
 
             socketClient = new BinanceSocketClient();
             var subscribeResult = await socketClient.SpotStreams.SubscribeToAllTickerUpdatesAsync(data =>
@@ -91,7 +81,7 @@ namespace BinanceAPI.ViewModels
             });
         }
 
-        private async Task GetOrders()
+        private async Task GetTradeStream()
         {
             client = new BinanceClient();
             var result = await client.SpotApi.ExchangeData.GetAllBookPricesAsync();
@@ -100,57 +90,25 @@ namespace BinanceAPI.ViewModels
             socketClient = new BinanceSocketClient();
             var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
-
                 var date = data.Data.TradeTime;
                 DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
                 var color = data.Data.BuyerIsMaker ? "#0fb172" : "#e74359";
 
+                var price = data.Data.Price.ToString();
+                var quant = data.Data.Quantity.ToString();
+                var time = date1.AddHours(5).ToLongTimeString();
 
-                if (allTrades[39].Price != "")
+                if (i == 0)
                 {
-                    for (var e = 39; e >= 1; e--)
-                    {
-
-                        allTrades[e].Price = allTrades[e - 1].Price;
-                        allTrades[e].QPrice = allTrades[e - 1].QPrice;
-                        AllTrades[e].Time = AllTrades[e - 1].Time;
-                        AllTrades[e].Color = AllTrades[e - 1].Color;
-                    }
-
-                    AllTrades[0].Price = data.Data.Price.ToString();
-                    AllTrades[0].QPrice = data.Data.Quantity.ToString();
-                    AllTrades[0].Time = date1.AddHours(5).ToLongTimeString();
-                    AllTrades[0].Color = color;
-
+                    DoSomeShit(price, quant, time, color, 0);
                 }
                 else
                 {
-                    var a = allTrades.Select((elem, index) => new { elem, index })
-                        .First(p => p.elem.Price == "")
-                        .index;
-
-                    if (a == 0)
+                    for (var e = 39; e >= 1; e--)
                     {
-                        AllTrades[0].Price = data.Data.Price.ToString();
-                        AllTrades[0].QPrice = data.Data.Quantity.ToString();
-                        AllTrades[0].Time = date1.AddHours(5).ToLongTimeString();
-                        AllTrades[0].Color = color;
+                        DoSomeShitE(e);
                     }
-                    else 
-                    {
-                        for (var e = a; e >= 1; e--)
-                        {
-                            allTrades[e].Price = allTrades[e - 1].Price;
-                            allTrades[e].QPrice = allTrades[e - 1].QPrice;
-                            AllTrades[e].Time = AllTrades[e - 1].Time;
-                            AllTrades[e].Color = AllTrades[e - 1].Color;
-                        }
-
-                        AllTrades[0].Price = data.Data.Price.ToString();
-                        AllTrades[0].QPrice = data.Data.Quantity.ToString();
-                        AllTrades[0].Time = date1.AddHours(5).ToLongTimeString();
-                        AllTrades[0].Color = color;
-                    }
+                    DoSomeShit(price, quant, time, color, 0);
                 }
             });
         }
@@ -160,9 +118,28 @@ namespace BinanceAPI.ViewModels
         {
             if (SelectedSymbol != null)
             {
-                Task.Run(() => GetOrders());
+                Task.Run(() => GetTradeStream());
             }
         }
+
+        private void DoSomeShit(string price, string quant, string time, string color, int e)
+        {
+
+            AllTrades[e].Price = price;
+            AllTrades[e].QPrice = quant;
+            AllTrades[e].Time = time;
+            AllTrades[e].Color = color;
+        }
+
+        private void DoSomeShitE(int e)
+        {
+
+            allTrades[e].Price = allTrades[e - 1].Price;
+            allTrades[e].QPrice = allTrades[e - 1].QPrice;
+            AllTrades[e].Time = AllTrades[e - 1].Time;
+            AllTrades[e].Color = AllTrades[e - 1].Color;
+        }
+
     }
 }
 

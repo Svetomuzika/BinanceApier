@@ -112,6 +112,7 @@ namespace BinanceAPI.ViewModels
             client = new BinanceClient();
             AllTrades = new ObservableCollection<TradeViewModel>(new string[25].Select(r => new TradeViewModel()).ToList());
             socketClient = new BinanceSocketClient();
+            decimal sum = 0;
             var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
 
@@ -127,9 +128,25 @@ namespace BinanceAPI.ViewModels
                     AllTrades[e].TradeColor = AllTrades[e - 1].TradeColor;
                 }
                 AllTrades[0].TradePrice = Math.Round(data.Data.Price, 2); 
-                AllTrades[0].TradeQPrice = Math.Round(data.Data.Quantity, 5).ToString();
+                AllTrades[0].TradeQPrice = Math.Round(data.Data.Quantity, 5).ToString().Replace(",", ".");
                 AllTrades[0].TradeTime = date1.AddHours(5).ToLongTimeString(); ;
                 AllTrades[0].TradeColor = color;
+
+                var newBest = AllTrades[0].TradePrice;
+
+                if (newBest == sum)
+                {
+                    SelectedSymbol.SumColor = "white";
+                }
+                else
+                {
+                    SelectedSymbol.SumColor = newBest > sum ? "#009900" : "red";
+                }
+
+                var oldBest = Math.Round(newBest, 2);
+                SelectedSymbol.OrderBestPrice = oldBest.ToString().Replace(",", ".").Insert(2, ",");
+
+                sum = oldBest;
             });
         }
         
@@ -162,7 +179,9 @@ namespace BinanceAPI.ViewModels
                         sum = "  " + sum;
                     }
 
-                    AllOrdersAsks[i].OrderSum = sum.Replace(",", ".");
+                    sum = sum.Replace(",", ".");
+
+                    AllOrdersAsks[i].OrderSum = sum;
                 }
             });
         }
@@ -197,39 +216,11 @@ namespace BinanceAPI.ViewModels
             });
         }
 
-        private async Task GetOrderStreamBestPrice()
-        {
-            client = new BinanceClient();
-            socketClient = new BinanceSocketClient();
-
-            var sum = Convert.ToDecimal(SelectedSymbol.OrderBestPrice);
-
-            var subscribeResultBest = await socketClient.SpotStreams.SubscribeToPartialOrderBookUpdatesAsync(SelectedSymbol.Symbol, 5, 100, async data =>
-            {
-
-                var newBest = data.Data.Bids.FirstOrDefault().Price;
-
-                if (newBest == sum)
-                {
-                    SelectedSymbol.SumColor = "white";
-                }
-                else
-                {
-                    SelectedSymbol.SumColor = newBest > sum ? "#009900" : "red";
-                }
-
-                var oldBest = Math.Round(newBest, 2);
-                SelectedSymbol.OrderBestPrice = oldBest.ToString().Replace(",", ".").Insert(2, ",");
-
-                sum = oldBest;
-            });
-        }
-
         private void ChangeSymbol()
         {
             if (SelectedSymbol != null)
             {
-                Task.Run(async () => await Task.WhenAll(GetTradeStream(), GetOrderStreamAsks(), GetOrderStreamBestPrice(), GetOrderStreamBids()));
+                Task.Run(async () => await Task.WhenAll(GetTradeStream(), GetOrderStreamAsks(), GetOrderStreamBids()));
             }
         }
     }

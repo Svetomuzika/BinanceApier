@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 
 namespace BinanceAPI
-{ 
-    public partial class NewWindow : Window
+{
+    public partial class OrderWindow : Window
     {
-        public NewWindow()
+        public OrderWindow()
         {
             InitializeComponent();
 

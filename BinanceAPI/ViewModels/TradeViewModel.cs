@@ -5,55 +5,52 @@ namespace BinanceApi.ViewModels
     public class TradeViewModel : ObservableObject
     {
 
-        private string time;
-        public string Time
+        private string tradeTime;
+        public string TradeTime
         {
-            get { return time; }
+            get { return tradeTime; }
             set
             {
-                time = value;
-                RaisePropertyChangedEvent("Time");
+                tradeTime = value;
+                RaisePropertyChangedEvent("TradeTime");
             }
         }
 
-        private string price;
-        public string Price
+        private decimal tradePrice;
+        public decimal TradePrice
         {
-            get { return price; }
+            get { return tradePrice; }
             set
             {
-                price = value;
-                RaisePropertyChangedEvent("Price");
+                tradePrice = value;
+                RaisePropertyChangedEvent("TradePrice");
             }
         }
 
-        private string qPrice;
-        public string QPrice
+        private string tradeQPrice;
+        public string TradeQPrice
         {
-            get { return qPrice; }
+            get { return tradeQPrice; }
             set
             {
-                qPrice = value;
-                RaisePropertyChangedEvent("QPrice");
+                tradeQPrice = value;
+                RaisePropertyChangedEvent("TradeQPrice");
             }
         }
 
-        private string color;
-        public string Color
+        private string tradeColor;
+        public string TradeColor
         {
-            get { return color; }
+            get { return tradeColor; }
             set
             {
-                color = value;
-                RaisePropertyChangedEvent("Color");
+                tradeColor = value;
+                RaisePropertyChangedEvent("TradeColor");
             }
         }
 
-        public TradeViewModel(string price, string qprice, string time)
+        public TradeViewModel()
         {
-            this.price = price;
-            this.qPrice = qprice;
-            this.time = time;
         }
     }
 }

@@ -23,7 +23,8 @@ namespace BinanceAPI
             var item = (sender as ListView).SelectedItem;
             if (item != null)
             {
-                new NewWindow { Left = Left + Width * 1.01, Top = Top }.Show();
+                new TradeWindow { Left = Left + Width * 1.01, Top = Top }.Show();
+                new OrderWindow { Left = Left + Width * 2.22, Top = Top }.Show();
             }
         }
     }

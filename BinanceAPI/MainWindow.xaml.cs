@@ -18,7 +18,7 @@ namespace BinanceAPI
             InitializeComponent();
         }
 
-        private void listView_Click(object sender, MouseButtonEventArgs e)
+        private void ListView_Click(object sender, MouseButtonEventArgs e)
         {
             var item = (sender as ListView).SelectedItem;
             if (item != null)

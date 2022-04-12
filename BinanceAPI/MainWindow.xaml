@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BinanceAPI" xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
+        xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
         Title="BinanceApi" Height="390" Width="293" Visibility="Visible" FontSize="35" BorderBrush="#FF3A3A3A" OpacityMask="#FF615656">
@@ -24,7 +24,7 @@
     </Window.Resources>
 
     <Grid  OpacityMask="Black">
-        <ListView Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}" SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="listView_Click">
+        <ListView Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}" SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="ListView_Click">
             <ListView.View>
                 <GridView>
                     <GridView.Columns>

@@ -48,9 +48,5 @@ namespace BinanceApi.ViewModels
                 RaisePropertyChangedEvent("TradeColor");
             }
         }
-
-        public TradeViewModel()
-        {
-        }
     }
 }

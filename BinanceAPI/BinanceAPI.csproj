@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E38367E2-44E2-4E67-9417-134C0379A4BA}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>BinanceAPI</RootNamespace>
     <AssemblyName>BinanceAPI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -119,11 +119,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="TradeWindow.xaml.cs">
+    <Compile Include="MVVM\DelegateCommand.cs" />
+    <Compile Include="View\TradingWindow.xaml.cs">
+      <DependentUpon>TradingWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AggTradeWindow.xaml.cs">
+      <DependentUpon>AggTradeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TradeWindow.xaml.cs">
       <DependentUpon>TradeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\ObservableObject.cs" />
-    <Compile Include="OrderWindow.xaml.cs">
+    <Compile Include="View\OrderWindow.xaml.cs">
       <DependentUpon>OrderWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Themes\ColourfulDarkTheme.xaml.cs">
@@ -141,6 +148,14 @@
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\TradeViewModel.cs" />
+    <Page Include="View\TradingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AggTradeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -155,11 +170,11 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TradeWindow.xaml">
+    <Page Include="View\TradeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OrderWindow.xaml">
+    <Page Include="View\OrderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

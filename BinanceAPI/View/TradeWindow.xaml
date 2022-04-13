@@ -6,14 +6,14 @@
         xmlns:local="clr-namespace:BinanceAPI" xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource CustomWindowStyle}"
-        Title="TradeStream" Height="709" Width="350">
+        Title="{Binding SelectedSymbol.Symbol, StringFormat='TradeStream({0})'}" Height="709" Width="358">
 
     <Window.DataContext>
         <local2:MainViewModel/>
     </Window.DataContext>
 
     <Grid Margin="10,0,8,0">
-        <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding AllTrades}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="0,37,-11,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" VerticalAlignment="Top">
+        <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="0,37,-11,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" VerticalAlignment="Top">
             <ListView.View>
                 <GridView >
                     <GridViewColumn Width="170">
@@ -30,7 +30,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="60">
+                    <GridViewColumn Width="155">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding TradeTime}" Foreground="#afb5be" />
@@ -43,7 +43,7 @@
 
         <TextBlock Foreground="#7d8594" Text="Цена" FontSize="15" Margin="10,7,269,559" RenderTransformOrigin="0.936,0.587"/>
         <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="150,5,79,570"/>
-        <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="273,5,0,570"/>
+        <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="270,5,0,570"/>
 
     </Grid>
 

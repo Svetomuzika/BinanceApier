@@ -7,8 +7,6 @@ namespace BinanceAPI
 { 
     public partial class TradeWindow : Window
     {
-        MainViewModel mainViewModel = new MainViewModel();
-
         public TradeWindow()
         {
             InitializeComponent();

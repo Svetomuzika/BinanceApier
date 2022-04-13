@@ -28,7 +28,6 @@ namespace BinanceAPI
                 new TradingWindow { Left = Left + Width * 1.01, Top = Top }.Show();
             }
         }
-        MainViewModel mainViewModel = new MainViewModel();
 
         private void MenuItem_Click_Orders(object sender, RoutedEventArgs e)
         {

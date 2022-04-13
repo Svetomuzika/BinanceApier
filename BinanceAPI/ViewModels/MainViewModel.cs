@@ -31,20 +31,6 @@ namespace BinanceAPI.ViewModels
         private BinanceClient client;
 
         private BinanceClient binanceClient;
-        private BinanceClient BinanceClient
-        {
-            get {
-                return binanceClient = new BinanceClient(new BinanceClientOptions
-                {
-                    ApiCredentials = new ApiCredentials("AU8ovgGXuLShglvZLyoEcjE3MrE7RaH3PPoESHRX4lrztsAdtvpfYSjXqkfhwogD",
-                        "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh"),
-                    SpotApiOptions = new BinanceApiClientOptions
-                    {
-                        BaseAddress = BinanceApiAddresses.TestNet.RestClientAddress
-                    }
-                }); 
-            }
-        }
 
         private ObservableCollection<BinanceSymbolViewModel> allPrices;
 
@@ -125,6 +111,17 @@ namespace BinanceAPI.ViewModels
         public MainViewModel()
         {
             Task.Run(() => GetAllSymbols());
+
+            binanceClient = new BinanceClient(new BinanceClientOptions
+            {
+                ApiCredentials = new ApiCredentials("AU8ovgGXuLShglvZLyoEcjE3MrE7RaH3PPoESHRX4lrztsAdtvpfYSjXqkfhwogD",
+                        "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh"),
+                SpotApiOptions = new BinanceApiClientOptions
+                {
+                    BaseAddress = BinanceApiAddresses.TestNet.RestClientAddress
+                }
+            });
+
             CallTradeStreamCommand = new DelegateCommand(async (o) => await CallTradeStream(o));
             CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream(o));
             CallAggTradeStreamCommand = new DelegateCommand(async (o) => await CallAggTradeStream(o));
@@ -325,7 +322,7 @@ namespace BinanceAPI.ViewModels
         public async Task TradingStream()
         {
 
-            var result = await BinanceClient.SpotApi.Account.GetAccountInfoAsync();
+            var result = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
             var a = result.Data.Balances.SingleOrDefault(r => r.Asset == "BTC");
             Console.WriteLine(a.Total);
         }

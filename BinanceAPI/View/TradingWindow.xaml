@@ -4,36 +4,174 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
-        xmlns:local="clr-namespace:BinanceAPI" xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
+        xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
-        Title="TradingWindow" Height="450" Width="800">
+        Title="TradingWindow" Height="450" Width="740">
     <Window.DataContext>
         <local2:MainViewModel/>
     </Window.DataContext>
 
     <Grid>
+        <TextBlock x:Name="Limit" Text="Limit" Margin="10,10,696,378" FontSize="15" MouseLeftButtonDown="TextBlock_MouseLeftButtonDownLimit">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="true">
+                            <Setter Property="Foreground" Value="#7f8c9c"/>
+                        </Trigger>
+                        <Trigger Property ="IsMouseOver" Value="true">
+                            <Setter Property= "Foreground" Value="#f0b90b"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBlock x:Name="Market" Text="Market" Margin="60,10,641,390" FontSize="15" MouseLeftButtonDown="TextBlock_MouseLeftButtonDownMarket">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="true">
+                            <Setter Property="Foreground" Value="#7f8c9c"/>
+                        </Trigger>
+                        <Trigger Property ="IsMouseOver" Value="true">
+                            <Setter Property= "Foreground" Value="#f0b90b"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
         <StackPanel>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Price"></TextBlock>
-                <TextBox  Margin="5" Text="{Binding SelectedSymbol.TradePrice}" Grid.Column="1"></TextBox>
+            <Grid Width="265" HorizontalAlignment="Left"  Margin="0,-20,0,0" Height="241">
+                <TextBlock x:Name="Balance" Text="{Binding SelectedSymbol.Balance, StringFormat='Дост.{0} USDT'}" Margin="13,70,60,127" Foreground="#FFB2BCC8"/>
+                <TextBox x:Name="PriceLimitBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.TradingPrice}" Margin="10,87,0,124" HorizontalAlignment="Left" Width="190" Height="25">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBox x:Name="AmountLimitBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.TradingAmount}" Margin="10,120,0,82" PreviewTextInput="NumberValidationTextBoxAmountLimit" HorizontalAlignment="Left" Width="190" Height="25" >
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBox x:Name="AmountMarketBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.TradingAmountMarket}" Margin="10,-43,0,-7" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBlock x:Name="PriceLimitBlock" Text="Price" Margin="13,93,209,127" Foreground="#7f8c9c"/>
+                <TextBlock x:Name="AmountLimitBlock" Text="Amount" Margin="13,130,199,89" Foreground="#7f8c9c"/>
+                <TextBlock x:Name="AmountMarketBlock" Text="Amount" Margin="13,92,0,-62" Foreground="#7f8c9c" HorizontalAlignment="Left" Width="53" Visibility="Hidden"/>
             </Grid>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Amount"></TextBlock>
-                <TextBox  Margin="5" Text="{Binding SelectedSymbol.TradeAmount}" Grid.Column="1"></TextBox>
-            </Grid>
-            <StackPanel Orientation="Horizontal">
-                <Button Width="60" Margin="5" Command="{Binding SellCommand}" IsEnabled="{Binding CredentialsEntered}">Sell</Button>
-                <Button Width="60" Margin="5" Command="{Binding BuyCommand}" IsEnabled="{Binding CredentialsEntered}">Buy</Button>
+            <StackPanel Orientation="Horizontal" Height="50" Margin="0,-70,0,100" Width="277" HorizontalAlignment="Left">
+                <Button x:Name="BuyLimit" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandLimit}" Content="Buy" HorizontalAlignment="Left" Background="#f6465d" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button x:Name="SellLimit" Width="80" Margin="25,0,5,5" Command="{Binding SellCommandLimit}" Content="Sell" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
             </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="50" Margin="0,-250,0,100" Width="277" HorizontalAlignment="Left">
+                <Button x:Name="BuyMarket" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandMarket}" Content="Buy" Background="#f6465d" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Visibility="Hidden">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button x:Name="SellMarket" Width="80" Margin="25,0,5,5" Command="{Binding SellCommandMarket}" Content="Sell" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Visibility="Hidden">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+            <Button x:Name="Cancel" Width="190" Margin="10,-90,0,0" Command="{Binding CancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button x:Name="CancelMarket" Width="190" Margin="10,-142,0,0" Command="{Binding CancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" >
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
         </StackPanel>
+
+        <Grid Margin="10,0,8,0">
+            <ListView x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.TradingOrders, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" Margin="222,-1,-10,0" Height="438" VerticalAlignment="Top">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="70">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding Side }" Foreground="#afb5be" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="110">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding Price}" Foreground="#afb5be" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="80">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding ExecutedQuantity}" Foreground="#afb5be" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="70">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding Status}" Foreground="#afb5be" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="155">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding Time}" Foreground="#afb5be" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
     </Grid>
+
+    <Window.Resources>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
 </Window>

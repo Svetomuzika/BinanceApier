@@ -7,11 +7,6 @@ using System.Windows.Media;
 
 namespace BinanceAPI
 {
-    static class Selection
-    {
-        public static BinanceSymbolViewModel SelectedSymbol { get; set; }
-    }
-
     public partial class MainWindow : Window
 
     {
@@ -22,11 +17,7 @@ namespace BinanceAPI
 
         private void LeftClick(object sender, MouseButtonEventArgs e)
         {
-            var item = (sender as ListView).SelectedItem;
-            if (item != null)
-            {
-                new TradingWindow { Left = Left + Width * 1.01, Top = Top }.Show();
-            }
+            new TradingWindow() { Left = Left + Width * 1.01, Top = Top }.Show();
         }
 
         private void MenuItem_Click_Orders(object sender, RoutedEventArgs e)

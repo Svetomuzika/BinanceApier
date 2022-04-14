@@ -1,6 +1,9 @@
 ﻿using BinanceApi.MVVM;
 using BinanceApi.ViewModels;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace BinanceAPI.ViewModels
 {
@@ -25,6 +28,17 @@ namespace BinanceAPI.ViewModels
             {
                 price = value;
                 RaisePropertyChangedEvent("Price");
+            }
+        }
+
+        private decimal balance;
+        public decimal Balance
+        {
+            get { return balance; }
+            set
+            {
+                balance = Math.Round(value, 2);
+                RaisePropertyChangedEvent("Balance");
             }
         }
 
@@ -71,26 +85,49 @@ namespace BinanceAPI.ViewModels
                 RaisePropertyChangedEvent("AggTrades");
             }
         }
+        
 
-        private decimal tradeAmount;
-        public decimal TradeAmount
+        private decimal tradingAmountMarket;
+        public decimal TradingAmountMarket
         {
-            get { return tradeAmount; }
+            get { return tradingAmountMarket; }
             set
             {
-                tradeAmount = value;
-                RaisePropertyChangedEvent("TradeAmount");
+                tradingAmountMarket = value;
+                RaisePropertyChangedEvent("TradingAmountMarket");
             }
         }
 
-        private decimal tradePrice;
-        public decimal TradePrice
+        private decimal tradingAmount;
+        public decimal TradingAmount
         {
-            get { return tradePrice; }
+            get { return tradingAmount; }
             set
             {
-                tradePrice = value;
-                RaisePropertyChangedEvent("TradePrice");
+                tradingAmount = value;
+                RaisePropertyChangedEvent("TradingAmount");
+            }
+        }
+
+        private ObservableCollection<OrderViewModel> orders;
+        public ObservableCollection<OrderViewModel> Orders
+        {
+            get { return orders; }
+            set
+            {
+                orders = value;
+                RaisePropertyChangedEvent("Orders");
+            }
+        }
+
+        private decimal tradingPrice;
+        public decimal TradingPrice
+        {
+            get { return Math.Round(tradingPrice, 2); }
+            set
+            {
+                tradingPrice = Math.Round(value, 2);
+                RaisePropertyChangedEvent("TradingPrice");
             }
         }
 
@@ -106,10 +143,28 @@ namespace BinanceAPI.ViewModels
             RaisePropertyChangedEvent("Trades");
         }
 
+        private ObservableCollection<TradingOrdersViewModel> tradingOrders;
+        public ObservableCollection<TradingOrdersViewModel> TradingOrders
+        {
+            get { return tradingOrders; }
+            set
+            {
+                tradingOrders = value;
+                RaisePropertyChangedEvent("TradingOrders");
+            }
+        }
+
         public BinanceSymbolViewModel(string symbol, decimal price)
         {
             this.symbol = symbol;
             this.price = price;
+        }
+
+        public void AddOrder(TradingOrdersViewModel order)
+        {
+            TradingOrders.Insert(0, order);
+            TradingOrders.OrderByDescending(o => o.Time);
+            RaisePropertyChangedEvent("TradingOrders");
         }
     }
 }

@@ -12,6 +12,7 @@ namespace BinanceAPI
             InitializeComponent();
 
             SelectorNew.SelectedItem = Selection.SelectedSymbol;
+            SelectorNew1.SelectedItem = Selection.SelectedSymbol;
 
             CloseStream.CloseOrderStream = false;
             CloseStream.CloseLastTradeStream = false;

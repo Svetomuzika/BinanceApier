@@ -27,7 +27,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBlock x:Name="Market" Text="Market" Margin="60,10,641,390" FontSize="15" MouseLeftButtonDown="TextBlock_MouseLeftButtonDownMarket">
+        <TextBlock x:Name="Market" Text="Market" Margin="60,10,628,390" FontSize="15" MouseLeftButtonDown="TextBlock_MouseLeftButtonDownMarket">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>

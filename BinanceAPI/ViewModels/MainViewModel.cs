@@ -16,6 +16,8 @@ using CryptoExchange.Net.Authentication;
 using Binance.Net.Enums;
 using CryptoExchange.Net.Sockets;
 using Binance.Net.Objects.Models.Spot.Socket;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace BinanceAPI.ViewModels
 {
@@ -32,6 +34,16 @@ namespace BinanceAPI.ViewModels
         public static BinanceSymbolViewModel SelectedSymbol { get; set; }
     }
 
+    static class NewListName
+    {
+        public static string Name { get; set; }
+    }
+
+     class NewAllPrices
+    {
+        public static ObservableCollection<BinanceSymbolViewModel> NewPrices {get; set;}
+    }
+
     public class MainViewModel : ObservableObject
     {
         private BinanceSocketClient socketClient;
@@ -39,6 +51,20 @@ namespace BinanceAPI.ViewModels
 
         private BinanceClient binanceClient;
         private BinanceSocketClient binanceSocketClient;
+
+        public string searchMain;
+        public string SearchMain
+        {
+            get { return searchMain; }
+            set
+            {
+                searchMain = value;
+                GetSearch(value);
+                RaisePropertyChangedEvent("SearchMain");
+            }
+        }
+
+        public ObservableCollection<BinanceSymbolViewModel> FakeSymbol;
 
         private ObservableCollection<BinanceSymbolViewModel> allPrices;
 
@@ -49,6 +75,18 @@ namespace BinanceAPI.ViewModels
             {
                 allPrices = value;
                 RaisePropertyChangedEvent("AllPrices");
+            }
+        }
+
+        private ObservableCollection<BinanceSymbolViewModel> newPrices;
+
+        public ObservableCollection<BinanceSymbolViewModel> NewPrices
+        {
+            get { return newPrices; }
+            set
+            {
+                newPrices = value;
+                RaisePropertyChangedEvent("NewPrices");
             }
         }
 
@@ -103,6 +141,18 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private string listName;
+        public string ListName
+        {
+            get { return listName; }
+            set
+            {
+                listName = value;
+                NewListName.Name = value;
+                RaisePropertyChangedEvent("ListName");
+            }
+        }
+
         public ICommand CallTradeStreamCommand { get; set; }
         public ICommand CallOrderStreamCommand { get; set; }
         public ICommand CallAggTradeStreamCommand { get; set; }
@@ -112,14 +162,19 @@ namespace BinanceAPI.ViewModels
         public ICommand BuyCommandMarket { get; set; }
         public ICommand SellCommandMarket { get; set; }
 
+
+
         public bool SymbolIsSelected
         {
             get { return SelectedSymbol != null; }
         }
 
+        //public ObservableCollection<BinanceSymbolViewModel> NewPrices { get; private set; }
+
         public MainViewModel()
         {
-            Task.Run(() => GetAllSymbols());
+            searchMain = "";
+            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols()));
 
             binanceClient = new BinanceClient(new BinanceClientOptions
             {
@@ -154,16 +209,12 @@ namespace BinanceAPI.ViewModels
 
         private async Task GetAllSymbols()
         {
-            client = new BinanceClient();
             socketClient = new BinanceSocketClient();
-            
-            var result = await client.SpotApi.ExchangeData.GetPricesAsync();
-            AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().Take(40).OrderByDescending(p => p.Price));
-
             var subscribeResult = await socketClient.SpotStreams.SubscribeToAllTickerUpdatesAsync(data =>
             {
                 foreach (var ud in data.Data)
                 {
+                    
                     var symbol = AllPrices.SingleOrDefault(p => p.Symbol == ud.Symbol);
                     if (symbol != null)
                     {
@@ -172,6 +223,17 @@ namespace BinanceAPI.ViewModels
                 }
             });
         }
+
+        private async Task GetNewSymbols()
+        {
+            client = new BinanceClient();
+            var result = await client.SpotApi.ExchangeData.GetPricesAsync();
+            
+            AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
+            FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
+            NewAllPrices.NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
+        }
+
 
         public async Task GetTradeStream()
         {
@@ -318,7 +380,6 @@ namespace BinanceAPI.ViewModels
             var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
                 var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
-
                 var newBest = data.Data.Price;
 
                 if (newBest == sum)
@@ -329,8 +390,6 @@ namespace BinanceAPI.ViewModels
                 {
                     mainSymbol.SumColor = newBest > sum ? "#009900" : "red";
                 }
-
-                Thread.Sleep(300);
                 var oldBest = Math.Round(newBest, 2);
                 mainSymbol.OrderBestPrice = oldBest.ToString().Replace(",", ".").Insert(2, ",");
 
@@ -387,8 +446,9 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.CancelAllOrdersAsync(SelectedSymbol.Symbol);
             if (result.Success)
                 Console.WriteLine("Canceled!!!");
-            
         }
+
+
 
         private void OnOrderUpdate(DataEvent<BinanceStreamOrderUpdate> data)
         {
@@ -428,6 +488,26 @@ namespace BinanceAPI.ViewModels
         {
             var info = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
             SelectedSymbol.Balance = info.Data.Balances.SingleOrDefault(r => r.Asset == "USDT").Total;
+        }
+
+        private void GetSearch(string name)
+        {
+            if (name != "")
+            {
+                AllPrices.Clear();
+
+                foreach (var e in FakeSymbol)
+                {
+                    if (e.Symbol.StartsWith(name.ToUpper()))
+                    {
+                        AllPrices.Add(e);
+                    }
+                }
+            }
+            else
+            {
+               Task.Run(() => GetNewSymbols());
+            }
         }
 
         private async Task CallTradeStream(object o)

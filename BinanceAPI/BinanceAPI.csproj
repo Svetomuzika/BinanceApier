@@ -135,6 +135,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="MVVM\DelegateCommand.cs" />
+    <Compile Include="View\NewWatchList.xaml.cs">
+      <DependentUpon>NewWatchList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\TradingOrdersViewModel.cs" />
     <Compile Include="View\TradingWindow.xaml.cs">
       <DependentUpon>TradingWindow.xaml</DependentUpon>
@@ -164,6 +167,13 @@
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\TradeViewModel.cs" />
+    <Compile Include="NewWindowWatchList.xaml.cs">
+      <DependentUpon>NewWindowWatchList.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\NewWatchList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\TradingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -210,6 +220,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="NewWindowWatchList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -240,6 +254,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\search1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

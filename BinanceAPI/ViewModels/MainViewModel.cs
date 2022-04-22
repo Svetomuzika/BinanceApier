@@ -32,7 +32,6 @@ namespace BinanceAPI.ViewModels
     public class Main
     {
         public static MainWindow main { get; set; }
-        public static int intmain = 0;
     }
 
     static class Selection
@@ -48,6 +47,7 @@ namespace BinanceAPI.ViewModels
 
      class NewAllPrices
      {
+        public static ObservableCollection<BinanceSymbolViewModel> FakeSymbol;
         public static ObservableCollection<BinanceSymbolViewModel> newPrices;
         public static ObservableCollection<BinanceSymbolViewModel> NewPrices
         {
@@ -70,23 +70,17 @@ namespace BinanceAPI.ViewModels
                 mainViewModel.SelectedSymbol = value;
             }
         }
-        public ICommand CallTradeStreamCommand { get; set; }
-        public ICommand CallOrderStreamCommand { get; set; }
-        public ICommand CallAggTradeStreamCommand { get; set; }
 
-        public NewAllPrices()
+        public static string searchMain;
+        public static string SearchMain
         {
-            var a = new MainViewModel();
-
-            CallTradeStreamCommand = new DelegateCommand(async (o) => await a.CallTradeStream(o));
-            CallOrderStreamCommand = new DelegateCommand(async (o) => await a.CallOrderStream(o));
-            CallAggTradeStreamCommand = new DelegateCommand(async (o) => await a.CallAggTradeStream(o));
-        }
-
-        public async Task CallTradeStream(object o)
-        {
-            var a = new MainViewModel();
-            await a.GetTradeStream();
+            get { return searchMain; }
+            set
+            {
+                var mainViewModel= new MainViewModel();
+                searchMain = value;
+                mainViewModel.GetNewSearch(value);
+            }
         }
     }
 
@@ -211,6 +205,7 @@ namespace BinanceAPI.ViewModels
         public MainViewModel()
         {
             searchMain = "";
+            NewAllPrices.searchMain = "";
             Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols()));
 
             binanceClient = new BinanceClient(new BinanceClientOptions
@@ -272,6 +267,7 @@ namespace BinanceAPI.ViewModels
             if(Selection.Flag == true)
             {
                 NewAllPrices.NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().Take(0).OrderByDescending(p => p.Price));
+                NewAllPrices.FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().Take(0).OrderByDescending(p => p.Price));
                 Selection.Flag = false;
             }
         }
@@ -280,9 +276,10 @@ namespace BinanceAPI.ViewModels
         public async Task GetTradeStream()
         {
             SelectedSymbol = Selection.SelectedSymbol;
+
             client = new BinanceClient();
             socketClient = new BinanceSocketClient();
-            Console.WriteLine(SelectedSymbol.Symbol);
+            
             var result = await client.SpotApi.ExchangeData.GetRecentTradesAsync(SelectedSymbol.Symbol, 1000);
             SelectedSymbol.Trades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.BaseQuantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
             var mainSymbol = SelectedSymbol;
@@ -557,9 +554,33 @@ namespace BinanceAPI.ViewModels
                     }
                 }
             }
-            else
+            else if (name == "" || name == null)
             {
                Task.Run(() => GetNewSymbols());
+            }
+        }
+
+        public void GetNewSearch(string name)
+        {
+            if (name != "")
+            {
+                NewAllPrices.newPrices.Clear();
+
+                foreach (var e in NewAllPrices.FakeSymbol)
+                {
+                    if (e.Symbol.StartsWith(name.ToUpper()))
+                    {
+                        NewAllPrices.newPrices.Add(e);
+                    }
+                }
+            }
+            else if(name == "" || name == null)
+            {
+                NewAllPrices.newPrices.Clear();
+                foreach (var i in NewAllPrices.FakeSymbol)
+                {
+                    NewAllPrices.newPrices.Add(i);
+                }
             }
         }
 

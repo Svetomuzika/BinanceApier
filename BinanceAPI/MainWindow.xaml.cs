@@ -20,7 +20,9 @@ namespace BinanceAPI
     public partial class MainWindow : Window
     {
         private bool FlagForList = true;
-        public ICommand NewSymbolCommand { get; set; }
+        private ICommand NewSymbolCommand { get; set; }
+
+        private List<object> ListOfNewWindows = new List<object>();
 
         public MainWindow()
         {
@@ -28,12 +30,17 @@ namespace BinanceAPI
 
             NewSymbolCommand = new DelegateCommand((o) => NewSymboll(o));
 
+            if (this.Title == "BinanceApi")
+                Main.main = this;
         }
 
         public void NewSymboll(object o)
         {
-            
-            NewAllPrices.NewPrices.Insert(0, Selection.SelectedSymbol);
+            if (!NewAllPrices.NewPrices.Contains(Selection.SelectedSymbol))
+            {
+                NewAllPrices.NewPrices.Insert(0, Selection.SelectedSymbol);
+                NewAllPrices.FakeSymbol.Insert(0, Selection.SelectedSymbol);
+            }
         }
 
         private void LeftClick(object sender, MouseButtonEventArgs e)
@@ -130,43 +137,51 @@ namespace BinanceAPI
 
         private void Menu_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow newMainWindow = new MainWindow()
+            if (!ListOfNewWindows.Contains(sender))
             {
-                Left = Left + Width * 1.3,
-                Top = Top,
-                Title = NewListName.Name,
-                DataContext = new NewAllPrices(),
-            };
-            var a = new MainViewModel();
+                ListOfNewWindows.Add(sender);
 
-            //Binding binding = new Binding
-            //{
-            //    Source = a.SelectedSymbol,
-            //};
+                MainWindow newMainWindow = new MainWindow()
+                {
+                    Left = Left + Width * 1.3,
+                    Top = Top,
+                    Title = NewListName.Name,
+                    DataContext = new NewAllPrices(),
+                };
 
-            //newMainWindow.Selector.SetBinding(ListView.ItemsSourceProperty, binding);
-            //newMainWindow.Selector.DataContext = new NewAllPrices();
-            newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
-            ContextMenuItem1.DataContext = new MainViewModel();
-            newMainWindow.GoHome.Visibility = Visibility.Visible;
-            //this.Visibility = Visibility.Hidden;
-            //newMainWindow.Selector.ContextMenu.set = new MainViewModel();
+                newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
+                newMainWindow.GoHome.Visibility = Visibility.Visible;
+                newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
+                newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
+                newMainWindow.AddNewList.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+
+                MainWindow newMainWindow = new MainWindow()
+                {
+                    Left = Left + Width * 1.3,
+                    Top = Top,
+                    Title = sender.ToString().Split(' ')[1].Remove(0, 7),
+                    DataContext = new NewAllPrices(),
+                };
 
 
-            //NewAllPrices.NewPrices.Clear();
 
+                NewAllPrices.NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
 
-            //newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
-            //NewAllPrices.NewPrices.Clear();
-            //NewAllPrices.NewPrices.RemoveAt(0);
-            //Console.WriteLine(Selection.SelectedSymbol.Symbol);
-            //newMainWindow.DataContext = new NewAllPrices();
-            //NewAllPrices.NewPrices.Clear();
+                newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
+                newMainWindow.GoHome.Visibility = Visibility.Visible;
+                newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
+                newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
+                newMainWindow.AddNewList.Visibility = Visibility.Hidden;
+            }
+
         }
 
         private void GoHome_Click(object sender, RoutedEventArgs e)
         {
-            Main.main.Visibility = Visibility.Visible;
+                Main.main.Visibility = Visibility.Visible;
         }
 
         protected override void OnClosing(CancelEventArgs e)

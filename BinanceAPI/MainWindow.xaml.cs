@@ -15,10 +15,48 @@ using System.Windows.Media;
 
 namespace BinanceAPI
 {
-
-
     public partial class MainWindow : Window
     {
+        public ObservableCollection<BinanceSymbolViewModel> FakeSymbol;
+
+        public ObservableCollection<BinanceSymbolViewModel> newPrices;
+        public ObservableCollection<BinanceSymbolViewModel> NewPrices
+        {
+            get { return newPrices; }
+            set
+            {
+                newPrices = value;
+            }
+        }
+
+        public ObservableCollection<BinanceSymbolViewModel> NewPricesFake = new ObservableCollection<BinanceSymbolViewModel>();
+
+        private BinanceSymbolViewModel selectedSymbol;
+
+        public BinanceSymbolViewModel SelectedSymbol
+        {
+            get { return selectedSymbol; }
+            set
+            {
+                selectedSymbol = value;
+                MainViewModel mainViewModel = new MainViewModel();
+                mainViewModel.SelectedSymbol = value;
+            }
+        }
+
+        public string searchMain;
+        public string SearchMain
+        {
+            get { return searchMain; }
+            set
+            {
+                searchMain = value;
+                GetNewSearch(value);
+            }
+        }
+
+
+
         private bool FlagForList = true;
         private ICommand NewSymbolCommand { get; set; }
 
@@ -34,12 +72,19 @@ namespace BinanceAPI
                 Main.main = this;
         }
 
+        private void NewSymbols()
+        {
+            NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
+            FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>();
+        }
+
         public void NewSymboll(object o)
         {
-            if (!NewAllPrices.NewPrices.Contains(Selection.SelectedSymbol))
+            if (!NewPrices.Contains(Selection.SelectedSymbol))
             {
-                NewAllPrices.NewPrices.Insert(0, Selection.SelectedSymbol);
-                NewAllPrices.FakeSymbol.Insert(0, Selection.SelectedSymbol);
+                NewPricesFake.Insert(0, Selection.SelectedSymbol);
+                ValueChanged(NewPricesFake);
+                //FakeSymbol.Insert(0, Selection.SelectedSymbol);
             }
         }
 
@@ -137,8 +182,11 @@ namespace BinanceAPI
 
         private void Menu_Click(object sender, RoutedEventArgs e)
         {
+
             if (!ListOfNewWindows.Contains(sender))
             {
+                NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
+
                 ListOfNewWindows.Add(sender);
 
                 MainWindow newMainWindow = new MainWindow()
@@ -146,14 +194,24 @@ namespace BinanceAPI
                     Left = Left + Width * 1.3,
                     Top = Top,
                     Title = NewListName.Name,
-                    DataContext = new NewAllPrices(),
                 };
 
-                newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
+                newMainWindow.Selector.ItemsSource = NewPrices;
+                newMainWindow.Selector.SelectedItem = SelectedSymbol;
                 newMainWindow.GoHome.Visibility = Visibility.Visible;
                 newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
                 newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
                 newMainWindow.AddNewList.Visibility = Visibility.Hidden;
+
+                ValueChanged += (x =>
+                {
+                    foreach(var i in x)
+                    {
+                        if(!NewPrices.Contains(i))
+                            NewPrices.Add(i);
+                    }
+                });
+
             }
             else
             {
@@ -163,14 +221,10 @@ namespace BinanceAPI
                     Left = Left + Width * 1.3,
                     Top = Top,
                     Title = sender.ToString().Split(' ')[1].Remove(0, 7),
-                    DataContext = new NewAllPrices(),
                 };
 
-
-
-                NewAllPrices.NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
-
-                newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
+                newMainWindow.Selector.ItemsSource = NewPrices;
+                newMainWindow.Selector.SelectedItem = SelectedSymbol;
                 newMainWindow.GoHome.Visibility = Visibility.Visible;
                 newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
                 newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
@@ -178,6 +232,8 @@ namespace BinanceAPI
             }
 
         }
+
+        public event Action<ObservableCollection<BinanceSymbolViewModel>> ValueChanged;
 
         private void GoHome_Click(object sender, RoutedEventArgs e)
         {
@@ -191,6 +247,30 @@ namespace BinanceAPI
                 e.Cancel = true;
                 Main.main = this;
                 Main.main.Visibility = Visibility.Hidden;
+            }
+        }
+
+        public void GetNewSearch(string name)
+        {
+            if (name != "")
+            {
+                NewPrices.Clear();
+
+                foreach (var e in FakeSymbol)
+                {
+                    if (e.Symbol.StartsWith(name.ToUpper()))
+                    {
+                        newPrices.Add(e);
+                    }
+                }
+            }
+            else if (name == "" || name == null)
+            {
+                newPrices.Clear();
+                foreach (var i in FakeSymbol)
+                {
+                    newPrices.Add(i);
+                }
             }
         }
     }

@@ -45,45 +45,6 @@ namespace BinanceAPI.ViewModels
         public static string Name { get; set; }
      }
 
-     class NewAllPrices
-     {
-        public static ObservableCollection<BinanceSymbolViewModel> FakeSymbol;
-        public static ObservableCollection<BinanceSymbolViewModel> newPrices;
-        public static ObservableCollection<BinanceSymbolViewModel> NewPrices
-        {
-            get { return newPrices; }
-            set
-            {
-                newPrices = value;
-            }
-        }
-
-        private BinanceSymbolViewModel selectedSymbol;
-
-        public BinanceSymbolViewModel SelectedSymbol
-        {
-            get { return selectedSymbol; }
-            set
-            {
-                selectedSymbol = value;
-                MainViewModel mainViewModel = new MainViewModel();
-                mainViewModel.SelectedSymbol = value;
-            }
-        }
-
-        public static string searchMain;
-        public static string SearchMain
-        {
-            get { return searchMain; }
-            set
-            {
-                var mainViewModel= new MainViewModel();
-                searchMain = value;
-                mainViewModel.GetNewSearch(value);
-            }
-        }
-    }
-
     public class MainViewModel : ObservableObject
     {
         private BinanceSocketClient socketClient;
@@ -204,8 +165,6 @@ namespace BinanceAPI.ViewModels
 
         public MainViewModel()
         {
-            searchMain = "";
-            NewAllPrices.searchMain = "";
             Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols()));
 
             binanceClient = new BinanceClient(new BinanceClientOptions
@@ -263,13 +222,6 @@ namespace BinanceAPI.ViewModels
             
             AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
             FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
-            
-            if(Selection.Flag == true)
-            {
-                NewAllPrices.NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().Take(0).OrderByDescending(p => p.Price));
-                NewAllPrices.FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().Take(0).OrderByDescending(p => p.Price));
-                Selection.Flag = false;
-            }
         }
 
 
@@ -289,11 +241,8 @@ namespace BinanceAPI.ViewModels
 
             var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
-                Console.WriteLine("tradesub");
-
                 var symbol = mainSymbol;
                 //var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
-                Console.WriteLine(AllPrices.Count);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -324,7 +273,6 @@ namespace BinanceAPI.ViewModels
 
             var subscribeResult = await socketClient.SpotStreams.SubscribeToAggregatedTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
-                //var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
                 var symbol = mainSymbol;
 
                 Application.Current.Dispatcher.Invoke(() =>
@@ -342,8 +290,6 @@ namespace BinanceAPI.ViewModels
 
         public async Task GetOrderStreamAsks()
         {
-            //SelectedSymbol = Selection.SelectedSymbol;
-
             client = new BinanceClient();
             socketClient = new BinanceSocketClient();
 
@@ -360,9 +306,9 @@ namespace BinanceAPI.ViewModels
                 for (var i = 0; i < 15; i++)
                 {
                     AllOrdersAsks[i].OrderPrice = newArr[i + 5].OrderPrice;
-                    AllOrdersAsks[i].OrderQPrice = Math.Round(newArr[i+5].OrderQPrice, 5);
+                    AllOrdersAsks[i].OrderQPrice = Math.Round(newArr[i + 5].OrderQPrice, 5);
 
-                    var sum = Math.Round(newArr[i+5].OrderPrice * newArr[i+5].OrderQPrice, 5).ToString();
+                    var sum = Math.Round(newArr[i+5].OrderPrice * newArr[i + 5].OrderQPrice, 5).ToString();
                     var b = 14 - sum.Length;
                     for (int e = 1; e <= b; e++)
                     {
@@ -422,7 +368,6 @@ namespace BinanceAPI.ViewModels
 
         private async Task GetLastTrade()
         {
-            //SelectedSymbol = Selection.SelectedSymbol;
             socketClient = new BinanceSocketClient();
             var mainSymbol = SelectedSymbol;
             decimal sum = 0;
@@ -449,7 +394,6 @@ namespace BinanceAPI.ViewModels
 
         public async Task TradingStream()
         {
-            //var allOrders = await client.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol);
             var startUserStreamAsync = await binanceClient.SpotApi.Account.StartUserStreamAsync();
 
             var lastPriceTest = await binanceClient.SpotApi.ExchangeData.GetPriceAsync(SelectedSymbol.Symbol);
@@ -557,30 +501,6 @@ namespace BinanceAPI.ViewModels
             else if (name == "" || name == null)
             {
                Task.Run(() => GetNewSymbols());
-            }
-        }
-
-        public void GetNewSearch(string name)
-        {
-            if (name != "")
-            {
-                NewAllPrices.newPrices.Clear();
-
-                foreach (var e in NewAllPrices.FakeSymbol)
-                {
-                    if (e.Symbol.StartsWith(name.ToUpper()))
-                    {
-                        NewAllPrices.newPrices.Add(e);
-                    }
-                }
-            }
-            else if(name == "" || name == null)
-            {
-                NewAllPrices.newPrices.Clear();
-                foreach (var i in NewAllPrices.FakeSymbol)
-                {
-                    NewAllPrices.newPrices.Add(i);
-                }
             }
         }
 

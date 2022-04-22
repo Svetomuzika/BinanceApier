@@ -1,8 +1,11 @@
-﻿using BinanceAPI.MVVM;
+﻿using Binance.Net.Clients;
+using BinanceAPI.MVVM;
 using BinanceAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +15,8 @@ using System.Windows.Media;
 
 namespace BinanceAPI
 {
+
+
     public partial class MainWindow : Window
     {
         private bool FlagForList = true;
@@ -21,15 +26,14 @@ namespace BinanceAPI
         {
             InitializeComponent();
 
-            NewSymbolCommand = new DelegateCommand((o) => NewSymboll());
+            NewSymbolCommand = new DelegateCommand((o) => NewSymboll(o));
+
         }
 
-        public void NewSymboll()
+        public void NewSymboll(object o)
         {
-            Console.WriteLine(21332);
-            //newMainWindow.DataContext = new NewAllPrices();
-            NewAllPrices.NewPrices.RemoveAt(0);
-            //NewAllPrices.NewPrices.Clear();
+            
+            NewAllPrices.NewPrices.Insert(0, Selection.SelectedSymbol);
         }
 
         private void LeftClick(object sender, MouseButtonEventArgs e)
@@ -101,23 +105,27 @@ namespace BinanceAPI
             MenuItem newMenuItem = new MenuItem
             {
                 Header = NewListName.Name,
-                FontSize = 15,
-                
+                FontSize = 15,      
             };
+
             newMenuItem.Click += Menu_Click;
             AddNewList.ContextMenu.Items.Add(newMenuItem);
 
-
+            addNewMenuItem.Click += AddNewMenuItem_Click;
             stack.Children.RemoveAt(0);
             Selector.Margin = new Thickness(0, 38, 0, 0);
             ButtonCreateNewList.Visibility = Visibility.Hidden;
             ButtonCancelNewList.Visibility = Visibility.Hidden;
 
-            AddNewName.Items.Add(addNewMenuItem);
+            ContextMenuItem4.Items.Add(addNewMenuItem);
             var a = new MainViewModel();
             addNewMenuItem.Command = NewSymbolCommand;
             FlagForList = true;
+        }
 
+        private void AddNewMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine(e.Source);
         }
 
         private void Menu_Click(object sender, RoutedEventArgs e)
@@ -129,8 +137,26 @@ namespace BinanceAPI
                 Title = NewListName.Name,
                 DataContext = new NewAllPrices(),
             };
+            var a = new MainViewModel();
 
+            //Binding binding = new Binding
+            //{
+            //    Source = a.SelectedSymbol,
+            //};
+
+            //newMainWindow.Selector.SetBinding(ListView.ItemsSourceProperty, binding);
+            //newMainWindow.Selector.DataContext = new NewAllPrices();
             newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
+            ContextMenuItem1.DataContext = new MainViewModel();
+            newMainWindow.GoHome.Visibility = Visibility.Visible;
+            //this.Visibility = Visibility.Hidden;
+            //newMainWindow.Selector.ContextMenu.set = new MainViewModel();
+
+
+            //NewAllPrices.NewPrices.Clear();
+
+
+            //newMainWindow.Selector.ItemsSource = NewAllPrices.NewPrices;
             //NewAllPrices.NewPrices.Clear();
             //NewAllPrices.NewPrices.RemoveAt(0);
             //Console.WriteLine(Selection.SelectedSymbol.Symbol);
@@ -138,5 +164,19 @@ namespace BinanceAPI
             //NewAllPrices.NewPrices.Clear();
         }
 
+        private void GoHome_Click(object sender, RoutedEventArgs e)
+        {
+            Main.main.Visibility = Visibility.Visible;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if(this.Title == "BinanceApi")
+            {
+                e.Cancel = true;
+                Main.main = this;
+                Main.main.Visibility = Visibility.Hidden;
+            }
+        }
     }
 }

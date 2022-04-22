@@ -6,7 +6,7 @@ namespace BinanceApi.MVVM
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent(string propertyName)
+        public void RaisePropertyChangedEvent(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

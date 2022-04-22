@@ -34,7 +34,31 @@
                 </TextBox.Resources>
             </TextBox>
             <Image Source="icons/search.png" Width="20" Height="20" VerticalAlignment="Top" Margin="-30,8,0,0"/>
-            <Button x:Name="AddNewList" Height="56" VerticalAlignment="Top" Width="40" Margin="75,-20,0,0" Content="+" FontSize="45"  Background="{x:Null}" BorderBrush="{x:Null}" Click="AddNewList_Click" Cursor="Hand">
+            <Button x:Name="GoHome" Height="35" VerticalAlignment="Top" Width="35" Margin="30,0,0,0" FontSize="25" BorderBrush="{x:Null}" Click="GoHome_Click" Cursor="Hand" Visibility="Hidden">
+                <Button.Background>
+                    <ImageBrush ImageSource="icons/home.png"/>
+                </Button.Background>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightGray"></Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="AddNewList" Height="56" VerticalAlignment="Top" Width="40" Margin="5,-20,0,0" Content="+" FontSize="45"  Background="{x:Null}" BorderBrush="{x:Null}" Click="AddNewList_Click" Cursor="Hand">
                 <Button.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="New WatchList" FontSize="15" Click="MenuItem_Click">
@@ -48,10 +72,10 @@
             <ListView Height="407" Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}" SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="LeftClick" Margin="0,38,0,0">
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="TradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallTradeStreamCommand}"/>
-                        <MenuItem Header="OrderStream" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
-                        <MenuItem Header="AggTradeStream" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
-                        <MenuItem x:Name="AddNewName"  Header="Add to WatchList"/>
+                        <MenuItem x:Name="ContextMenuItem1" Header="TradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallTradeStreamCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem2" Header="OrderStream" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem4"  Header="Add to WatchList"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
                 <ListView.View>

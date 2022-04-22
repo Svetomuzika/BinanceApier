@@ -29,19 +29,65 @@ namespace BinanceAPI.ViewModels
         public static bool CloseLastTradeStream = false;
     }
 
+    public class Main
+    {
+        public static MainWindow main { get; set; }
+        public static int intmain = 0;
+    }
+
     static class Selection
     {
         public static BinanceSymbolViewModel SelectedSymbol { get; set; }
+        public static bool Flag = true;
     }
 
-    static class NewListName
-    {
+     class NewListName
+     {
         public static string Name { get; set; }
-    }
+     }
 
      class NewAllPrices
-    {
-        public static ObservableCollection<BinanceSymbolViewModel> NewPrices {get; set;}
+     {
+        public static ObservableCollection<BinanceSymbolViewModel> newPrices;
+        public static ObservableCollection<BinanceSymbolViewModel> NewPrices
+        {
+            get { return newPrices; }
+            set
+            {
+                newPrices = value;
+            }
+        }
+
+        private BinanceSymbolViewModel selectedSymbol;
+
+        public BinanceSymbolViewModel SelectedSymbol
+        {
+            get { return selectedSymbol; }
+            set
+            {
+                selectedSymbol = value;
+                MainViewModel mainViewModel = new MainViewModel();
+                mainViewModel.SelectedSymbol = value;
+            }
+        }
+        public ICommand CallTradeStreamCommand { get; set; }
+        public ICommand CallOrderStreamCommand { get; set; }
+        public ICommand CallAggTradeStreamCommand { get; set; }
+
+        public NewAllPrices()
+        {
+            var a = new MainViewModel();
+
+            CallTradeStreamCommand = new DelegateCommand(async (o) => await a.CallTradeStream(o));
+            CallOrderStreamCommand = new DelegateCommand(async (o) => await a.CallOrderStream(o));
+            CallAggTradeStreamCommand = new DelegateCommand(async (o) => await a.CallAggTradeStream(o));
+        }
+
+        public async Task CallTradeStream(object o)
+        {
+            var a = new MainViewModel();
+            await a.GetTradeStream();
+        }
     }
 
     public class MainViewModel : ObservableObject
@@ -78,17 +124,7 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        private ObservableCollection<BinanceSymbolViewModel> newPrices;
 
-        public ObservableCollection<BinanceSymbolViewModel> NewPrices
-        {
-            get { return newPrices; }
-            set
-            {
-                newPrices = value;
-                RaisePropertyChangedEvent("NewPrices");
-            }
-        }
 
         private ObservableCollection<TradeViewModel> allTrades;
 
@@ -169,6 +205,7 @@ namespace BinanceAPI.ViewModels
             get { return SelectedSymbol != null; }
         }
 
+
         //public ObservableCollection<BinanceSymbolViewModel> NewPrices { get; private set; }
 
         public MainViewModel()
@@ -231,15 +268,21 @@ namespace BinanceAPI.ViewModels
             
             AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
             FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
-            NewAllPrices.NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
+            
+            if(Selection.Flag == true)
+            {
+                NewAllPrices.NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().Take(0).OrderByDescending(p => p.Price));
+                Selection.Flag = false;
+            }
         }
 
 
         public async Task GetTradeStream()
         {
+            SelectedSymbol = Selection.SelectedSymbol;
             client = new BinanceClient();
             socketClient = new BinanceSocketClient();
-
+            Console.WriteLine(SelectedSymbol.Symbol);
             var result = await client.SpotApi.ExchangeData.GetRecentTradesAsync(SelectedSymbol.Symbol, 1000);
             SelectedSymbol.Trades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.BaseQuantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
             var mainSymbol = SelectedSymbol;
@@ -249,12 +292,16 @@ namespace BinanceAPI.ViewModels
 
             var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
-                var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
+                Console.WriteLine("tradesub");
+
+                var symbol = mainSymbol;
+                //var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
+                Console.WriteLine(AllPrices.Count);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     symbol.AddTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
-
+                    
                     if (CloseStream.CloseTradeStream)
                     {
                         cancelTokenSource.Cancel();
@@ -266,6 +313,8 @@ namespace BinanceAPI.ViewModels
 
         public async Task GetAggTradeStream()
         {
+            SelectedSymbol = Selection.SelectedSymbol;
+
             client = new BinanceClient();
             socketClient = new BinanceSocketClient();
 
@@ -278,7 +327,8 @@ namespace BinanceAPI.ViewModels
 
             var subscribeResult = await socketClient.SpotStreams.SubscribeToAggregatedTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
-                var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
+                //var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
+                var symbol = mainSymbol;
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -295,6 +345,8 @@ namespace BinanceAPI.ViewModels
 
         public async Task GetOrderStreamAsks()
         {
+            //SelectedSymbol = Selection.SelectedSymbol;
+
             client = new BinanceClient();
             socketClient = new BinanceSocketClient();
 
@@ -373,6 +425,7 @@ namespace BinanceAPI.ViewModels
 
         private async Task GetLastTrade()
         {
+            //SelectedSymbol = Selection.SelectedSymbol;
             socketClient = new BinanceSocketClient();
             var mainSymbol = SelectedSymbol;
             decimal sum = 0;
@@ -510,17 +563,17 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        private async Task CallTradeStream(object o)
+        public async Task CallTradeStream(object o)
         {
             await GetTradeStream();
         }
 
-        private async Task CallOrderStream(object o)
+        public async Task CallOrderStream(object o)
         {
             await GetLastTrade();
         }
 
-        private async Task CallAggTradeStream(object o)
+        public async Task CallAggTradeStream(object o)
         {
             await GetAggTradeStream();
         }

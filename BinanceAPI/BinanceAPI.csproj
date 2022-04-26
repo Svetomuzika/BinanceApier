@@ -134,6 +134,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\DataBase.cs" />
     <Compile Include="MVVM\DelegateCommand.cs" />
     <Compile Include="View\NewWatchList.xaml.cs">
       <DependentUpon>NewWatchList.xaml</DependentUpon>
@@ -256,6 +257,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\home.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Model\Dictionary.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

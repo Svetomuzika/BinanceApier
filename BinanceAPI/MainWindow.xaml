@@ -26,7 +26,7 @@
     <Grid OpacityMask="Black">
 
         <StackPanel Orientation="Horizontal">
-            <TextBox x:Name="Search" VerticalContentAlignment="Center" Text="{Binding SearchMain, UpdateSourceTrigger=PropertyChanged}" Margin="10,5,0,0" Width="190" Height="26" VerticalAlignment="Top" FontSize="15">
+            <TextBox x:Name="Search" VerticalContentAlignment="Center" Text="{Binding Path=SearchMain, UpdateSourceTrigger=PropertyChanged}" Margin="10,5,0,0" Width="190" Height="26" VerticalAlignment="Top" FontSize="15">
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -69,11 +69,11 @@
 
         </StackPanel>
         <StackPanel x:Name="stack">
-            <ListView Height="407" Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}" SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="LeftClick" Margin="0,38,0,0">
+            <ListView Height="407" Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}"  SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="LeftClick" Margin="0,38,0,0">
                 <ListView.ContextMenu>
                     <ContextMenu>
                         <MenuItem x:Name="ContextMenuItem1" Header="TradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallTradeStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem2" Header="OrderStream" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem2" Header="Level 2" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem4"  Header="Add to WatchList"/>
                     </ContextMenu>

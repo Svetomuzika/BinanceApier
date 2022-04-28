@@ -72,19 +72,19 @@ namespace BinanceAPI
 
             Task.Run(() => GetNewSymbols());
 
-            foreach (var e in AllTables.Tables[0].Rows[0].ItemArray)
+            foreach (DataRow e in AllTables.Tables[0].Rows)
             {
-                if (AllTables.Tables[0].Rows[1].ItemArray[Convert.ToInt32(e)].ToString() != "")
+                if (e.ItemArray[1].ToString() != "")
                 {
                     MenuItem newMenuItem = new MenuItem
                     {
-                        Header = AllTables.Tables[0].Rows[1].ItemArray[Convert.ToInt32(e)],
+                        Header = e.ItemArray[1],
                         FontSize = 15,
                     };
 
                     MenuItem addNewMenuItem = new MenuItem
                     {
-                        Header = AllTables.Tables[0].Rows[1].ItemArray[Convert.ToInt32(e)],
+                        Header = e.ItemArray[1],
                         FontSize = 15,
                     };
 
@@ -110,6 +110,15 @@ namespace BinanceAPI
             DataSet AllTables = new DataSet();
 
             adapter.Fill(AllTables);
+            AllTables.Tables[0].Columns[0].AutoIncrement = true;
+            AllTables.Tables[0].Columns[0].Unique = true;
+            AllTables.Tables[0].Columns[0].DataType = Type.GetType("System.Int32");
+            var keys = new DataColumn[1];
+
+            keys[0] = AllTables.Tables[0].Columns[0];
+
+
+            AllTables.Tables[0].PrimaryKey = keys;
 
             return AllTables;
         }
@@ -142,19 +151,55 @@ namespace BinanceAPI
         {
             OleDbConnection StrCon = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model;Extended Properties=text");
             string Select1 = "SELECT * FROM [Dictionary.txt]";
-
+            DataColumn column;
             OleDbCommand comand = new OleDbCommand(Select1, StrCon);
             OleDbDataAdapter adapter = new OleDbDataAdapter(comand);
             DataSet AllTables = new DataSet();
 
             StrCon.Open();
-            adapter.Fill(AllTables);
 
-            var count = AllTables.Tables[0].Rows[1].ItemArray.Where(r => r.ToString() != "").Count();
-            DataRow newRow = AllTables.Tables[0].NewRow();;
-            newRow[2] = text;
-            Console.WriteLine(count);
-            AllTables.Tables[0].Rows.InsertAt(newRow, 1);
+
+            adapter.Fill(AllTables);
+            var newCol = new DataColumn
+            {
+                ColumnName = "ID",
+                DataType = Type.GetType("System.Int32"),
+                AutoIncrement = true,
+            };
+
+
+
+            AllTables.Tables[0].Columns[0].AutoIncrement = true;
+            AllTables.Tables[0].Columns[0].Unique = true;
+            AllTables.Tables[0].Columns[0].DataType = Type.GetType("System.Int32");
+            var keys = new DataColumn[1];
+
+            keys[0] = AllTables.Tables[0].Columns[0];
+
+
+            AllTables.Tables[0].PrimaryKey = keys;
+
+            Console.WriteLine(AllTables.Tables[0].Columns[0]);
+            Console.WriteLine(AllTables.Tables[0].Rows[0].ItemArray[0]);
+
+            DataRow newRow = AllTables.Tables[0].NewRow();
+            newRow[0] = 9;
+            newRow[1] = text;
+            AllTables.Tables[0].Rows.Add(newRow);
+            AllTables.Tables[0].Rows[3].Delete();
+
+            //var q = AllTables.Tables[0].AsEnumerable().Where(r => r.Field<string>("0") == "1");
+            //foreach (var row in q.ToList())
+            //{
+            //    Console.WriteLine("dasdasdsaads");
+            //    row.Delete();
+            //}
+
+            //foreach (var e in AllTables.Tables[0].Columns)
+            //    Console.WriteLine(e);
+
+            //AllTables.Tables[0].Rows[1][1] = text;
+            //Console.WriteLine(AllTables.Tables[0].Rows[0].ItemArray[0]);
 
             OleDbCommandBuilder commandBuilder = new OleDbCommandBuilder(adapter);
             adapter.Update(AllTables);

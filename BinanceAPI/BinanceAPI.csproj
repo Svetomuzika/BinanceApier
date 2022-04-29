@@ -134,12 +134,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\DataBase.cs" />
+    <Compile Include="Model\Models.cs" />
     <Compile Include="MVVM\DelegateCommand.cs" />
     <Compile Include="View\NewWatchList.xaml.cs">
       <DependentUpon>NewWatchList.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\TradingOrdersViewModel.cs" />
+    <Compile Include="View\TradeFrame.xaml.cs">
+      <DependentUpon>TradeFrame.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TradingWindow.xaml.cs">
       <DependentUpon>TradingWindow.xaml</DependentUpon>
     </Compile>
@@ -169,6 +172,10 @@
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\TradeViewModel.cs" />
     <Page Include="View\NewWatchList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TradeFrame.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -259,7 +266,10 @@
     <Resource Include="icons\home.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Model\Dictionary.txt" />
+    <Resource Include="Model\BD.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\lock.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

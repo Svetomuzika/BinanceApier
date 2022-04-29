@@ -1,4 +1,5 @@
-﻿using BinanceAPI.ViewModels;
+﻿using BinanceAPI.Model;
+using BinanceAPI.ViewModels;
 using System;
 using System.Windows;
 

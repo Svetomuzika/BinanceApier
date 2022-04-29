@@ -23,7 +23,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid OpacityMask="Black">
+    <Grid OpacityMask="Black" x:Name="grid">
 
         <StackPanel Orientation="Horizontal">
             <TextBox x:Name="Search" VerticalContentAlignment="Center" Text="{Binding Path=SearchMain, UpdateSourceTrigger=PropertyChanged}" Margin="10,5,0,0" Width="190" Height="26" VerticalAlignment="Top" FontSize="15">

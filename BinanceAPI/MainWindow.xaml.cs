@@ -1,23 +1,21 @@
 ﻿using Binance.Net.Clients;
-using BinanceAPI.MVVM;
 using BinanceAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
-using System.Data.OleDb;
-using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
+using BinanceAPI.Model;
 
 namespace BinanceAPI
 {
+    
     public class Searching
     {
         public static string searchMain;
@@ -68,145 +66,71 @@ namespace BinanceAPI
             if (this.Title == "BinanceApi")
                 Main.main = this;
 
-            var AllTables = NewTable();
+            Task.Run(async () => await Task.WhenAll(GetNewSymbols()));
 
-            Task.Run(() => GetNewSymbols());
+            var lines = NewTable();
 
-            foreach (DataRow e in AllTables.Tables[0].Rows)
+            foreach (var e in lines)
             {
-                if (e.ItemArray[1].ToString() != "")
+                var item = e.Split(',')[0];
+                MenuItem newMenuItem = new MenuItem
                 {
-                    MenuItem newMenuItem = new MenuItem
-                    {
-                        Header = e.ItemArray[1],
-                        FontSize = 15,
-                    };
+                    Header = item,
+                    FontSize = 15,
+                };
 
-                    MenuItem addNewMenuItem = new MenuItem
-                    {
-                        Header = e.ItemArray[1],
-                        FontSize = 15,
-                    };
+                MenuItem addNewMenuItem = new MenuItem
+                {
+                    Header = item,
+                    FontSize = 15,
+                };
 
-                    AddNewList.ContextMenu.Items.Add(newMenuItem);
-                    ContextMenuItem4.Items.Add(addNewMenuItem);
-                    newMenuItem.Click += Menu_ClickBD;
-                    addNewMenuItem.Click += AddNewMenuItem_Click;
+                AddNewList.ContextMenu.Items.Add(newMenuItem);
+                ContextMenuItem4.Items.Add(addNewMenuItem);
+                newMenuItem.Click += Menu_ClickBD;
+                addNewMenuItem.Click += AddNewMenuItem_Click;
+            }
+        }
+
+        public List<string> NewTable()
+        {
+            var lines = new List<string>();
+
+            using (StreamReader reader = new StreamReader(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt"))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
                 }
-              
+            }
+            return lines;
+        }
 
+        public void AddNewTable(string ticker, string line)
+        {
+            string str = string.Empty;
 
+            using (StreamReader reader = new StreamReader(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt"))
+            {
+                str = reader.ReadToEnd();
             }
 
-        }
+            string newLine = line + "," + ticker;
+            str = str.Replace(line, newLine);
 
-        public DataSet NewTable()
-        {
-            OleDbConnection StrCon = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model;Extended Properties=text");
-            string Select1 = "SELECT * FROM [Dictionary.txt]";
-
-            OleDbCommand comand1 = new OleDbCommand(Select1, StrCon);
-            OleDbDataAdapter adapter = new OleDbDataAdapter(comand1);
-            DataSet AllTables = new DataSet();
-
-            adapter.Fill(AllTables);
-            AllTables.Tables[0].Columns[0].AutoIncrement = true;
-            AllTables.Tables[0].Columns[0].Unique = true;
-            AllTables.Tables[0].Columns[0].DataType = Type.GetType("System.Int32");
-            var keys = new DataColumn[1];
-
-            keys[0] = AllTables.Tables[0].Columns[0];
-
-
-            AllTables.Tables[0].PrimaryKey = keys;
-
-            return AllTables;
-        }
-
-        public void AddNewTable(int row, string text)
-        {
-            OleDbConnection StrCon = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model;Extended Properties=text");
-            string Select1 = "SELECT * FROM [Dictionary.txt]";
-
-            OleDbCommand comand = new OleDbCommand(Select1, StrCon);
-            OleDbDataAdapter adapter = new OleDbDataAdapter(comand);
-            DataSet AllTables = new DataSet();
-
-            StrCon.Open();
-            adapter.Fill(AllTables);
-
-            DataRow newRow = AllTables.Tables[0].NewRow();
-            newRow[row] = text;
-            AllTables.Tables[0].Rows.Add(newRow);
-
-            OleDbCommandBuilder commandBuilder = new OleDbCommandBuilder(adapter);
-            adapter.Update(AllTables);
-            AllTables.Clear();
-            adapter.Fill(AllTables);
-
-            StrCon.Close();
-        }
-
-        private void AddNewMenu(string text)
-        {
-            OleDbConnection StrCon = new OleDbConnection(@"Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model;Extended Properties=text");
-            string Select1 = "SELECT * FROM [Dictionary.txt]";
-            DataColumn column;
-            OleDbCommand comand = new OleDbCommand(Select1, StrCon);
-            OleDbDataAdapter adapter = new OleDbDataAdapter(comand);
-            DataSet AllTables = new DataSet();
-
-            StrCon.Open();
-
-
-            adapter.Fill(AllTables);
-            var newCol = new DataColumn
+            using (StreamWriter file = new StreamWriter(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt"))
             {
-                ColumnName = "ID",
-                DataType = Type.GetType("System.Int32"),
-                AutoIncrement = true,
-            };
+                file.Write(str);
+            }
+        }
 
-
-
-            AllTables.Tables[0].Columns[0].AutoIncrement = true;
-            AllTables.Tables[0].Columns[0].Unique = true;
-            AllTables.Tables[0].Columns[0].DataType = Type.GetType("System.Int32");
-            var keys = new DataColumn[1];
-
-            keys[0] = AllTables.Tables[0].Columns[0];
-
-
-            AllTables.Tables[0].PrimaryKey = keys;
-
-            Console.WriteLine(AllTables.Tables[0].Columns[0]);
-            Console.WriteLine(AllTables.Tables[0].Rows[0].ItemArray[0]);
-
-            DataRow newRow = AllTables.Tables[0].NewRow();
-            newRow[0] = 9;
-            newRow[1] = text;
-            AllTables.Tables[0].Rows.Add(newRow);
-            AllTables.Tables[0].Rows[3].Delete();
-
-            //var q = AllTables.Tables[0].AsEnumerable().Where(r => r.Field<string>("0") == "1");
-            //foreach (var row in q.ToList())
-            //{
-            //    Console.WriteLine("dasdasdsaads");
-            //    row.Delete();
-            //}
-
-            //foreach (var e in AllTables.Tables[0].Columns)
-            //    Console.WriteLine(e);
-
-            //AllTables.Tables[0].Rows[1][1] = text;
-            //Console.WriteLine(AllTables.Tables[0].Rows[0].ItemArray[0]);
-
-            OleDbCommandBuilder commandBuilder = new OleDbCommandBuilder(adapter);
-            adapter.Update(AllTables);
-            AllTables.Clear();
-            adapter.Fill(AllTables);
-
-            StrCon.Close();
+        private void AddNewMenu(string name)
+        {
+            using (StreamWriter file = new StreamWriter(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt", true))
+            {
+                file.WriteLine(name);
+            }
         }
 
         private void LeftClick(object sender, MouseButtonEventArgs e)
@@ -221,7 +145,23 @@ namespace BinanceAPI
 
         private void MenuItem_Click_Trades(object sender, RoutedEventArgs e)
         {
-            new TradeWindow { Left = Left + Width * 1.01, Top = Top }.Show();
+            if (!Lock.Locker)
+            {
+                var a = new TradeWindow
+                {
+                    Left = Left + Width * 1.01,
+                    Top = Top
+                };
+                a.Show();
+            }
+            else
+            {
+                var a = new TradeWindow
+                {
+                    Left = Left + Width * 1.01,
+                    Top = Top
+                };
+            }
         }
 
         private void MenuItem_Click_AggTrades(object sender, RoutedEventArgs e)
@@ -280,7 +220,7 @@ namespace BinanceAPI
                 FontSize = 15,      
             };
 
-            newMenuItem.Click += Menu_Click;
+            newMenuItem.Click += Menu_ClickBD;
             AddNewList.ContextMenu.Items.Add(newMenuItem);
 
             addNewMenuItem.Click += AddNewMenuItem_Click;
@@ -304,159 +244,171 @@ namespace BinanceAPI
 
         private void Menu_Click(object sender, RoutedEventArgs routedEventArgs)
         {
-            var a = new ObservableCollection<BinanceSymbolViewModel>();
-            var b = new ObservableCollection<BinanceSymbolViewModel>();
-
-            MainWindow newMainWindow = new MainWindow()
-            {
-                Left = Left + Width * 1.3,
-                Top = Top,
-                Title = sender.ToString().Split(' ')[1].Remove(0, 7),
-            };
-
-            AddNewMenu(newMainWindow.Title.ToString());
-            newMainWindow.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
-            newMainWindow.Selector.SelectedItem = SelectedSymbol;
-            newMainWindow.GoHome.Visibility = Visibility.Visible;
-            newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
-            newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
-            newMainWindow.AddNewList.Visibility = Visibility.Hidden;
-            newMainWindow.Closing += OnWindowClosing;
-            newMainWindow.Search.DataContext = new Searching();
-            newMainWindow.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindow.Title);
-
-            ValueChanged += (x, parentsender) =>
-            {
-                if (newMainWindow.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !a.Contains(Selection.SelectedSymbol))
-                {
-                    foreach (var o in x)
-                    {
-                        a.Add(o);
-                        b.Add(o);
-                    }
-
-
-                    newMainWindow.Selector.ItemsSource = a;
-                }
-            };
-
-            SearchChanged += (text, title) =>
-            {
-                if (newMainWindow.Title == title.ToString())
-                {
-                    if (text != "")
-                    {
-                        a.Clear();
-
-                        foreach (var o in b)
-                        {
-                            if (o.Symbol.Contains(text.ToUpper()))
-                            {
-                                a.Add(o);
-                            }
-                        }
-                    }
-                    else if (text == "" || text == null)
-                    {
-                        a.Clear();
-                        foreach (var o in b)
-                        {
-                            a.Add(o);
-                        }
-                    }
-                }
-
-                newMainWindow.Selector.ItemsSource = a;
-            };            
+                        
         }
 
         private void Menu_ClickBD(object sender, RoutedEventArgs routedEventArgs)
         {
-            var AllTables = NewTable();
+            var currLines = NewTable();
+            var names = new List<string>();
 
-            foreach (var i in AllTables.Tables[0].Rows[0].ItemArray)
+            foreach (var line in currLines)
+                names.Add(line.Split(',')[0]);
+
+            if (names.Contains(sender.ToString().Split(' ')[1].Remove(0, 7)))
             {
-                if (sender.ToString().Split(' ')[1].Remove(0, 7) == AllTables.Tables[0].Rows[1].ItemArray[Convert.ToInt32(i.ToString())].ToString())
+                var lines = NewTable();
+
+                foreach (string i in lines)
                 {
-                    var a = new ObservableCollection<BinanceSymbolViewModel>();
-                    var b = new ObservableCollection<BinanceSymbolViewModel>();
-
-                    MainWindow newMainWindowBD = new MainWindow()
+                    if (sender.ToString().Split(' ')[1].Remove(0, 7) == i.Split(',')[0])
                     {
-                        Left = Left + Width * 1.3,
-                        Top = Top,
-                        Title = sender.ToString().Split(' ')[1].Remove(0, 7),
-                    };
+                        var a = new ObservableCollection<BinanceSymbolViewModel>();
+                        var b = new ObservableCollection<BinanceSymbolViewModel>();
 
-                    newMainWindowBD.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
-                    newMainWindowBD.Selector.SelectedItem = SelectedSymbol;
-                    newMainWindowBD.GoHome.Visibility = Visibility.Visible;
-                    newMainWindowBD.Selector.ContextMenu.DataContext = new MainViewModel();
-                    newMainWindowBD.Selector.ContextMenu.Items.RemoveAt(3);
-                    newMainWindowBD.AddNewList.Visibility = Visibility.Hidden;
-                    newMainWindowBD.Closing += OnWindowClosing;
-                    newMainWindowBD.Search.DataContext = new Searching();
-                    newMainWindowBD.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindowBD.Title);
-
-
-                    foreach (DataRow e in AllTables.Tables[0].Rows)
-                    {
-                        var l = NewPrices.SingleOrDefault(p => p.Symbol.ToString() == e.ItemArray[Convert.ToInt32(i.ToString())].ToString());
-                        if(l != null)
+                        MainWindow newMainWindowBD = new MainWindow()
                         {
-                            a.Add(l);
-                            b.Add(l);
+                            Left = Left + Width * 1.3,
+                            Top = Top,
+                            Title = sender.ToString().Split(' ')[1].Remove(0, 7),
+                        };
 
-                        }
-                    }
+                        newMainWindowBD.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
+                        newMainWindowBD.Selector.SelectedItem = SelectedSymbol;
+                        newMainWindowBD.GoHome.Visibility = Visibility.Visible;
+                        newMainWindowBD.Selector.ContextMenu.DataContext = new MainViewModel();
+                        newMainWindowBD.Selector.ContextMenu.Items.RemoveAt(3);
+                        newMainWindowBD.AddNewList.Visibility = Visibility.Hidden;
+                        newMainWindowBD.Closing += OnWindowClosing;
+                        newMainWindowBD.Search.DataContext = new Searching();
+                        newMainWindowBD.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindowBD.Title);
 
-                    newMainWindowBD.Selector.ItemsSource = a;
-
-                    ValueChanged += (x, parentsender) =>
-                    {
-                        Console.WriteLine(12321312);
-                        if (newMainWindowBD.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !a.Contains(Selection.SelectedSymbol))
+                        var tickers = i.Split(',');
+                        foreach (string e in tickers)
                         {
-                            foreach (var o in x)
+                            var ticker = NewPrices.SingleOrDefault(p => p.Symbol.ToString() == e);
+                            if (ticker != null)
                             {
-                                a.Add(o);
-                                b.Add(o);
-                                AddNewTable(Convert.ToInt32(i.ToString()), o.Symbol);
+                                a.Add(ticker);
+                                b.Add(ticker);
                             }
-
-                            newMainWindowBD.Selector.ItemsSource = a;
                         }
-                    };
+                        newMainWindowBD.Selector.ItemsSource = a;
 
-                    SearchChanged += (text, title) =>
-                    {
-                        if (newMainWindowBD.Title == title.ToString())
+                        ValueChanged += (x, parentsender) =>
                         {
-                            if (text != "")
+                            if (newMainWindowBD.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !a.Contains(Selection.SelectedSymbol))
                             {
-                                a.Clear();
-
-                                foreach (var o in b)
+                                foreach (var o in x)
                                 {
-                                    if (o.Symbol.Contains(text.ToUpper()))
+                                    a.Add(o);
+                                    b.Add(o);
+                                    AddNewTable(o.Symbol, i);
+                                }
+
+                                newMainWindowBD.Selector.ItemsSource = a;
+                            }
+                        };
+
+                        SearchChanged += (text, title) =>
+                        {
+                            if (newMainWindowBD.Title == title.ToString())
+                            {
+                                if (text != "")
+                                {
+                                    a.Clear();
+
+                                    foreach (var o in b)
+                                    {
+                                        if (o.Symbol.Contains(text.ToUpper()))
+                                        {
+                                            a.Add(o);
+                                        }
+                                    }
+                                }
+                                else if (text == "" || text == null)
+                                {
+                                    a.Clear();
+                                    foreach (var o in b)
                                     {
                                         a.Add(o);
                                     }
                                 }
                             }
-                            else if (text == "" || text == null)
+
+                            newMainWindowBD.Selector.ItemsSource = a;
+                        };
+                    }
+                }
+            }
+            else
+            {
+                var a = new ObservableCollection<BinanceSymbolViewModel>();
+                var b = new ObservableCollection<BinanceSymbolViewModel>();
+
+                MainWindow newMainWindow = new MainWindow()
+                {
+                    Left = Left + Width * 1.3,
+                    Top = Top,
+                    Title = sender.ToString().Split(' ')[1].Remove(0, 7),
+                };
+
+                AddNewMenu(newMainWindow.Title.ToString());
+                var lines = NewTable();
+                var line = lines.Last();
+
+                newMainWindow.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
+                newMainWindow.Selector.SelectedItem = SelectedSymbol;
+                newMainWindow.GoHome.Visibility = Visibility.Visible;
+                newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
+                newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
+                newMainWindow.AddNewList.Visibility = Visibility.Hidden;
+                newMainWindow.Closing += OnWindowClosing;
+                newMainWindow.Search.DataContext = new Searching();
+                newMainWindow.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindow.Title);
+
+                ValueChanged += (x, parentsender) =>
+                {
+                    if (newMainWindow.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !a.Contains(Selection.SelectedSymbol))
+                    {
+                        foreach (var o in x)
+                        {
+                            a.Add(o);
+                            b.Add(o);
+                            AddNewTable(o.Symbol, line);
+                        }
+                        newMainWindow.Selector.ItemsSource = a;
+                    }
+                };
+
+                SearchChanged += (text, title) =>
+                {
+                    if (newMainWindow.Title == title.ToString())
+                    {
+                        if (text != "")
+                        {
+                            a.Clear();
+
+                            foreach (var o in b)
                             {
-                                a.Clear();
-                                foreach (var o in b)
+                                if (o.Symbol.Contains(text.ToUpper()))
                                 {
                                     a.Add(o);
                                 }
                             }
                         }
+                        else if (text == "" || text == null)
+                        {
+                            a.Clear();
+                            foreach (var o in b)
+                            {
+                                a.Add(o);
+                            }
+                        }
+                    }
 
-                        newMainWindowBD.Selector.ItemsSource = a;
-                    };
-                }
+                    newMainWindow.Selector.ItemsSource = a;
+                };
             }
         }
 

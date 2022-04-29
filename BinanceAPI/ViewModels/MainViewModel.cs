@@ -5,8 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BinanceApi.MVVM;
 using BinanceApi.ViewModels;
-using System.Globalization;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using BinanceAPI.MVVM;
@@ -16,18 +14,10 @@ using CryptoExchange.Net.Authentication;
 using Binance.Net.Enums;
 using CryptoExchange.Net.Sockets;
 using Binance.Net.Objects.Models.Spot.Socket;
-using System.Text;
-using System.Security.Cryptography;
+using BinanceAPI.Model;
 
 namespace BinanceAPI.ViewModels
 {
-    static class CloseStream
-    {
-        public static bool CloseAggTradeStream = false;
-        public static bool CloseTradeStream = false;
-        public static bool CloseOrderStream = false;
-        public static bool CloseLastTradeStream = false;
-    }
 
     public class Main
     {

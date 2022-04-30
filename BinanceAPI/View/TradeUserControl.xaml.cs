@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BinanceAPI.Model;
+using BinanceAPI.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +17,20 @@ using System.Windows.Shapes;
 
 namespace BinanceAPI.View
 {
-    /// <summary>
-    /// Логика взаимодействия для TradeFrame.xaml
-    /// </summary>
-    public partial class TradeFrame : Page
+    public partial class TradeUserControl : UserControl
     {
-        public TradeFrame()
+        public TradeUserControl()
         {
             InitializeComponent();
+
+            SelectorNew.SelectedItem = Selection.SelectedSymbol;
+            CloseStream.CloseTradeStream = false;
+        }
+
+
+        private void Lock_Click(object sender, RoutedEventArgs e)
+        {
+            Lock.Locker = !Lock.Locker;
         }
     }
 }

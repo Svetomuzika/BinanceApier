@@ -5,6 +5,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace BinanceAPI.Model
 {
@@ -20,6 +21,9 @@ namespace BinanceAPI.Model
                 Console.WriteLine(Locker);
             }
         }
+        public static bool IsTradeUserControlExist;
+        public static TradeWindow LockedWindow;
+        public static UserControl UserControl = null;
     }
 
     static class CloseStream

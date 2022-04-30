@@ -6,22 +6,14 @@
         xmlns:local="clr-namespace:BinanceAPI" xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource CustomWindowStyle}"
-        Title="{Binding SelectedSymbol.Symbol, StringFormat='TradeStream({0})'}" Height="709" Width="358">
+        Title="{Binding SelectedSymbol.Symbol, StringFormat='TradeStream({0})'}" Height="709" Width="360">
 
     <Window.DataContext>
         <local2:MainViewModel/>
     </Window.DataContext>
 
-    <Grid Margin="10,0,8,0" x:Name="grid">
-        <Button x:Name="LockerButton" VerticalAlignment="Top" Margin="0,0,-73,0" FontSize="25" BorderBrush="{x:Null}" Click="Lock_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="32" Width="32">
-            <Button.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="-1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Button.RenderTransform>
+    <Grid Margin="0,0,-2,0" x:Name="grid">
+        <Button x:Name="LockerButton" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="25" BorderBrush="{x:Null}" Click="Lock_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="32" Width="32">
             <Button.Background>
                 <ImageBrush ImageSource="/icons/lock.png"/>
             </Button.Background>
@@ -45,8 +37,13 @@
                 </Style>
             </Button.Style>
         </Button>
-        <StackPanel x:Name="stack" Orientation="Vertical">
-            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="0,37,-11,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" VerticalAlignment="Top">
+        <StackPanel x:Name="mainStack">
+            <StackPanel Orientation="Horizontal" Height="41">
+                <TextBlock Foreground="#7d8594" Text="Цена" FontSize="15" Margin="10,7,100,0" RenderTransformOrigin="0.936,0.587"/>
+                <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="0,5,40,0"/>
+                <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="0,5,12,0"/>
+            </StackPanel>
+            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="-10,0,-10,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="359">
                 <ListView.View>
                     <GridView >
                         <GridViewColumn Width="170">
@@ -74,10 +71,6 @@
                 </ListView.View>
             </ListView>
         </StackPanel>
-        <TextBlock Foreground="#7d8594" Text="Цена" FontSize="15" Margin="10,7,269,559" RenderTransformOrigin="0.936,0.587"/>
-        <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="150,5,79,570"/>
-        <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="270,5,22,570"/>
-
     </Grid>
 
     <Window.Resources>

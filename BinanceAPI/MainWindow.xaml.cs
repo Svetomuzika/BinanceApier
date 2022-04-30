@@ -12,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using BinanceAPI.Model;
+using BinanceAPI.View;
 
 namespace BinanceAPI
 {
@@ -58,6 +59,7 @@ namespace BinanceAPI
 
         private bool FlagForList = true;
         private List<object> ListOfNewWindows = new List<object>();
+        private TradeWindow TradeWindow = null;
 
         public MainWindow()
         {
@@ -145,22 +147,34 @@ namespace BinanceAPI
 
         private void MenuItem_Click_Trades(object sender, RoutedEventArgs e)
         {
+
             if (!Lock.Locker)
             {
-                var a = new TradeWindow
+                TradeWindow = new TradeWindow
                 {
                     Left = Left + Width * 1.01,
                     Top = Top
                 };
-                a.Show();
+                TradeWindow.Show();
+                Lock.IsTradeUserControlExist = false;
+            }
+            else if(!Lock.IsTradeUserControlExist)
+            {
+                Lock.UserControl = new UserControl
+                {
+                    Content = new TradeUserControl(),
+                };
+
+                Lock.LockedWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
+                Lock.LockedWindow.grid.Children.Add(Lock.UserControl);
+                Lock.LockedWindow.mainStack.Visibility = Visibility.Hidden;
+                Lock.IsTradeUserControlExist = true;
             }
             else
             {
-                var a = new TradeWindow
-                {
-                    Left = Left + Width * 1.01,
-                    Top = Top
-                };
+                Lock.LockedWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
+                Lock.UserControl.Content = new TradeUserControl();
+                CloseStream.CloseTradeStream = true;
             }
         }
 
@@ -240,11 +254,6 @@ namespace BinanceAPI
             NewPricesFake = new ObservableCollection<BinanceSymbolViewModel>();
             NewPricesFake.Insert(0, Selection.SelectedSymbol);
             ValueChanged(NewPricesFake, sender);
-        }
-
-        private void Menu_Click(object sender, RoutedEventArgs routedEventArgs)
-        {
-                        
         }
 
         private void Menu_ClickBD(object sender, RoutedEventArgs routedEventArgs)

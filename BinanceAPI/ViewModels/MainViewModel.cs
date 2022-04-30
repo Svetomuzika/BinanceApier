@@ -173,7 +173,7 @@ namespace BinanceAPI.ViewModels
             });
 
             CallTradeStreamCommand = new DelegateCommand(async (o) => await CallTradeStream(o));
-            CallOrderStreamCommand = new DelegateCommand(async (o) => CallOrderStream(o));
+            CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream(o));
             CallAggTradeStreamCommand = new DelegateCommand(async (o) => await CallAggTradeStream(o));
             BuyCommandLimit = new DelegateCommand(async (o) => await BuyLimit(o));
             SellCommandLimit = new DelegateCommand(async (o) => await SellLimit(o));
@@ -361,7 +361,6 @@ namespace BinanceAPI.ViewModels
 
             var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
-                Console.WriteLine(123);
                 var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
                 var newBest = data.Data.Price;
 

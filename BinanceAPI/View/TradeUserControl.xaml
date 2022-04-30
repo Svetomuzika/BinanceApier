@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="BinanceAPI.View.TradeUserControl"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BinanceAPI.View" xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="709" d:DesignWidth="358">
+    <UserControl.DataContext>
+        <local2:MainViewModel/>
+    </UserControl.DataContext>
+
+    <Grid Margin="0,0,-2,0" x:Name="grid">
+        <StackPanel x:Name="mainStack">
+            <StackPanel Orientation="Horizontal" Height="41">
+                <TextBlock Foreground="#7d8594" Text="Цена" FontSize="15" Margin="10,7,100,0" RenderTransformOrigin="0.936,0.587"/>
+                <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="0,5,40,0"/>
+                <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="0,5,12,0"/>
+            </StackPanel>
+            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="-10,0,-10,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="359">
+                <ListView.View>
+                    <GridView >
+                        <GridViewColumn Width="170">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding TradePrice}" Foreground = "{Binding TradeColor}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="90">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding TradeQPrice}" Foreground="#afb5be" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Width="155">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock x:Name="Txt" Text="{Binding TradeTime}" Foreground="#afb5be" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</UserControl>

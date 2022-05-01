@@ -1,19 +1,21 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using System.Text.RegularExpressions;
-using System;
-using System.Windows.Controls;
+﻿using BinanceAPI.Model;
 using BinanceAPI.ViewModels;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
-namespace BinanceAPI
+namespace BinanceAPI.View
 {
-    public partial class TradingWindow : Window
+    public partial class TradingUserControl : UserControl
     {
-        public TradingWindow()
+        public TradingUserControl()
         {
             InitializeComponent();
-            SelectorNew.SelectedItem = Selection.SelectedSymbol;
+            OrdersList.SelectedItem = Selection.SelectedSymbol;
+            TradesList.SelectedItem = Selection.SelectedSymbol;
 
             Limit.Foreground = new BrushConverter().ConvertFromString("#f0b90b") as SolidColorBrush;
             AmountMarketBox.Visibility = Visibility.Hidden;
@@ -102,5 +104,24 @@ namespace BinanceAPI
             Limit.Foreground = new BrushConverter().ConvertFromString("#7f8c9c") as SolidColorBrush;
         }
 
+        private void Trades_Click(object sender, RoutedEventArgs e)
+        {
+            TradesList.Visibility = Visibility.Visible;
+            OrdersList.Visibility = Visibility.Hidden;
+        }
+
+        private void Orders_Click(object sender, RoutedEventArgs e)
+        {
+            TradesList.Visibility = Visibility.Hidden;
+            OrdersList.Visibility = Visibility.Visible;
+        }
+
+        public void DeleteOrder_Click(object sender, RoutedEventArgs e)
+        {
+            var b = new MainViewModel();
+            Button a = (Button)e.Source;
+
+            Task.Run(() => b.Cancel((long)a.Content));
+        }
     }
 }

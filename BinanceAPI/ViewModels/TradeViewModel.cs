@@ -62,10 +62,5 @@ namespace BinanceApi.ViewModels
             this.tradeTime = date1.AddHours(5).ToLongTimeString();
             this.tradeColor = color;
         }
-
-
-
-
-
     }
 }

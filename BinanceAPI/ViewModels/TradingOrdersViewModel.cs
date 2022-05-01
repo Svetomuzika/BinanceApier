@@ -5,6 +5,7 @@ using System.Linq;
 using Binance.Net.Enums;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BinanceAPI.ViewModels
 {
@@ -116,13 +117,24 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private DateTime dateTime;
+        public DateTime DateTime
+        {
+            get { return dateTime; }
+            set
+            {
+                dateTime = value;
+                RaisePropertyChangedEvent("DateTime");
+            }
+        }
+
         public bool CanCancel
         {
             get { return Status == OrderStatus.New || Status == OrderStatus.PartiallyFilled; }
         }
 
 
-        public TradingOrdersViewModel(decimal quantity, decimal price, OrderSide side, OrderStatus status, string symbol, DateTime time)
+        public TradingOrdersViewModel(decimal quantity, decimal price, OrderSide side, OrderStatus status, string symbol, DateTime time, long id)
         {
             var date = time.AddHours(5);
             DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
@@ -133,6 +145,8 @@ namespace BinanceAPI.ViewModels
             this.status = status;
             this.symbol = symbol;
             this.time = date1.ToString("dd MMMM yyyy HH:mm");
+            this.id = id;
+            this.DateTime = time;
         }
     }
 }

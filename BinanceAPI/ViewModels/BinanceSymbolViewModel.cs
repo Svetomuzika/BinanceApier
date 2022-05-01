@@ -134,13 +134,13 @@ namespace BinanceAPI.ViewModels
         public void AddAggTrade(TradeViewModel trade)
         {
             AggTrades.Insert(0, trade);
-            RaisePropertyChangedEvent("AggTrades");
+            RaisePropertyChangedEvent("AddAggTrade");
         }
 
         public void AddTrade(TradeViewModel trade)
         {
             Trades.Insert(0, trade);
-            RaisePropertyChangedEvent("Trades");
+            RaisePropertyChangedEvent("AddTrade");
         }
 
         private ObservableCollection<TradingOrdersViewModel> tradingOrders;
@@ -154,17 +154,33 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private ObservableCollection<TradingOrdersViewModel> tradingTrades;
+        public ObservableCollection<TradingOrdersViewModel> TradingTrades
+        {
+            get { return tradingTrades; }
+            set
+            {
+                tradingTrades = value;
+                RaisePropertyChangedEvent("TradingTrades");
+            }
+        }
+
         public BinanceSymbolViewModel(string symbol, decimal price)
         {
             this.symbol = symbol;
             this.price = price;
         }
 
-        public void AddOrder(TradingOrdersViewModel order)
+        public void AddTradingOrders(TradingOrdersViewModel order)
         {
             TradingOrders.Insert(0, order);
-            TradingOrders.OrderByDescending(o => o.Time);
             RaisePropertyChangedEvent("TradingOrders");
+        }
+
+        public void AddTradingTrades(TradingOrdersViewModel order)
+        {
+            TradingTrades.Insert(0, order);
+            RaisePropertyChangedEvent("TradingTrades");
         }
     }
 }

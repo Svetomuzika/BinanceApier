@@ -24,13 +24,6 @@ namespace BinanceAPI.View
             InitializeComponent();
 
             SelectorNew.SelectedItem = Selection.SelectedSymbol;
-            CloseStream.CloseTradeStream = false;
-        }
-
-
-        private void Lock_Click(object sender, RoutedEventArgs e)
-        {
-            Lock.Locker = !Lock.Locker;
         }
     }
 }

@@ -136,6 +136,12 @@
     </ApplicationDefinition>
     <Compile Include="Model\Models.cs" />
     <Compile Include="MVVM\DelegateCommand.cs" />
+    <Compile Include="View\AggTradeUserControl.xaml.cs">
+      <DependentUpon>AggTradeUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Level2UserControl.xaml.cs">
+      <DependentUpon>Level2UserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NewWatchList.xaml.cs">
       <DependentUpon>NewWatchList.xaml</DependentUpon>
     </Compile>
@@ -143,19 +149,13 @@
     <Compile Include="View\TradeUserControl.xaml.cs">
       <DependentUpon>TradeUserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TradingWindow.xaml.cs">
-      <DependentUpon>TradingWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\AggTradeWindow.xaml.cs">
-      <DependentUpon>AggTradeWindow.xaml</DependentUpon>
+    <Compile Include="View\TradingUserControl.xaml.cs">
+      <DependentUpon>TradingUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TradeWindow.xaml.cs">
       <DependentUpon>TradeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\ObservableObject.cs" />
-    <Compile Include="View\OrderWindow.xaml.cs">
-      <DependentUpon>OrderWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Themes\ColourfulDarkTheme.xaml.cs">
       <DependentUpon>ColourfulDarkTheme.xaml</DependentUpon>
     </Compile>
@@ -171,6 +171,14 @@
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="ViewModels\OrderViewModel.cs" />
     <Compile Include="ViewModels\TradeViewModel.cs" />
+    <Page Include="View\AggTradeUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Level2UserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\NewWatchList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -179,13 +187,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\TradingWindow.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="View\TradingUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\AggTradeWindow.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -202,10 +206,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\TradeWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\OrderWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -243,6 +243,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -270,6 +271,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\bin.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

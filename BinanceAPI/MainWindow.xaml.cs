@@ -58,7 +58,6 @@ namespace BinanceAPI
         }
 
         private bool FlagForList = true;
-        private List<object> ListOfNewWindows = new List<object>();
         private TradeWindow TradeWindow = null;
 
         public MainWindow()
@@ -137,12 +136,68 @@ namespace BinanceAPI
 
         private void LeftClick(object sender, MouseButtonEventArgs e)
         {
-            new TradingWindow() { Left = Left + Width * 1.01, Top = Top }.Show();
+            if (!Lock.Locker)
+            {
+                TradeWindow = new TradeWindow
+                {
+                    Left = Left + Width * 1.01,
+                    Top = Top,
+                    Height = 473,
+                    Width = 740,
+                };
+
+                var userControl = new UserControl
+                {
+                    Content = new TradingUserControl(),
+                };
+
+                TradeWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
+                TradeWindow.StackForControl.Children.Add(userControl);
+                TradeWindow.Show();
+            }
+            else
+            {
+                CloseStream.ClosedStream = true;
+                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
+
+                Lock.UserControl.Content = new Level2UserControl();
+                Lock.LockedWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
+                Lock.LockedWindow.Width = 474;
+                Lock.LockedWindow.Height = 886;
+            }
         }
 
         private void MenuItem_Click_Orders(object sender, RoutedEventArgs e)
         {
-            new OrderWindow { Left = Left + Width * 2.25, Top = Top }.Show();
+            if (!Lock.Locker)
+            {
+                TradeWindow = new TradeWindow
+                {
+                    Left = Left + Width * 1.01,
+                    Top = Top,
+                    Height = 886,
+                    Width = 424,
+                };
+
+                var userControl = new UserControl
+                {
+                    Content = new Level2UserControl(),
+                };
+
+                TradeWindow.Title = $"Level2({Selection.SelectedSymbol.Symbol})";
+                TradeWindow.StackForControl.Children.Add(userControl);
+                TradeWindow.Show();
+            }
+            else
+            {
+                CloseStream.ClosedStream = true;
+                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
+
+                Lock.UserControl.Content = new Level2UserControl();
+                Lock.LockedWindow.Title = $"Level2({Selection.SelectedSymbol.Symbol})";
+                Lock.LockedWindow.Width = 424;
+                Lock.LockedWindow.Height = 886;
+            }
         }
 
         private void MenuItem_Click_Trades(object sender, RoutedEventArgs e)
@@ -150,37 +205,63 @@ namespace BinanceAPI
 
             if (!Lock.Locker)
             {
+
                 TradeWindow = new TradeWindow
                 {
                     Left = Left + Width * 1.01,
                     Top = Top
                 };
-                TradeWindow.Show();
-                Lock.IsTradeUserControlExist = false;
-            }
-            else if(!Lock.IsTradeUserControlExist)
-            {
-                Lock.UserControl = new UserControl
+
+                var userControl = new UserControl
                 {
                     Content = new TradeUserControl(),
                 };
 
-                Lock.LockedWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
-                Lock.LockedWindow.grid.Children.Add(Lock.UserControl);
-                Lock.LockedWindow.mainStack.Visibility = Visibility.Hidden;
-                Lock.IsTradeUserControlExist = true;
+                TradeWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
+                TradeWindow.StackForControl.Children.Add(userControl);
+                TradeWindow.Show();
             }
             else
             {
-                Lock.LockedWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
+                CloseStream.ClosedStream = true;
+                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
+
+                Lock.LockedWindow.Width = 360;
+                Lock.LockedWindow.Height = 709;
                 Lock.UserControl.Content = new TradeUserControl();
-                CloseStream.CloseTradeStream = true;
+                Lock.LockedWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
             }
         }
 
         private void MenuItem_Click_AggTrades(object sender, RoutedEventArgs e)
         {
-            new AggTradeWindow { Left = Left + Width * 1.01, Top = Top }.Show();
+            if (!Lock.Locker)
+            {
+                var userControl = new TradeWindow
+                {
+                    Left = Left + Width * 1.01,
+                    Top = Top,
+                };
+
+                Lock.UserControl = new UserControl
+                {
+                    Content = new AggTradeUserControl(),
+                };
+
+                TradeWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
+                TradeWindow.StackForControl.Children.Add(userControl);
+                TradeWindow.Show();
+            }
+            else
+            {
+                CloseStream.ClosedStream = true;
+                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
+
+                Lock.LockedWindow.Width = 360;
+                Lock.LockedWindow.Height = 709;
+                Lock.UserControl.Content = new AggTradeUserControl();
+                Lock.LockedWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
+            }
         }
 
         private void AddNewList_Click(object sender, RoutedEventArgs e)
@@ -288,7 +369,6 @@ namespace BinanceAPI
                         newMainWindowBD.Selector.ContextMenu.DataContext = new MainViewModel();
                         newMainWindowBD.Selector.ContextMenu.Items.RemoveAt(3);
                         newMainWindowBD.AddNewList.Visibility = Visibility.Hidden;
-                        newMainWindowBD.Closing += OnWindowClosing;
                         newMainWindowBD.Search.DataContext = new Searching();
                         newMainWindowBD.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindowBD.Title);
 
@@ -372,7 +452,6 @@ namespace BinanceAPI
                 newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
                 newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
                 newMainWindow.AddNewList.Visibility = Visibility.Hidden;
-                newMainWindow.Closing += OnWindowClosing;
                 newMainWindow.Search.DataContext = new Searching();
                 newMainWindow.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindow.Title);
 
@@ -447,17 +526,6 @@ namespace BinanceAPI
                 Main.main = this;
                 Main.main.Visibility = Visibility.Hidden;
             }
-        }
-
-        public void OnWindowClosing(object sender, CancelEventArgs e)
-        {
-            Console.WriteLine(1111);
-
-        }
-
-        public void GetNewSearch(string name, ObservableCollection<BinanceSymbolViewModel> a, ObservableCollection<BinanceSymbolViewModel> b)
-        {
-            
         }
     }
 }

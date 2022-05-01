@@ -1,30 +1,15 @@
-﻿<Window x:Class="BinanceAPI.OrderWindow"
-xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
-mc:Ignorable="d"
-Style="{DynamicResource CustomWindowStyle}"
-Title="{Binding SelectedSymbol.Symbol, StringFormat='OrderStream({0})'}" Height="886" Width="399">
-
-    <Window.DataContext>
+﻿<UserControl x:Class="BinanceAPI.View.Level2UserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="886" Width="424">
+    
+    <UserControl.DataContext>
         <local2:MainViewModel/>
-    </Window.DataContext>
-    <Window.Resources>
-        <Style TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        
-    </Window.Resources>
-
+    </UserControl.DataContext>
     <Grid Margin="10,0,8,0">
         <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding AllOrdersAsks}" SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="0,35,-34,0" Foreground="#FF4EFF00" Height="402" VerticalAlignment="Top" BorderBrush="Transparent">
             <ListView.View>
@@ -84,8 +69,8 @@ Title="{Binding SelectedSymbol.Symbol, StringFormat='OrderStream({0})'}" Height=
 
         <TextBlock Foreground="#7d8594" Text="Цена" FontSize="15" Margin="10,5,315,824" RenderTransformOrigin="0.936,0.587"/>
         <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="155,5,100,804"/>
-        <TextBlock Foreground="#7d8594" Text="Всего" FontSize="15" Margin="335,6,0,804"/>
+        <TextBlock Foreground="#7d8594" Text="Всего" FontSize="15" Margin="335,6,31,856"/>
         <TextBlock Foreground="{Binding SelectedSymbol.SumColor}" Text="{Binding SelectedSymbol.OrderBestPrice}" FontSize="25" Margin="10,424,100,386"/>
 
     </Grid>
-</Window>
+</UserControl>

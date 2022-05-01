@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Windows;
-using BinanceAPI.ViewModels;
 using BinanceAPI.Model;
 using System.Windows.Controls;
-using BinanceAPI.View;
 
 namespace BinanceAPI
 { 
@@ -13,15 +11,16 @@ namespace BinanceAPI
         {
             InitializeComponent();
 
-            SelectorNew.SelectedItem = Selection.SelectedSymbol;
-
-            CloseStream.CloseTradeStream = false;
+            CloseStream.ClosedStream = false;
         }
 
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            CloseStream.CloseTradeStream = true;
+
+            CloseStream.ClosedStream = true;
+            CloseStream.ClosedWindowName = Title;
+            
             Lock.Locker = false;
         }
 
@@ -29,6 +28,7 @@ namespace BinanceAPI
         {
             Lock.Locker = !Lock.Locker;
             Lock.LockedWindow = this;
+            Lock.UserControl = (UserControl)StackForControl.Children[0];
         }
     }
 }

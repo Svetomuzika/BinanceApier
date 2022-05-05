@@ -160,10 +160,10 @@ namespace BinanceAPI
                 CloseStream.ClosedStream = true;
                 CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
 
-                Lock.UserControl.Content = new Level2UserControl();
+                Lock.UserControl.Content = new TradingUserControl();
                 Lock.LockedWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
-                Lock.LockedWindow.Width = 474;
-                Lock.LockedWindow.Height = 886;
+                Lock.LockedWindow.Width = 740;
+                Lock.LockedWindow.Height = 473;
             }
         }
 
@@ -237,13 +237,13 @@ namespace BinanceAPI
         {
             if (!Lock.Locker)
             {
-                var userControl = new TradeWindow
+                TradeWindow = new TradeWindow
                 {
                     Left = Left + Width * 1.01,
                     Top = Top,
                 };
 
-                Lock.UserControl = new UserControl
+                var userControl = new UserControl
                 {
                     Content = new AggTradeUserControl(),
                 };

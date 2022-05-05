@@ -95,14 +95,25 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        private SpotOrderType type;
-        public SpotOrderType Type
+        private int sumOrders;
+        public int SumOrders
         {
-            get { return type; }
+            get { return sumOrders; }
             set
             {
-                type = value;
-                RaisePropertyChangedEvent("Type");
+                sumOrders = value;
+                RaisePropertyChangedEvent("SumOrders");
+            }
+        }
+
+        private int sumTrades;
+        public int SumTrades
+        {
+            get { return sumTrades; }
+            set
+            {
+                sumTrades = value;
+                RaisePropertyChangedEvent("SumTrades");
             }
         }
 
@@ -146,7 +157,9 @@ namespace BinanceAPI.ViewModels
             this.symbol = symbol;
             this.time = date1.ToString("dd MMMM yyyy HH:mm");
             this.id = id;
-            this.DateTime = time;
+            this.dateTime = time;
+            //this.sumTrades += sumTrade;
+            //this.sumOrders += sumOrder;
         }
     }
 }

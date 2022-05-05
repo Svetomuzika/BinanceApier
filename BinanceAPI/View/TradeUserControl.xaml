@@ -17,7 +17,7 @@
                 <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="0,5,40,0"/>
                 <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="0,5,12,0"/>
             </StackPanel>
-            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="-10,0,-10,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="359">
+            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="-10,0,-10,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="359">
                 <ListView.View>
                     <GridView >
                         <GridViewColumn Width="170">

@@ -11,7 +11,7 @@
         <local2:MainViewModel/>
     </UserControl.DataContext>
     <Grid Margin="10,0,8,0">
-        <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding AllOrdersAsks}" SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="0,35,-34,0" Foreground="#FF4EFF00" Height="402" VerticalAlignment="Top" BorderBrush="Transparent">
+        <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding AllOrdersAsks}" SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="0,35,-34,0" Foreground="#FF4EFF00" Height="402" VerticalAlignment="Top" BorderBrush="Transparent">
             <ListView.View>
                 <GridView >
                     <GridViewColumn Width="175">
@@ -28,7 +28,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="120">
+                    <GridViewColumn Width="140">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding OrderSum}" Foreground="#afb5be" TextAlignment="Right"/>
@@ -39,7 +39,7 @@
             </ListView.View>
         </ListView>
 
-        <ListView Grid.Row="0" x:Name="SelectorNew1" ItemsSource="{Binding AllOrdersBids}" SelectedItem="{Binding SelectedSymbol}" FontSize="14" OpacityMask="#FF040101" Margin="0,466,0,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="402.04" HorizontalAlignment="Left" Width="453"   >
+        <ListView Grid.Row="0" x:Name="SelectorNew1" ItemsSource="{Binding AllOrdersBids}" SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="0,466,0,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="402.04" HorizontalAlignment="Left" Width="453"   >
             <ListView.View>
                 <GridView >
                     <GridViewColumn Width="175">
@@ -56,7 +56,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="120">
+                    <GridViewColumn Width="140">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding OrderSum}" Foreground="#afb5be" />
@@ -70,7 +70,7 @@
         <TextBlock Foreground="#7d8594" Text="Цена" FontSize="15" Margin="10,5,315,824" RenderTransformOrigin="0.936,0.587"/>
         <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="155,5,100,804"/>
         <TextBlock Foreground="#7d8594" Text="Всего" FontSize="15" Margin="335,6,31,856"/>
-        <TextBlock Foreground="{Binding SelectedSymbol.SumColor}" Text="{Binding SelectedSymbol.OrderBestPrice}" FontSize="25" Margin="10,424,100,386"/>
+        <TextBlock Foreground="{Binding SelectedSymbol.SumColor}" Text="{Binding SelectedSymbol.OrderBestPrice}" FontSize="25" Margin="10,440,100,386"/>
 
     </Grid>
 </UserControl>

@@ -380,7 +380,6 @@ namespace BinanceAPI.ViewModels
 
         public async Task TradingStream()
         {
-            SelectedSymbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>();
             var startUserStreamAsync = await binanceClient.SpotApi.Account.StartUserStreamAsync();
 
             var lastPriceTest = await binanceClient.SpotApi.ExchangeData.GetPriceAsync(SelectedSymbol.Symbol);
@@ -494,6 +493,9 @@ namespace BinanceAPI.ViewModels
         {
             var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol);
 
+
+            SelectedSymbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() != "Filled" && a.Status.ToString() != "Canceled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
+
             SelectedSymbol.TradingTrades = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() == "Filled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
         }
 
@@ -503,7 +505,7 @@ namespace BinanceAPI.ViewModels
             if (SelectedSymbol != null)
             {
                 selectedSymbol.TradingAmount = 0;
-                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetOrderStreamBids(), TradingStream(), GetTrades(), GetBalance()));
+                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetOrderStreamBids(), GetTrades(), TradingStream(), GetBalance()));
             }
         }
 

@@ -69,14 +69,14 @@
                 <TextBlock x:Name="AmountMarketBlock" Text="Amount" Margin="13,92,0,-62" Foreground="#7f8c9c" HorizontalAlignment="Left" Width="53" Visibility="Hidden"/>
             </Grid>
             <StackPanel Orientation="Horizontal" Height="50" Margin="0,-70,0,100" Width="277" HorizontalAlignment="Left">
-                <Button x:Name="BuyLimit" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandLimit}" Content="Buy" HorizontalAlignment="Left" Background="#f6465d" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30">
+                <Button x:Name="BuyLimit" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandLimit}" Content="Buy" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button x:Name="SellLimit" Width="80" Margin="25,0,5,5" Command="{Binding SellCommandLimit}" Content="Sell" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30">
+                <Button x:Name="SellLimit" Width="80" Margin="25,0,5,5" Command="{Binding SellCommandLimit}" Content="Sell" Background="#f6465d" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -85,14 +85,14 @@
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="50" Margin="0,-250,0,100" Width="277" HorizontalAlignment="Left">
-                <Button x:Name="BuyMarket" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandMarket}" Content="Buy" Background="#f6465d" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Visibility="Hidden">
+                <Button x:Name="BuyMarket" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandMarket}" Content="Buy" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Visibility="Hidden">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button x:Name="SellMarket" Width="80" Margin="25,0,5,5" Command="{Binding SellCommandMarket}" Content="Sell" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Visibility="Hidden">
+                <Button x:Name="SellMarket" Width="80" Margin="25,0,5,5" Command="{Binding SellCommandMarket}" Content="Sell" Background="#f6465d" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Visibility="Hidden">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -117,7 +117,7 @@
         </StackPanel>
 
         <Grid Margin="10,0,8,0">
-            <ListView x:Name="TradesList" ItemsSource="{Binding SelectedSymbol.TradingTrades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="14" Margin="222,39,-10,0" Height="435" VerticalAlignment="Top">
+            <ListView x:Name="TradesList" ItemsSource="{Binding SelectedSymbol.TradingTrades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="15" Margin="222,39,-10,0" Height="435" VerticalAlignment="Top">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="70">
@@ -159,7 +159,7 @@
                 </ListView.View>
             </ListView>
 
-            <ListView x:Name="OrdersList" ItemsSource="{Binding SelectedSymbol.TradingOrders, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedSymbol}" FontSize="14" Margin="222,39,-10,0" Height="435" VerticalAlignment="Top" Visibility="Hidden" >
+            <ListView x:Name="OrdersList" ItemsSource="{Binding SelectedSymbol.TradingOrders, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedSymbol}" FontSize="15" Margin="222,39,-10,0" Height="435" VerticalAlignment="Top" Visibility="Hidden" >
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="70">
@@ -232,15 +232,15 @@
             </ListView>
         </Grid>
 
-        <StackPanel Orientation="Horizontal" Height="50" Margin="0,0,0,20" Width="277" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-            <Button x:Name="Trades" Width="80" Margin="10,0,5,5" Command="{Binding GetTradesCommand}" Content="Trades"  Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Click="Trades_Click">
+        <StackPanel Orientation="Horizontal" Height="50" Margin="0,0,0,20" Width="277" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
+            <Button x:Name="Trades" Width="80" Margin="10,0,5,5" Command="{Binding GetTradesCommand}" Content="{Binding SelectedSymbol.TradingTrades.Count}" ContentStringFormat="Trades({0})" FontSize="15"   Height="30" Click="Trades_Click" BorderBrush="Transparent" Background="Transparent">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
                     </Style>
                 </Button.Resources>
             </Button>
-            <Button x:Name="Orders" Width="80" Margin="25,0,5,5" Command="{Binding GetOrdersCommand}" Content="Orders" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Click="Orders_Click" Cursor="Hand">
+            <Button x:Name="Orders" Width="120" Margin="0,0,5,5" Command="{Binding GetOrdersCommand}" Content="{Binding SelectedSymbol.TradingOrders.Count}" ContentStringFormat="OpenOrders({0})" Background="Transparent" FontSize="15" Height="30" Click="Orders_Click"  BorderBrush="Transparent">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>

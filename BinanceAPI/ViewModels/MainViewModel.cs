@@ -15,8 +15,6 @@ using Binance.Net.Enums;
 using CryptoExchange.Net.Sockets;
 using Binance.Net.Objects.Models.Spot.Socket;
 using BinanceAPI.Model;
-using System.Collections.Generic;
-using BinanceAPI.View;
 
 namespace BinanceAPI.ViewModels
 {
@@ -512,6 +510,7 @@ namespace BinanceAPI.ViewModels
         private async Task GetBalance()
         {
             var info = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
+
             SelectedSymbol.Balance = info.Data.Balances.SingleOrDefault(r => r.Asset == "USDT").Total;
         }
 

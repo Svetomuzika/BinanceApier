@@ -233,7 +233,7 @@
         </Grid>
 
         <StackPanel Orientation="Horizontal" Height="50" Margin="0,0,0,20" Width="277" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
-            <Button x:Name="Trades" Width="80" Margin="10,0,5,5" Command="{Binding GetTradesCommand}" Content="{Binding SelectedSymbol.TradingTrades.Count}" ContentStringFormat="Trades({0})" FontSize="15"   Height="30" Click="Trades_Click" BorderBrush="Transparent" Background="Transparent">
+            <Button x:Name="Trades" Width="80" Margin="10,0,5,5" Command="{Binding GetTradesCommand}" Content="{Binding SelectedSymbol.TradingTrades.Count}" ContentStringFormat="Trades({0})" FontSize="15"   Height="30" Click="Trades_Click" BorderBrush="Transparent" Background="Transparent" Foreground="red">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>

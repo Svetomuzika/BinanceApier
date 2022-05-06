@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using BinanceAPI.Model;
 using BinanceAPI.View;
+using System.Reflection;
 
 namespace BinanceAPI
 {
@@ -97,7 +98,11 @@ namespace BinanceAPI
         {
             var lines = new List<string>();
 
-            using (StreamReader reader = new StreamReader(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt"))
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BD.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamReader reader = new StreamReader(fullPath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -112,7 +117,11 @@ namespace BinanceAPI
         {
             string str = string.Empty;
 
-            using (StreamReader reader = new StreamReader(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt"))
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BD.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamReader reader = new StreamReader(fullPath))
             {
                 str = reader.ReadToEnd();
             }
@@ -120,7 +129,7 @@ namespace BinanceAPI
             string newLine = line + "," + ticker;
             str = str.Replace(line, newLine);
 
-            using (StreamWriter file = new StreamWriter(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt"))
+            using (StreamWriter file = new StreamWriter(fullPath))
             {
                 file.Write(str);
             }
@@ -128,7 +137,11 @@ namespace BinanceAPI
 
         private void AddNewMenu(string name)
         {
-            using (StreamWriter file = new StreamWriter(@"C:\Users\sozon\Desktop\Binnance\BinanceAPI\BinanceAPI\Model\BD.txt", true))
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BD.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamWriter file = new StreamWriter(fullPath, true))
             {
                 file.WriteLine(name);
             }

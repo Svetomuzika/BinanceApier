@@ -54,6 +54,7 @@ namespace BinanceApi.ViewModels
         public TradeViewModel(decimal tradePrice, decimal tradeQPrice, DateTime tradeTime, bool tradeColor)
         {
             var date = tradeTime;
+            Console.WriteLine(tradeTime);
             DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
             var color = tradeColor ? "#e74359" : "#0fb172"; 
 

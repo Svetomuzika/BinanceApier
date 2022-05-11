@@ -6,102 +6,26 @@
         xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
-        Title="BinanceApi" Height="473" Width="314" Visibility="Visible" FontSize="35" BorderBrush="#FF3A3A3A" OpacityMask="#FF615656">
+        Title="InsideTestLab" Height="300" Width="400" Visibility="Visible" FontSize="35" BorderBrush="#FF3A3A3A" OpacityMask="#FF615656">
 
     <Window.DataContext>
         <local1:MainViewModel/>
     </Window.DataContext>
 
-    <Window.Resources>
-        <Style TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
 
     <Grid OpacityMask="Black" x:Name="grid">
-
-        <StackPanel Orientation="Horizontal">
-            <TextBox x:Name="Search" VerticalContentAlignment="Center" Text="{Binding Path=SearchMain, UpdateSourceTrigger=PropertyChanged}" Margin="10,5,0,0" Width="190" Height="26" VerticalAlignment="Top" FontSize="15">
-                <TextBox.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="5"/>
-                    </Style>
-                </TextBox.Resources>
-            </TextBox>
-            <Image Source="icons/search.png" Width="20" Height="20" VerticalAlignment="Top" Margin="-30,8,0,0"/>
-            <Button x:Name="GoHome" Height="35" VerticalAlignment="Top" Width="35" Margin="75,0,0,0" FontSize="25" BorderBrush="{x:Null}" Click="GoHome_Click" Cursor="Hand" Visibility="Hidden">
-                <Button.Background>
-                    <ImageBrush ImageSource="icons/home.png"/>
-                </Button.Background>
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="LightGray"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <Border Background="{TemplateBinding Background}">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightGray"></Setter>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <Button x:Name="AddNewList" Height="56" VerticalAlignment="Top" Width="40" Margin="-35,-20,0,0" Content="+" FontSize="45"  Background="{x:Null}" BorderBrush="{x:Null}" Click="AddNewList_Click" Cursor="Hand">
+        <StackPanel x:Name="MenuBar" Orientation="Horizontal">
+            <Button x:Name="Info" Content="Info" Margin="0,0,0,2" Width="100" Height="30" FontSize="15" VerticalAlignment="Top" Click="Info_Click">
                 <Button.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="New WatchList" FontSize="15" Click="MenuItem_Click">
-                        </MenuItem>
+                    <ContextMenu x:Name="infoButton">
+                        <MenuItem Header="Securities" FontSize="15" Click="MenuItem_Click"/>
+                        <MenuItem x:Name="Watchlists" Header="WatchLists" FontSize="15" Click="MenuItem_Click_1"/>
+                        <Separator/>
+                        <MenuItem Header="WatchLists" FontSize="15" Click="MenuItem_Click_1"/>
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-
         </StackPanel>
-        <StackPanel x:Name="stack">
-            <ListView Height="407" Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}"  SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="LeftClick" Margin="0,38,0,0">
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem x:Name="ContextMenuItem1" Header="TradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallTradeStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem2" Header="Level 2" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem4"  Header="Add to WatchList"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
-                <ListView.View>
-                    <GridView>
-                        <GridView.Columns>
-                            <GridViewColumn Width="120">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock x:Name="ListColumn1" Text="{Binding Symbol}" Foreground="#FFC0C7D2"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridViewColumn Width="163">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock x:Name="ListColumn2" Text="{Binding Price}" Foreground="#FFC0C7D2"/>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView.Columns>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </StackPanel>
-        <Button x:Name="ButtonCreateNewList" Content="Yes" Margin="270,42,10,365" FontSize="15" VerticalContentAlignment="Center" Background="Green"  Cursor="Hand" Visibility="Hidden" Click="ButtonCreateNewList_Click"/>
-        <Button x:Name="ButtonCancelNewList" Content="No" Margin="270,70,10,339" FontSize="15" VerticalContentAlignment="Center" Background="red"  Cursor="Hand" Visibility="Hidden" Click="ButtonCancelNewList_Click"/>
     </Grid>
 </Window>
     

@@ -17,20 +17,6 @@ using System.Reflection;
 
 namespace BinanceAPI
 {
-    
-    public class Searching
-    {
-        public static string searchMain;
-        public static string SearchMain
-        {
-            get { return searchMain; }
-            set
-            {
-                searchMain = value;
-            }
-        }
-    }
-
     public partial class MainWindow : Window
     {
         public ObservableCollection<BinanceSymbolViewModel> newPrices;
@@ -58,17 +44,12 @@ namespace BinanceAPI
             }
         }
 
-        private bool FlagForList = true;
-        private TradeWindow TradeWindow = null;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            if (this.Title == "BinanceApi")
-                Main.main = this;
-
-            Task.Run(async () => await Task.WhenAll(GetNewSymbols()));
+            NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
 
             var lines = NewTable();
 
@@ -81,273 +62,26 @@ namespace BinanceAPI
                     FontSize = 15,
                 };
 
-                MenuItem addNewMenuItem = new MenuItem
-                {
-                    Header = item,
-                    FontSize = 15,
-                };
+                Watchlists.Items.Add(newMenuItem);
 
-                AddNewList.ContextMenu.Items.Add(newMenuItem);
-                ContextMenuItem4.Items.Add(addNewMenuItem);
                 newMenuItem.Click += Menu_ClickBD;
-                addNewMenuItem.Click += AddNewMenuItem_Click;
             }
-        }
-
-        public List<string> NewTable()
-        {
-            var lines = new List<string>();
-
-            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            var relativePath = @"Model\BD.txt";
-            var fullPath = Path.Combine(appDir, relativePath);
-
-            using (StreamReader reader = new StreamReader(fullPath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    lines.Add(line);
-                }
-            }
-            return lines;
-        }
-
-        public void AddNewTable(string ticker, string line)
-        {
-            string str = string.Empty;
-
-            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            var relativePath = @"Model\BD.txt";
-            var fullPath = Path.Combine(appDir, relativePath);
-
-            using (StreamReader reader = new StreamReader(fullPath))
-            {
-                str = reader.ReadToEnd();
-            }
-
-            string newLine = line + "," + ticker;
-            str = str.Replace(line, newLine);
-
-            using (StreamWriter file = new StreamWriter(fullPath))
-            {
-                file.Write(str);
-            }
-        }
-
-        private void AddNewMenu(string name)
-        {
-            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            var relativePath = @"Model\BD.txt";
-            var fullPath = Path.Combine(appDir, relativePath);
-
-            using (StreamWriter file = new StreamWriter(fullPath, true))
-            {
-                file.WriteLine(name);
-            }
-        }
-
-        private void LeftClick(object sender, MouseButtonEventArgs e)
-        {
-            if (!Lock.Locker)
-            {
-                TradeWindow = new TradeWindow
-                {
-                    Left = Left + Width * 1.01,
-                    Top = Top,
-                    Height = 473,
-                    Width = 740,
-                };
-
-                var userControl = new UserControl
-                {
-                    Content = new TradingUserControl(),
-                };
-
-                TradeWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
-                TradeWindow.StackForControl.Children.Add(userControl);
-                TradeWindow.Show();
-            }
-            else
-            {
-                CloseStream.ClosedStream = true;
-                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
-
-                Lock.UserControl.Content = new TradingUserControl();
-                Lock.LockedWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
-                Lock.LockedWindow.Width = 740;
-                Lock.LockedWindow.Height = 473;
-            }
-        }
-
-        private void MenuItem_Click_Orders(object sender, RoutedEventArgs e)
-        {
-            if (!Lock.Locker)
-            {
-                TradeWindow = new TradeWindow
-                {
-                    Left = Left + Width * 1.01,
-                    Top = Top,
-                    Height = 886,
-                    Width = 424,
-                };
-
-                var userControl = new UserControl
-                {
-                    Content = new Level2UserControl(),
-                };
-
-                TradeWindow.Title = $"Level2({Selection.SelectedSymbol.Symbol})";
-                TradeWindow.StackForControl.Children.Add(userControl);
-                TradeWindow.Show();
-            }
-            else
-            {
-                CloseStream.ClosedStream = true;
-                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
-
-                Lock.UserControl.Content = new Level2UserControl();
-                Lock.LockedWindow.Title = $"Level2({Selection.SelectedSymbol.Symbol})";
-                Lock.LockedWindow.Width = 424;
-                Lock.LockedWindow.Height = 886;
-            }
-        }
-
-        private void MenuItem_Click_Trades(object sender, RoutedEventArgs e)
-        {
-
-            if (!Lock.Locker)
-            {
-
-                TradeWindow = new TradeWindow
-                {
-                    Left = Left + Width * 1.01,
-                    Top = Top
-                };
-
-                var userControl = new UserControl
-                {
-                    Content = new TradeUserControl(),
-                };
-
-                TradeWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
-                TradeWindow.StackForControl.Children.Add(userControl);
-                TradeWindow.Show();
-            }
-            else
-            {
-                CloseStream.ClosedStream = true;
-                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
-
-                Lock.LockedWindow.Width = 360;
-                Lock.LockedWindow.Height = 709;
-                Lock.UserControl.Content = new TradeUserControl();
-                Lock.LockedWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
-            }
-        }
-
-        private void MenuItem_Click_AggTrades(object sender, RoutedEventArgs e)
-        {
-            if (!Lock.Locker)
-            {
-                TradeWindow = new TradeWindow
-                {
-                    Left = Left + Width * 1.01,
-                    Top = Top,
-                };
-
-                var userControl = new UserControl
-                {
-                    Content = new AggTradeUserControl(),
-                };
-
-                TradeWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
-                TradeWindow.StackForControl.Children.Add(userControl);
-                TradeWindow.Show();
-            }
-            else
-            {
-                CloseStream.ClosedStream = true;
-                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
-
-                Lock.LockedWindow.Width = 360;
-                Lock.LockedWindow.Height = 709;
-                Lock.UserControl.Content = new AggTradeUserControl();
-                Lock.LockedWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
-            }
-        }
-
-        private void AddNewList_Click(object sender, RoutedEventArgs e)
-        {
-            AddNewList.ContextMenu.DataContext = AddNewList.DataContext;
-            AddNewList.ContextMenu.IsOpen = true;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (FlagForList)
-            {
-                var frame = new Frame
-                {
-                    Height = 60,
-                    Width = 290,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    Margin = new Thickness(0, 40, 0, 0),
-                    Content = new NewWatchList()
-                };
-
-                stack.Children.Insert(0, frame);
-                FlagForList = false;
-                Selector.Margin = new Thickness(0, 10, 0, 0);
-
-                ButtonCreateNewList.Visibility = Visibility.Visible;
-                ButtonCancelNewList.Visibility = Visibility.Visible;
-            }
+            new AllTickers { Left = Left + Width * 1.01, Top = Top }.Show();
         }
 
-        private void ButtonCancelNewList_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
         {
-            stack.Children.RemoveAt(0);
-            Selector.Margin = new Thickness(0, 38, 0, 0);
-            ButtonCreateNewList.Visibility = Visibility.Hidden;
-            ButtonCancelNewList.Visibility = Visibility.Hidden;
-            FlagForList = true;
+
         }
 
-        private void ButtonCreateNewList_Click(object sender, RoutedEventArgs e)
+        private void Info_Click(object sender, RoutedEventArgs e)
         {
-            MenuItem addNewMenuItem = new MenuItem
-            {
-                Header = NewListName.Name,
-                FontSize = 15,
-            };
-
-            MenuItem newMenuItem = new MenuItem
-            {
-                Header = NewListName.Name,
-                FontSize = 15,      
-            };
-
-            newMenuItem.Click += Menu_ClickBD;
-            AddNewList.ContextMenu.Items.Add(newMenuItem);
-
-            addNewMenuItem.Click += AddNewMenuItem_Click;
-            stack.Children.RemoveAt(0);
-            Selector.Margin = new Thickness(0, 38, 0, 0);
-
-            ButtonCreateNewList.Visibility = Visibility.Hidden;
-            ButtonCancelNewList.Visibility = Visibility.Hidden;
-
-            ContextMenuItem4.Items.Add(addNewMenuItem);
-            var a = new MainViewModel();
-            FlagForList = true;
-        }
-
-        private void AddNewMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            NewPricesFake = new ObservableCollection<BinanceSymbolViewModel>();
-            NewPricesFake.Insert(0, Selection.SelectedSymbol);
-            ValueChanged(NewPricesFake, sender);
+            Info.ContextMenu.PlacementTarget = sender as Button;
+            Info.ContextMenu.IsOpen = true;
         }
 
         private void Menu_ClickBD(object sender, RoutedEventArgs routedEventArgs)
@@ -369,7 +103,7 @@ namespace BinanceAPI
                         var a = new ObservableCollection<BinanceSymbolViewModel>();
                         var b = new ObservableCollection<BinanceSymbolViewModel>();
 
-                        MainWindow newMainWindowBD = new MainWindow()
+                        AllTickers newMainWindowBD = new AllTickers()
                         {
                             Left = Left + Width * 1.3,
                             Top = Top,
@@ -448,7 +182,7 @@ namespace BinanceAPI
                 var a = new ObservableCollection<BinanceSymbolViewModel>();
                 var b = new ObservableCollection<BinanceSymbolViewModel>();
 
-                MainWindow newMainWindow = new MainWindow()
+                AllTickers newMainWindow = new AllTickers()
                 {
                     Left = Left + Width * 1.3,
                     Top = Top,
@@ -513,31 +247,59 @@ namespace BinanceAPI
             }
         }
 
-
-        private async Task GetNewSymbols()
-        {
-            var client = new BinanceClient();
-            var result = await client.SpotApi.ExchangeData.GetPricesAsync();
-
-            NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList());
-        }
-
-
         public event Action<ObservableCollection<BinanceSymbolViewModel>, object> ValueChanged;
         public event Action<string, object> SearchChanged;
 
-        private void GoHome_Click(object sender, RoutedEventArgs e)
+        public List<string> NewTable()
         {
-            Main.main.Visibility = Visibility.Visible;
+            var lines = new List<string>();
+
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BD.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamReader reader = new StreamReader(fullPath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+            }
+            return lines;
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        public void AddNewTable(string ticker, string line)
         {
-            if(this.Title == "BinanceApi")
+            string str = string.Empty;
+
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BD.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamReader reader = new StreamReader(fullPath))
             {
-                e.Cancel = true;
-                Main.main = this;
-                Main.main.Visibility = Visibility.Hidden;
+                str = reader.ReadToEnd();
+            }
+
+            string newLine = line + "," + ticker;
+            str = str.Replace(line, newLine);
+
+            using (StreamWriter file = new StreamWriter(fullPath))
+            {
+                file.Write(str);
+            }
+        }
+
+        private void AddNewMenu(string name)
+        {
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BD.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamWriter file = new StreamWriter(fullPath, true))
+            {
+                file.WriteLine(name);
             }
         }
     }

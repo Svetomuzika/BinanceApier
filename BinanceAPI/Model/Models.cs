@@ -11,6 +11,19 @@ using System.Windows.Controls;
 
 namespace BinanceAPI.Model
 {
+    public class Searching
+    {
+        public static string searchMain;
+        public static string SearchMain
+        {
+            get { return searchMain; }
+            set
+            {
+                searchMain = value;
+            }
+        }
+    }
+
     public static class Lock
     {
         public static bool locker = false;
@@ -37,7 +50,7 @@ namespace BinanceAPI.Model
     public class Main
     {
         public static TradingUserControl CurrTradingControl;
-        public static MainWindow main { get; set; }
+        public static AllTickers main { get; set; }
     }
 
     static class Selection

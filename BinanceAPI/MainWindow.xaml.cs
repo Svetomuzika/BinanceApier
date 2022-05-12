@@ -49,8 +49,8 @@ namespace BinanceAPI
         {
             InitializeComponent();
 
-            NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
-
+            Main.MainWindow = this;
+            Task.Run(async () => await Task.WhenAll(GetNewSymbols()));
             var lines = NewTable();
 
             foreach (var e in lines)
@@ -105,21 +105,22 @@ namespace BinanceAPI
 
                         AllTickers newMainWindowBD = new AllTickers()
                         {
-                            Left = Left + Width * 1.3,
+                            Left = Left + Width * 1.805,
                             Top = Top,
                             Title = sender.ToString().Split(' ')[1].Remove(0, 7),
                         };
 
                         newMainWindowBD.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
                         newMainWindowBD.Selector.SelectedItem = SelectedSymbol;
-                        newMainWindowBD.GoHome.Visibility = Visibility.Visible;
+                        //newMainWindowBD.GoHome.Visibility = Visibility.Visible;
                         newMainWindowBD.Selector.ContextMenu.DataContext = new MainViewModel();
-                        newMainWindowBD.Selector.ContextMenu.Items.RemoveAt(3);
-                        newMainWindowBD.AddNewList.Visibility = Visibility.Hidden;
+                        //newMainWindowBD.Selector.ContextMenu.Items.RemoveAt(4);
+                        //newMainWindowBD.AddNewList.Visibility = Visibility.Hidden;
                         newMainWindowBD.Search.DataContext = new Searching();
                         newMainWindowBD.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindowBD.Title);
 
                         var tickers = i.Split(',');
+
                         foreach (string e in tickers)
                         {
                             var ticker = NewPrices.SingleOrDefault(p => p.Symbol.ToString() == e);
@@ -184,7 +185,7 @@ namespace BinanceAPI
 
                 AllTickers newMainWindow = new AllTickers()
                 {
-                    Left = Left + Width * 1.3,
+                    Left = Left + Width * 1.805,
                     Top = Top,
                     Title = sender.ToString().Split(' ')[1].Remove(0, 7),
                 };
@@ -195,10 +196,10 @@ namespace BinanceAPI
 
                 newMainWindow.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
                 newMainWindow.Selector.SelectedItem = SelectedSymbol;
-                newMainWindow.GoHome.Visibility = Visibility.Visible;
+                //newMainWindow.GoHome.Visibility = Visibility.Visible;
                 newMainWindow.Selector.ContextMenu.DataContext = new MainViewModel();
                 newMainWindow.Selector.ContextMenu.Items.RemoveAt(3);
-                newMainWindow.AddNewList.Visibility = Visibility.Hidden;
+                //newMainWindow.AddNewList.Visibility = Visibility.Hidden;
                 newMainWindow.Search.DataContext = new Searching();
                 newMainWindow.Search.TextChanged += (send, args) => SearchChanged(Searching.SearchMain, newMainWindow.Title);
 
@@ -249,6 +250,39 @@ namespace BinanceAPI
 
         public event Action<ObservableCollection<BinanceSymbolViewModel>, object> ValueChanged;
         public event Action<string, object> SearchChanged;
+
+        private async Task GetNewSymbols()
+        {
+            var client = new BinanceClient();
+            var result = await client.SpotApi.ExchangeData.GetPricesAsync();
+            NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList());
+        }
+
+        public  void ChangedValue(object sender)
+        {
+            NewPricesFake = new ObservableCollection<BinanceSymbolViewModel>();
+            NewPricesFake.Insert(0, Selection.SelectedSymbol);
+
+            if(ValueChanged != null)
+            {
+                ValueChanged(NewPricesFake, sender);
+            }
+            else
+            {
+                var lines = NewTable();
+
+                foreach (string i in lines)
+                {
+                    if(i.Contains(sender.ToString().Split(' ')[1].Remove(0, 7)))
+                    {
+                        foreach(var o in NewPricesFake)
+                        {
+                            AddNewTable(o.Symbol, i);
+                        }
+                    }
+                }
+            }
+        }
 
         public List<string> NewTable()
         {
@@ -301,6 +335,19 @@ namespace BinanceAPI
             {
                 file.WriteLine(name);
             }
+        }
+
+        private void Info_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            // Get the button and check for nulls
+            Button button = sender as Button;
+            if (button == null || button.ContextMenu == null)
+                return;
+            // Set the placement target of the ContextMenu to the button
+            button.ContextMenu.PlacementTarget = button;
+            // Open the ContextMenu
+            button.ContextMenu.IsOpen = true;
+            e.Handled = true;
         }
     }
 }

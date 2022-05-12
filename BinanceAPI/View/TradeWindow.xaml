@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BinanceAPI" xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource CustomWindowStyle}"
-        Title="{Binding SelectedSymbol.Symbol, StringFormat='TradeStream({0})'}" Height="709" Width="360">
+        Title="{Binding SelectedSymbol.Symbol, StringFormat='TradeStream({0})'}" Height="700" Width="380">
 
     <Window.DataContext>
         <local2:MainViewModel/>
@@ -15,7 +15,7 @@
     <Grid Margin="0,0,-2,0" x:Name="grid">
         <Button x:Name="LockerButton" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="25" BorderBrush="{x:Null}" Click="Lock_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="32" Width="32">
             <Button.Background>
-                <ImageBrush ImageSource="/icons/lock.png"/>
+                <ImageBrush ImageSource="icons/lock.png"/>
             </Button.Background>
             <Button.Style>
                 <Style TargetType="Button">

@@ -34,7 +34,7 @@
                 </TextBox.Resources>
             </TextBox>
             <Image Source="icons/search.png" Width="20" Height="20" VerticalAlignment="Top" Margin="-30,8,0,0"/>
-            <Button x:Name="GoHome" Height="35" VerticalAlignment="Top" Width="35" Margin="75,0,0,0" FontSize="25" BorderBrush="{x:Null}" Click="GoHome_Click" Cursor="Hand" Visibility="Hidden">
+            <!--<Button x:Name="GoHome" Height="35" VerticalAlignment="Top" Width="35" Margin="75,0,0,0" FontSize="25" BorderBrush="{x:Null}" Click="GoHome_Click" Cursor="Hand" Visibility="Hidden">
                 <Button.Background>
                     <ImageBrush ImageSource="icons/home.png"/>
                 </Button.Background>
@@ -52,20 +52,19 @@
                         </Setter>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightGray"></Setter>
+                                <Setter Property="Background" Value="LightGray"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
-            </Button>
-            <Button x:Name="AddNewList" Height="56" VerticalAlignment="Top" Width="40" Margin="-35,-20,0,0" Content="+" FontSize="45"  Background="{x:Null}" BorderBrush="{x:Null}" Click="AddNewList_Click" Cursor="Hand">
+            </Button>-->
+            <!--<Button x:Name="AddNewList" Height="56" VerticalAlignment="Top" Width="40" Margin="-35,-20,0,0" Content="+" FontSize="45"  Background="{x:Null}" BorderBrush="{x:Null}" Click="AddNewList_Click" Cursor="Hand">
                 <Button.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="New WatchList" FontSize="15" Click="MenuItem_Click">
-                        </MenuItem>
+                        <MenuItem Header="New WatchList" FontSize="15" Click="MenuItem_Click"/>
                     </ContextMenu>
                 </Button.ContextMenu>
-            </Button>
+            </Button>-->
 
         </StackPanel>
         <StackPanel x:Name="stack">
@@ -74,8 +73,10 @@
                     <ContextMenu>
                         <MenuItem x:Name="ContextMenuItem1" Header="TradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallTradeStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem2" Header="Level 2" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem4"  Header="Add to WatchList"/>
+                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallAggTradeStreamCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem6" Header="TradeHistory" Click="MenuItem_Click_TradesHistory" Command="{Binding CallTradeHistoryCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem4" Header="Trading" Click="MenuItem_Click_Trading"/>
+                        <MenuItem x:Name="ContextMenuItem5"  Header="Add to WatchList"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
                 <ListView.View>
@@ -100,8 +101,8 @@
                 </ListView.View>
             </ListView>
         </StackPanel>
-        <Button x:Name="ButtonCreateNewList" Content="Yes" Margin="270,42,10,365" FontSize="15" VerticalContentAlignment="Center" Background="Green"  Cursor="Hand" Visibility="Hidden" Click="ButtonCreateNewList_Click"/>
-        <Button x:Name="ButtonCancelNewList" Content="No" Margin="270,70,10,339" FontSize="15" VerticalContentAlignment="Center" Background="red"  Cursor="Hand" Visibility="Hidden" Click="ButtonCancelNewList_Click"/>
+        <!--<Button x:Name="ButtonCreateNewList" Content="Yes" Margin="270,42,10,365" FontSize="15" VerticalContentAlignment="Center" Background="Green"  Cursor="Hand" Visibility="Hidden" Click="ButtonCreateNewList_Click"/>
+        <Button x:Name="ButtonCancelNewList" Content="No" Margin="270,70,10,339" FontSize="15" VerticalContentAlignment="Center" Background="red"  Cursor="Hand" Visibility="Hidden" Click="ButtonCancelNewList_Click"/>-->
     </Grid>
 </Window>
     

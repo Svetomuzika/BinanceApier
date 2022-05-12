@@ -54,13 +54,26 @@ namespace BinanceApi.ViewModels
         public TradeViewModel(decimal tradePrice, decimal tradeQPrice, DateTime tradeTime, bool tradeColor)
         {
             var date = tradeTime;
-            Console.WriteLine(tradeTime);
+
             DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
             var color = tradeColor ? "#e74359" : "#0fb172"; 
 
             this.tradePrice = tradePrice;
             this.tradeQPrice = tradeQPrice;
             this.tradeTime = date1.AddHours(5).ToLongTimeString();
+            this.tradeColor = color;
+        }
+
+        public TradeViewModel(decimal tradePrice, decimal tradeQPrice, DateTime tradeTime, bool tradeColor, int i)
+        {
+            var date = tradeTime;
+
+            DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+            var color = tradeColor ? "#e74359" : "#0fb172";
+
+            this.tradePrice = tradePrice;
+            this.tradeQPrice = tradeQPrice;
+            this.tradeTime = date1.AddHours(5).ToString("dd.MM.yyyy HH:mm");
             this.tradeColor = color;
         }
     }

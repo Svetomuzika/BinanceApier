@@ -1,7 +1,9 @@
-﻿using BinanceAPI.View;
+﻿using BinanceApi.MVVM;
+using BinanceAPI.View;
 using BinanceAPI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Linq;
@@ -36,8 +38,21 @@ namespace BinanceAPI.Model
             }
         }
         public static bool IsTradeUserControlExist;
+
         public static TradeWindow LockedWindow;
+
+        public static TradeWindow LockedWindowLevel2;
+        public static TradeWindow LockedWindowTradeStream;
+        public static TradeWindow LockedWindowAggTradeStream;
+        public static TradeWindow LockedWindowTrading;
+
         public static UserControl UserControl;
+
+        public static UserControl UserControlLevel2;
+        public static UserControl UserControlTradeStream;
+        public static UserControl UserControlAggTradeStream;
+        public static UserControl UserControlTrading;
+
     }
 
     static class CloseStream
@@ -50,7 +65,8 @@ namespace BinanceAPI.Model
     public class Main
     {
         public static TradingUserControl CurrTradingControl;
-        public static AllTickers main { get; set; }
+        public static AllTickers AllTickers { get; set; }
+        public static MainWindow MainWindow { get; set; }
     }
 
     static class Selection
@@ -63,4 +79,18 @@ namespace BinanceAPI.Model
     {
         public static string Name { get; set; }
     }
+
+    //class All : ObservableObject
+    //{
+    //    public static ObservableCollection<BinanceSymbolViewModel> allPrices;
+
+    //    public static ObservableCollection<BinanceSymbolViewModel> AllPrices
+    //    {
+    //        get { return allPrices; }
+    //        set
+    //        {
+    //            allPrices = value;
+    //        }
+    //    }
+    //}
 }

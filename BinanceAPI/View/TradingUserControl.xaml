@@ -202,7 +202,7 @@
                                 <DataTemplate>
                                     <Button x:Name="DeleteOrder"  VerticalAlignment="Top" Margin="0,0,0,0" FontSize="25" BorderBrush="{x:Null}" Content="{Binding Id}" Command="{Binding }" Click="DeleteOrder_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20">
                                         <Button.Background>
-                                            <ImageBrush ImageSource="/icons/bin.png"/>
+                                            <ImageBrush ImageSource="icons/bin.png"/>
                                         </Button.Background>
                                         <Button.Style>
                                             <Style TargetType="Button">

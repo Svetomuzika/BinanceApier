@@ -131,10 +131,10 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        public void AddAggTrade(TradeViewModel trade)
+        public void AddHistoryTrade(TradeViewModel trade)
         {
-            AggTrades.Insert(0, trade);
-            RaisePropertyChangedEvent("AddAggTrade");
+            Trades.Add(trade);
+            RaisePropertyChangedEvent("AddHistoryTrade");
         }
 
         public void AddTrade(TradeViewModel trade)

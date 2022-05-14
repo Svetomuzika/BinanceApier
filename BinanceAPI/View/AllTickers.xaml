@@ -73,9 +73,9 @@
                     <ContextMenu>
                         <MenuItem x:Name="ContextMenuItem1" Header="TradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallTradeStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem2" Header="Level 2" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallAggTradeStreamCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem6" Header="TradeHistory" Click="MenuItem_Click_TradesHistory" Command="{Binding CallTradeHistoryCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem4" Header="Trading" Click="MenuItem_Click_Trading"/>
+                        <MenuItem x:Name="ContextMenuItem4" Header="Trading" Click="MenuItem_Click_Trading" Command="{Binding CallTradingStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem5"  Header="Add to WatchList"/>
                     </ContextMenu>
                 </ListView.ContextMenu>

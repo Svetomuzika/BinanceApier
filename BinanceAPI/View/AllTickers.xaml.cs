@@ -123,10 +123,10 @@ namespace BinanceAPI
         //    }
         //}
 
-        public event Action<TradeWindow> NewLockWindowTrade;
-        public event Action<TradeWindow> NewLockWindowLevel2;
-        public event Action<TradeWindow> NewLockWindowAggTrade;
-        public event Action<TradeWindow> NewLockWindowTrading;
+        //public event Action<TradeWindow> NewLockWindowTrade;
+        //public event Action<TradeWindow> NewLockWindowLevel2;
+        //public event Action<TradeWindow> NewLockWindowAggTrade;
+        //public event Action<TradeWindow> NewLockWindowTrading;
 
         private void LeftClick(object sender, MouseButtonEventArgs e)
         {
@@ -134,21 +134,39 @@ namespace BinanceAPI
             {
                 if (Lock.LockedWindowLevel2 != null)
                 {
+                    var a = new MainViewModel();
+                    Task.Run(() => a.CallOrderStream());
+
                     Lock.UserControlLevel2.Content = new Level2UserControl();
                     Lock.LockedWindowLevel2.Title = $"Level2({Selection.SelectedSymbol.Symbol})";
                 }
 
                 if (Lock.LockedWindowTradeStream != null)
                 {
+                    var a = new MainViewModel();
+                    Task.Run(() => a.CallTradeStream());
+
                     Lock.UserControlTradeStream.Content = new TradeUserControl();
                     Lock.LockedWindowTradeStream.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
                 }
 
                 if (Lock.LockedWindowAggTradeStream != null)
-                    NewLockWindowAggTrade(Lock.LockedWindowAggTradeStream);
+                {
+                    var a = new MainViewModel();
+                    Task.Run(() => a.CallAggTradeStream());
 
-                if(Lock.LockedWindowTrading != null)
-                    NewLockWindowTrading(Lock.LockedWindowTrading);
+                    Lock.LockedWindowAggTradeStream.Content = new AggTradeUserControl();
+                    Lock.LockedWindowAggTradeStream.Title = $"TradeAggStream({Selection.SelectedSymbol.Symbol})";
+                }
+
+                if (Lock.LockedWindowTrading != null)
+                {
+                    var a = new MainViewModel();
+                    //Task.Run(() => a.CallTradeStream());
+
+                    Lock.UserControl.Content = new TradingUserControl();
+                    Lock.LockedWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
+                }
             }
         }
 
@@ -216,6 +234,7 @@ namespace BinanceAPI
                 Lock.LockedWindow.Height = 700;
                 Lock.UserControl.Content = new TradeUserControl();
                 Lock.LockedWindow.Title = $"TradeStream({Selection.SelectedSymbol.Symbol})";
+                
             }
         }
 
@@ -225,7 +244,6 @@ namespace BinanceAPI
 
             if (!Lock.Locker)
             {
-
                 TradeWindow = new TradeWindow
                 {
                     Left = Left + Width * 1.01,
@@ -261,36 +279,36 @@ namespace BinanceAPI
             }
         }
 
-        //private void MenuItem_Click_AggTrades(object sender, RoutedEventArgs e)
-        //{
-        //    if (!Lock.Locker)
-        //    {
-        //        TradeWindow = new TradeWindow
-        //        {
-        //            Left = Left + Width * 1.01,
-        //            Top = Top,
-        //        };
+        private void MenuItem_Click_AggTrades(object sender, RoutedEventArgs e)
+        {
+            if (!Lock.Locker)
+            {
+                TradeWindow = new TradeWindow
+                {
+                    Left = Left + Width * 1.01,
+                    Top = Top,
+                };
 
-        //        var userControl = new UserControl
-        //        {
-        //            Content = new AggTradeUserControl(),
-        //        };
+                var userControl = new UserControl
+                {
+                    Content = new AggTradeUserControl(),
+                };
 
-        //        TradeWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
-        //        TradeWindow.StackForControl.Children.Add(userControl);
-        //        TradeWindow.Show();
-        //    }
-        //    else
-        //    {
-        //        CloseStream.ClosedStream = true;
-        //        CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
+                TradeWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
+                TradeWindow.StackForControl.Children.Add(userControl);
+                TradeWindow.Show();
+            }
+            else
+            {
+                CloseStream.ClosedStream = true;
+                CloseStream.ClosedWindowName = Lock.LockedWindow.Title;
 
-        //        Lock.LockedWindow.Width = 360;
-        //        Lock.LockedWindow.Height = 709;
-        //        Lock.UserControl.Content = new AggTradeUserControl();
-        //        Lock.LockedWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
-        //    }
-        //}
+                Lock.LockedWindow.Width = 360;
+                Lock.LockedWindow.Height = 709;
+                Lock.UserControl.Content = new AggTradeUserControl();
+                Lock.LockedWindow.Title = $"AggTradeStream({Selection.SelectedSymbol.Symbol})";
+            }
+        }
 
         //private void AddNewList_Click(object sender, RoutedEventArgs e)
         //{

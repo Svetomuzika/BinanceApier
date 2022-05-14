@@ -110,10 +110,9 @@ namespace BinanceAPI
                             Title = sender.ToString().Split(' ')[1].Remove(0, 7),
                         };
 
-                        newMainWindowBD.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
-                        newMainWindowBD.Selector.SelectedItem = SelectedSymbol;
+                        //newMainWindowBD.Selector.ItemsSource = new ObservableCollection<BinanceSymbolViewModel>();
                         //newMainWindowBD.GoHome.Visibility = Visibility.Visible;
-                        newMainWindowBD.Selector.ContextMenu.DataContext = new MainViewModel();
+                        //newMainWindowBD.Selector.ContextMenu.DataContext = new MainViewModel();
                         //newMainWindowBD.Selector.ContextMenu.Items.RemoveAt(4);
                         //newMainWindowBD.AddNewList.Visibility = Visibility.Hidden;
                         newMainWindowBD.Search.DataContext = new Searching();
@@ -175,6 +174,8 @@ namespace BinanceAPI
 
                             newMainWindowBD.Selector.ItemsSource = a;
                         };
+
+
                     }
                 }
             }
@@ -340,8 +341,7 @@ namespace BinanceAPI
         private void Info_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             // Get the button and check for nulls
-            Button button = sender as Button;
-            if (button == null || button.ContextMenu == null)
+            if (!(sender is Button button) || button.ContextMenu == null)
                 return;
             // Set the placement target of the ContextMenu to the button
             button.ContextMenu.PlacementTarget = button;

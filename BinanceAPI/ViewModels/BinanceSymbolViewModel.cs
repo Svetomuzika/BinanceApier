@@ -143,6 +143,12 @@ namespace BinanceAPI.ViewModels
             RaisePropertyChangedEvent("AddTrade");
         }
 
+        public void AddAggTrade(TradeViewModel trade)
+        {
+            AggTrades.Insert(0, trade);
+            RaisePropertyChangedEvent("AddAggTrade");
+        }
+
         private ObservableCollection<TradingOrdersViewModel> tradingOrders;
         public ObservableCollection<TradingOrdersViewModel> TradingOrders
         {

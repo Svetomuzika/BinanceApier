@@ -21,10 +21,10 @@ namespace BinanceApi.ViewModels
         private decimal tradePrice;
         public decimal TradePrice
         {
-            get { return Math.Round(tradePrice, 2); }
+            get { return tradePrice; }
             set
             {
-                tradePrice = Math.Round(value, 2);
+                tradePrice = value;
                 RaisePropertyChangedEvent("TradePrice");
             }
         }
@@ -56,9 +56,9 @@ namespace BinanceApi.ViewModels
             var date = tradeTime;
 
             DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
-            var color = tradeColor ? "#e74359" : "#0fb172"; 
+            var color = tradeColor ? "#e74359" : "#0fb172";
 
-            this.tradePrice = tradePrice;
+            this.tradePrice = Math.Round(tradePrice, 2); 
             this.tradeQPrice = tradeQPrice;
             this.tradeTime = date1.AddHours(5).ToLongTimeString();
             this.tradeColor = color;

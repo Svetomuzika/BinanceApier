@@ -128,6 +128,8 @@ namespace BinanceAPI.ViewModels
         public ICommand BuyCommandMarket { get; set; }
         public ICommand SellCommandMarket { get; set; }
         public ICommand GetTradesCommand { get; set; }
+        public ICommand CallTradingStreamCommand { get; set; }
+
 
 
         public bool SymbolIsSelected
@@ -160,7 +162,7 @@ namespace BinanceAPI.ViewModels
             });
 
             CallTradeStreamCommand = new DelegateCommand(async (o) => await GetTradeStream());
-            CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream(o));
+            CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream());
             CallAggTradeStreamCommand = new DelegateCommand(async (o) => await GetAggTradeStream());
             BuyCommandLimit = new DelegateCommand(async (o) => await BuyLimit(o));
             SellCommandLimit = new DelegateCommand(async (o) => await SellLimit(o));
@@ -169,6 +171,7 @@ namespace BinanceAPI.ViewModels
             AllCancelCommand = new DelegateCommand(async (o) => await AllCancel(o));
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
+            //CallTradingStreamCommand = new DelegateCommand(async (o) => await CallTradingStream());
         }
 
         private async Task GetAllSymbols()
@@ -208,7 +211,7 @@ namespace BinanceAPI.ViewModels
             var result = await client.SpotApi.ExchangeData.GetRecentTradesAsync(SelectedSymbol.Symbol, 1000);
             SelectedSymbol.Trades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.BaseQuantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
             var mainSymbol = SelectedSymbol;
-            Console.WriteLine(result.Data.First().OrderId);
+
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
             CancellationToken token = cancelTokenSource.Token;
 
@@ -262,7 +265,7 @@ namespace BinanceAPI.ViewModels
 
             SelectedSymbol.Trades = new ObservableCollection<TradeViewModel>(firstResult.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker, 1)).Reverse().ToList());
 
-            for (var time = firsttime.Ticks; time > firsttime.Ticks - (hour * 120); time -= hour)
+            for (var time = firsttime.Ticks; time > firsttime.Ticks - (hour * 130); time -= hour)
             {
                 var newLastTime = new DateTime(time);
                 var newFirtstTime = new DateTime(time - hour);
@@ -284,7 +287,7 @@ namespace BinanceAPI.ViewModels
 
             DateTime final = new DateTime(currend - curr);
 
-            Console.WriteLine(final.Minute);
+            Console.WriteLine(final);
         }
 
 
@@ -296,7 +299,7 @@ namespace BinanceAPI.ViewModels
             socketClient = new BinanceSocketClient();
 
             var result = await client.SpotApi.ExchangeData.GetAggregatedTradeHistoryAsync(SelectedSymbol.Symbol, limit: 1000);
-            SelectedSymbol.Trades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
+            SelectedSymbol.AggTrades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
             var mainSymbol = SelectedSymbol;
 
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
@@ -308,7 +311,7 @@ namespace BinanceAPI.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    symbol.AddTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
+                    symbol.AddAggTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
 
                     if (CloseStream.ClosedStream)
                     {
@@ -333,6 +336,7 @@ namespace BinanceAPI.ViewModels
 
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
             CancellationToken token = cancelTokenSource.Token;
+
             var subscribeResultAsks = await socketClient.SpotStreams.SubscribeToPartialOrderBookUpdatesAsync(SelectedSymbol.Symbol, 20, 1000, data =>
             {
 
@@ -409,15 +413,21 @@ namespace BinanceAPI.ViewModels
 
         private async Task GetLastTrade()
         {
-
-            socketClient = new BinanceSocketClient();
-            var mainSymbol = SelectedSymbol;
+            var mainSymbol = Selection.SelectedSymbol;
             decimal sum = 0;
 
-            var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(Selection.SelectedSymbol.Symbol, data =>
+            var firstResult = await client.SpotApi.ExchangeData.GetRecentTradesAsync(mainSymbol.Symbol, 1);
+            var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
+            var newBest = firstResult.Data.FirstOrDefault().Price;
+            var oldBest = Math.Round(newBest, 2);
+
+            mainSymbol.SumColor = "white";
+            mainSymbol.OrderBestPrice = oldBest.ToString().Replace(",", ".").Insert(2, ",");
+
+            var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(mainSymbol.Symbol, data =>
             {
-                var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
-                var newBest = data.Data.Price;
+                symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
+                newBest = data.Data.Price;
 
                 if (newBest == sum)
                 {
@@ -427,7 +437,8 @@ namespace BinanceAPI.ViewModels
                 {
                     mainSymbol.SumColor = newBest > sum ? "#009900" : "red";
                 }
-                var oldBest = Math.Round(newBest, 2);
+
+                oldBest = Math.Round(newBest, 2);
                 mainSymbol.OrderBestPrice = oldBest.ToString().Replace(",", ".").Insert(2, ",");
 
                 sum = oldBest;
@@ -440,8 +451,6 @@ namespace BinanceAPI.ViewModels
 
             var lastPriceTest = await binanceClient.SpotApi.ExchangeData.GetPriceAsync(SelectedSymbol.Symbol);
             SelectedSymbol.TradingPrice = lastPriceTest.Data.Price;
-
-            var mainSymbol = SelectedSymbol;
 
             var subForAccUpdates = await binanceSocketClient.SpotStreams.SubscribeToUserDataUpdatesAsync(startUserStreamAsync.Data, OnOrderUpdate, null, null, onAccountBalanceUpdate: data =>
             {
@@ -498,16 +507,15 @@ namespace BinanceAPI.ViewModels
         private void OnOrderUpdate(DataEvent<BinanceStreamOrderUpdate> data)
         {
             var orderUpdate = data.Data;
-            var symbol = AllPrices.SingleOrDefault(a => a.Symbol == orderUpdate.Symbol);
+            var symbol = AllPrices.SingleOrDefault(p => p.Symbol == data.Data.Symbol);
             var price = orderUpdate.Price;
 
             if (orderUpdate.Type.ToString() == "Market")
             {
                 if (data.Data.Status.ToString() == "Filled")
                 {
-
-
                     price = orderUpdate.LastPriceFilled;
+
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         symbol.AddTradingTrades(new TradingOrdersViewModel(orderUpdate.QuantityFilled, price, orderUpdate.Side, orderUpdate.Status, orderUpdate.Symbol, orderUpdate.CreateTime, orderUpdate.Id));
@@ -541,13 +549,13 @@ namespace BinanceAPI.ViewModels
                 var id = data.Data.Id;
                 symbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>(symbol.TradingOrders.Where(a => a.Id != id).Select(o => new TradingOrdersViewModel(o.ExecutedQuantity, o.Price, o.Side, o.Status, o.Symbol, o.DateTime, o.Id)));
             }
-
             Task.Run(() => GetBalance());
         }
 
         private async Task GetTrades()
         {
             var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol);
+            var symbol = AllPrices.SingleOrDefault(a => a.Symbol == SelectedSymbol.Symbol);
 
 
             SelectedSymbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() != "Filled" && a.Status.ToString() != "Canceled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
@@ -560,7 +568,6 @@ namespace BinanceAPI.ViewModels
         {
             if (SelectedSymbol != null)
             {
-                selectedSymbol.TradingAmount = 0;
                 Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetOrderStreamBids(), GetTrades(), TradingStream(), GetBalance()));
             }
         }
@@ -568,13 +575,12 @@ namespace BinanceAPI.ViewModels
         private async Task GetBalance()
         {
             var info = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
-
             SelectedSymbol.Balance = info.Data.Balances.SingleOrDefault(r => r.Asset == "USDT").Total;
         }
 
         private void GetSearch(string name)
         {
-            if (name != "")
+            if (name != "") 
             {
                 AllPrices.Clear();
 
@@ -592,22 +598,22 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        public async Task CallTradeStream(object o)
+        public async Task CallTradeStream()
         {
             await GetTradeStream();
         }
 
-        public async Task CallTradeHistory(object o)
+        public async Task CallTradeHistory()
         {
             await GetTradeHistory();
         }
 
-        public async Task CallOrderStream(object o)
+        public async Task CallOrderStream()
         {
             await GetLastTrade();
         }
 
-        public async Task CallAggTradeStream(object o)
+        public async Task CallAggTradeStream()
         {
             await GetAggTradeStream();
         }

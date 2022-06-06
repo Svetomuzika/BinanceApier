@@ -161,5 +161,22 @@ namespace BinanceAPI.ViewModels
             //this.sumTrades += sumTrade;
             //this.sumOrders += sumOrder;
         }
+
+        public TradingOrdersViewModel(decimal quantity, decimal price, OrderSide side, OrderStatus status, string symbol, DateTime time, long id, int i)
+        {
+            var date = time.AddHours(5);
+            DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+
+            this.executedQuantity = quantity;
+            this.price = price;
+            this.side = side;
+            this.status = status;
+            this.symbol = symbol;
+            this.time = date1.ToString("dd MMMM yyyy HH:mm");
+            this.id = id;
+            this.dateTime = time;
+            //this.sumTrades += sumTrade;
+            //this.sumOrders += sumOrder;
+        }
     }
 }

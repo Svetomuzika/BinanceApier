@@ -19,6 +19,16 @@ namespace BinanceAPI
 {
     public partial class MainWindow : Window
     {
+        public ObservableCollection<BinanceSymbolViewModel> allPrices;
+        public ObservableCollection<BinanceSymbolViewModel> AllPrices
+        {
+            get { return allPrices; }
+            set
+            {
+                allPrices = value;
+            }
+        }
+
         public ObservableCollection<BinanceSymbolViewModel> newPrices;
         public ObservableCollection<BinanceSymbolViewModel> NewPrices
         {
@@ -26,6 +36,16 @@ namespace BinanceAPI
             set
             {
                 newPrices = value;
+            }
+        }
+
+        public ObservableCollection<BinanceSymbolViewModel> newPricesDuplicate;
+        public ObservableCollection<BinanceSymbolViewModel> NewPricesDuplicate
+        {
+            get { return newPricesDuplicate; }
+            set
+            {
+                newPricesDuplicate = value;
             }
         }
 
@@ -86,6 +106,10 @@ namespace BinanceAPI
 
         private void Menu_ClickBD(object sender, RoutedEventArgs routedEventArgs)
         {
+
+            NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
+            NewPricesDuplicate = new ObservableCollection<BinanceSymbolViewModel>();
+
             var currLines = NewTable();
             var names = new List<string>();
 
@@ -100,9 +124,6 @@ namespace BinanceAPI
                 {
                     if (sender.ToString().Split(' ')[1].Remove(0, 7) == i.Split(',')[0])
                     {
-                        var a = new ObservableCollection<BinanceSymbolViewModel>();
-                        var b = new ObservableCollection<BinanceSymbolViewModel>();
-
                         AllTickers newMainWindowBD = new AllTickers()
                         {
                             Left = Left + Width * 1.805,
@@ -122,27 +143,28 @@ namespace BinanceAPI
 
                         foreach (string e in tickers)
                         {
-                            var ticker = NewPrices.SingleOrDefault(p => p.Symbol.ToString() == e);
+                            var ticker = AllPrices.SingleOrDefault(p => p.Symbol.ToString() == e);
+
                             if (ticker != null)
                             {
-                                a.Add(ticker);
-                                b.Add(ticker);
+                                NewPrices.Add(ticker);
+                                NewPricesDuplicate.Add(ticker);
                             }
                         }
-                        newMainWindowBD.Selector.ItemsSource = a;
+                        newMainWindowBD.Selector.ItemsSource = NewPrices;
 
                         ValueChanged += (x, parentsender) =>
                         {
-                            if (newMainWindowBD.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !a.Contains(Selection.SelectedSymbol))
+                            if (newMainWindowBD.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !NewPrices.Contains(Selection.SelectedSymbol))
                             {
                                 foreach (var o in x)
                                 {
-                                    a.Add(o);
-                                    b.Add(o);
+                                    NewPrices.Add(o);
+                                    NewPricesDuplicate.Add(o);
                                     AddNewTable(o.Symbol, i);
                                 }
 
-                                newMainWindowBD.Selector.ItemsSource = a;
+                                newMainWindowBD.Selector.ItemsSource = NewPrices;
                             }
                         };
 
@@ -152,27 +174,27 @@ namespace BinanceAPI
                             {
                                 if (text != "")
                                 {
-                                    a.Clear();
+                                    NewPrices.Clear();
 
-                                    foreach (var o in b)
+                                    foreach (var o in NewPricesDuplicate)
                                     {
                                         if (o.Symbol.Contains(text.ToUpper()))
                                         {
-                                            a.Add(o);
+                                            NewPrices.Add(o);
                                         }
                                     }
                                 }
                                 else if (text == "" || text == null)
                                 {
-                                    a.Clear();
-                                    foreach (var o in b)
+                                    NewPrices.Clear();
+                                    foreach (var o in NewPricesDuplicate)
                                     {
-                                        a.Add(o);
+                                        NewPrices.Add(o);
                                     }
                                 }
                             }
 
-                            newMainWindowBD.Selector.ItemsSource = a;
+                            newMainWindowBD.Selector.ItemsSource = NewPrices;
                         };
 
 
@@ -181,8 +203,8 @@ namespace BinanceAPI
             }
             else
             {
-                var a = new ObservableCollection<BinanceSymbolViewModel>();
-                var b = new ObservableCollection<BinanceSymbolViewModel>();
+                var NewPrices = new ObservableCollection<BinanceSymbolViewModel>();
+                var NewPricesDuplicate = new ObservableCollection<BinanceSymbolViewModel>();
 
                 AllTickers newMainWindow = new AllTickers()
                 {
@@ -206,15 +228,15 @@ namespace BinanceAPI
 
                 ValueChanged += (x, parentsender) =>
                 {
-                    if (newMainWindow.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !a.Contains(Selection.SelectedSymbol))
+                    if (newMainWindow.Title == parentsender.ToString().Split(' ')[1].Remove(0, 7) && !NewPrices.Contains(Selection.SelectedSymbol))
                     {
                         foreach (var o in x)
                         {
-                            a.Add(o);
-                            b.Add(o);
+                            NewPrices.Add(o);
+                            NewPricesDuplicate.Add(o);
                             AddNewTable(o.Symbol, line);
                         }
-                        newMainWindow.Selector.ItemsSource = a;
+                        newMainWindow.Selector.ItemsSource = NewPrices;
                     }
                 };
 
@@ -224,27 +246,27 @@ namespace BinanceAPI
                     {
                         if (text != "")
                         {
-                            a.Clear();
+                            NewPrices.Clear();
 
-                            foreach (var o in b)
+                            foreach (var o in NewPricesDuplicate)
                             {
                                 if (o.Symbol.Contains(text.ToUpper()))
                                 {
-                                    a.Add(o);
+                                    NewPrices.Add(o);
                                 }
                             }
                         }
                         else if (text == "" || text == null)
                         {
-                            a.Clear();
-                            foreach (var o in b)
+                            NewPrices.Clear();
+                            foreach (var o in NewPricesDuplicate)
                             {
-                                a.Add(o);
+                                NewPrices.Add(o);
                             }
                         }
                     }
 
-                    newMainWindow.Selector.ItemsSource = a;
+                    newMainWindow.Selector.ItemsSource = NewPrices;
                 };
             }
         }
@@ -256,7 +278,8 @@ namespace BinanceAPI
         {
             var client = new BinanceClient();
             var result = await client.SpotApi.ExchangeData.GetPricesAsync();
-            NewPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList());
+
+            AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList());
         }
 
         public  void ChangedValue(object sender)

@@ -129,6 +129,8 @@ namespace BinanceAPI.ViewModels
         public ICommand SellCommandMarket { get; set; }
         public ICommand GetTradesCommand { get; set; }
         public ICommand CallTradingStreamCommand { get; set; }
+        public ICommand StartBotCommand { get; set; }
+        public ICommand StopBotCommand { get; set; }
 
 
 
@@ -171,7 +173,8 @@ namespace BinanceAPI.ViewModels
             AllCancelCommand = new DelegateCommand(async (o) => await AllCancel(o));
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
-            //CallTradingStreamCommand = new DelegateCommand(async (o) => await CallTradingStream());
+            StartBotCommand = new DelegateCommand(async (o) => await StartBot());
+            StopBotCommand = new DelegateCommand(async (o) => await StopBot());
         }
 
         private async Task GetAllSymbols()
@@ -464,6 +467,7 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, SelectedSymbol.TradingAmount, price: SelectedSymbol.TradingPrice, timeInForce: TimeInForce.GoodTillCanceled);
             if (result.Success)
                 Console.WriteLine("Succes!!! BuyLimit");
+            else Console.WriteLine(result.Error);
         }
 
         public async Task SellLimit(object o)
@@ -472,6 +476,7 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Sell, SpotOrderType.Limit, SelectedSymbol.TradingAmount, price: SelectedSymbol.TradingPrice, timeInForce: TimeInForce.GoodTillCanceled);
             if (result.Success)
                 Console.WriteLine("Succes!!! SellLimit");
+            else Console.WriteLine(result.Error);
         }
         public async Task BuyMarket(object o)
         {
@@ -479,6 +484,7 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Buy, SpotOrderType.Market, SelectedSymbol.TradingAmountMarket);
             if (result.Success)
                 Console.WriteLine("Succes!!! BuyMarket");
+            else Console.WriteLine(result.Error);
         }
 
         public async Task SellMarket(object o)
@@ -487,6 +493,7 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Sell, SpotOrderType.Market, SelectedSymbol.TradingAmountMarket);
             if (result.Success)
                 Console.WriteLine("Succes!!! SellMarket");
+            else Console.WriteLine(result.Error);
         }
 
         public async Task AllCancel(object o)
@@ -495,6 +502,7 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.CancelAllOrdersAsync(SelectedSymbol.Symbol);
             if (result.Success)
                 Console.WriteLine("Canceled!!!");
+            else Console.WriteLine(result.Error);
         }
 
         public async Task Cancel(long id)
@@ -502,6 +510,7 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.CancelOrderAsync(Selection.SelectedSymbol.Symbol, id);
             if (result.Success)
                 Console.WriteLine("OneCanceled!!!");
+            else Console.WriteLine(result.Error);
         }
 
         private void OnOrderUpdate(DataEvent<BinanceStreamOrderUpdate> data)
@@ -556,7 +565,6 @@ namespace BinanceAPI.ViewModels
         {
             var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol);
             var symbol = AllPrices.SingleOrDefault(a => a.Symbol == SelectedSymbol.Symbol);
-
 
             SelectedSymbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() != "Filled" && a.Status.ToString() != "Canceled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
 
@@ -616,6 +624,21 @@ namespace BinanceAPI.ViewModels
         public async Task CallAggTradeStream()
         {
             await GetAggTradeStream();
+        }
+
+        public void CancellOne(long id)
+        {
+            Task.Run(() => Cancel(id));
+        }
+
+        public async Task StartBot()
+        {
+
+        }
+
+        public async Task StopBot()
+        {
+
         }
     }
 }

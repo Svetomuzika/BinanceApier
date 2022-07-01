@@ -11,7 +11,7 @@
     </UserControl.DataContext>
 
     <Grid>
-        <TextBlock x:Name="Limit" Text="Limit" Margin="10,10,696,378" FontSize="15" MouseLeftButtonDown="TextBlock_MouseLeftButtonDownLimit">
+        <TextBlock x:Name="Limit" Text="Limit" Margin="10,10,696,390" FontSize="15" MouseLeftButtonDown="TextBlock_MouseLeftButtonDownLimit">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
@@ -26,6 +26,20 @@
             </TextBlock.Style>
         </TextBlock>
         <TextBlock x:Name="Market" Text="Market" Margin="60,10,628,390" FontSize="15" MouseLeftButtonDown="TextBlock_MouseLeftButtonDownMarket">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="true">
+                            <Setter Property="Foreground" Value="#7f8c9c"/>
+                        </Trigger>
+                        <Trigger Property ="IsMouseOver" Value="true">
+                            <Setter Property= "Foreground" Value="#f0b90b"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBlock x:Name="Bot" Text="Bot" Margin="122,10,628,390" FontSize="15" MouseLeftButtonDown="Bot_MouseLeftButtonDown">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
@@ -67,6 +81,30 @@
                 <TextBlock x:Name="PriceLimitBlock" Text="Price" Margin="13,93,209,127" Foreground="#7f8c9c"/>
                 <TextBlock x:Name="AmountLimitBlock" Text="Amount" Margin="13,130,199,89" Foreground="#7f8c9c"/>
                 <TextBlock x:Name="AmountMarketBlock" Text="Amount" Margin="13,92,0,-62" Foreground="#7f8c9c" HorizontalAlignment="Left" Width="53" Visibility="Hidden"/>
+                <TextBox x:Name="SizeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotSize}" Margin="10,87,0,124" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBox x:Name="DeltaBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotDelta}" Margin="10,120,0,82" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBox x:Name="TimeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotTime}" Margin="10,153,0,40" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBlock x:Name="SizeBotBlock" Text="Size" Margin="13,93,209,127" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBlock x:Name="DeltaBotBlock" Text="Delta(%)" Margin="13,130,199,89" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,167,199,49" Foreground="#7f8c9c" Visibility="Hidden"/>
             </Grid>
             <StackPanel Orientation="Horizontal" Height="50" Margin="0,-70,0,100" Width="277" HorizontalAlignment="Left">
                 <Button x:Name="BuyLimit" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandLimit}" Content="Buy" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30">
@@ -100,14 +138,30 @@
                     </Button.Resources>
                 </Button>
             </StackPanel>
-            <Button x:Name="Cancel" Width="190" Margin="10,-90,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel x:Name="BotPanel" Orientation="Horizontal" Height="50" Margin="0,-130,0,100" Width="277" HorizontalAlignment="Left" Visibility="Hidden">
+                <Button x:Name="StartBot" Width="80" Margin="10,0,5,5" Command="{Binding StartBot}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Click="StartBot_Click" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button x:Name="StopBot" Width="80" Margin="-85,0,5,5" Command="{Binding StopBot}" Content="Stop" HorizontalAlignment="Left" Background="#FFE0510D" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand" Visibility="Hidden" Click="StopBot_Click">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+            <Button x:Name="Cancel" Width="190" Margin="10,-112,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
                     </Style>
                 </Button.Resources>
             </Button>
-            <Button x:Name="CancelMarket" Width="190" Margin="10,-142,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" >
+            <Button x:Name="CancelMarket" Width="190" Margin="10,-164,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" >
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
@@ -202,7 +256,7 @@
                                 <DataTemplate>
                                     <Button x:Name="DeleteOrder"  VerticalAlignment="Top" Margin="0,0,0,0" FontSize="25" BorderBrush="{x:Null}" Content="{Binding Id}" Command="{Binding }" Click="DeleteOrder_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20">
                                         <Button.Background>
-                                            <ImageBrush ImageSource="/icons/bin.png"/>
+                                            <ImageBrush ImageSource="/View/bin.png"/>
                                         </Button.Background>
                                         <Button.Style>
                                             <Style TargetType="Button">

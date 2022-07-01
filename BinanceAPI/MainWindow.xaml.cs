@@ -282,7 +282,7 @@ namespace BinanceAPI
             AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList());
         }
 
-        public  void ChangedValue(object sender)
+        public void ChangedValue(object sender)
         {
             NewPricesFake = new ObservableCollection<BinanceSymbolViewModel>();
             NewPricesFake.Insert(0, Selection.SelectedSymbol);

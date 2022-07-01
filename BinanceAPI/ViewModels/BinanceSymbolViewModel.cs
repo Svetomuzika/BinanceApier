@@ -109,6 +109,39 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private decimal botSize;
+        public decimal BotSize
+        {
+            get { return botSize; }
+            set
+            {
+                botSize = value;
+                RaisePropertyChangedEvent("BotSize");
+            }
+        }
+
+        private decimal botDelta;
+        public decimal BotDelta
+        {
+            get { return botDelta; }
+            set
+            {
+                botDelta = value;
+                RaisePropertyChangedEvent("BotDelta");
+            }
+        }
+
+        private decimal botTime;
+        public decimal BotTime
+        {
+            get { return botTime; }
+            set
+            {
+                botTime = value;
+                RaisePropertyChangedEvent("BotTime");
+            }
+        }
+
         private ObservableCollection<OrderViewModel> orders;
         public ObservableCollection<OrderViewModel> Orders
         {

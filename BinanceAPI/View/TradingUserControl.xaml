@@ -139,14 +139,14 @@
                 </Button>
             </StackPanel>
             <StackPanel x:Name="BotPanel" Orientation="Horizontal" Height="50" Margin="0,-130,0,100" Width="277" HorizontalAlignment="Left" Visibility="Hidden">
-                <Button x:Name="StartBot" Width="80" Margin="10,0,5,5" Command="{Binding StartBot}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Click="StartBot_Click" Cursor="Hand">
+                <Button x:Name="StartBot" Width="80" Margin="10,0,5,5" Command="{Binding StartBotCommand}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Click="StartBot_Click" Cursor="Hand">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button x:Name="StopBot" Width="80" Margin="-85,0,5,5" Command="{Binding StopBot}" Content="Stop" HorizontalAlignment="Left" Background="#FFE0510D" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand" Visibility="Hidden" Click="StopBot_Click">
+                <Button x:Name="StopBot" Width="80" Margin="-85,0,5,5" Command="{Binding StopBotCommand}" Content="Stop" HorizontalAlignment="Left" Background="#FFE0510D" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand" Visibility="Hidden" Click="StopBot_Click">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>

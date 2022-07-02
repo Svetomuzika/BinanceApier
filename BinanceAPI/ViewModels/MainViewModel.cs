@@ -281,7 +281,6 @@ namespace BinanceAPI.ViewModels
                 }
 
                 Console.WriteLine(SelectedSymbol.Trades.Count);
-
             }
 
             Console.WriteLine("____" + SelectedSymbol.Trades.Count);
@@ -631,14 +630,35 @@ namespace BinanceAPI.ViewModels
             Task.Run(() => Cancel(id));
         }
 
+        bool flag = false;
+
         public async Task StartBot()
         {
-
+            flag = true;
+            await Flag();
         }
 
         public async Task StopBot()
         {
+            flag = false;
+        }
 
+        private async Task Flag()
+        {
+            if (flag)
+            {
+                //var price = (1 - SelectedSymbol.BotDelta * (decimal)0.01) * SelectedSymbol.Price;
+                var price = SelectedSymbol.Price - 10;
+                var buy = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, SelectedSymbol.BotSize, price: price, timeInForce: TimeInForce.GoodTillCanceled);
+                Console.WriteLine("BuyLimit");
+
+                await Task.Delay((int)SelectedSymbol.BotTime * 1000);
+
+                await binanceClient.SpotApi.Trading.CancelOrderAsync(SelectedSymbol.Symbol, buy.Data.Id);
+                Console.WriteLine("Canceled");
+
+                await Flag();
+            }
         }
     }
 }

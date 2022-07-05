@@ -4,6 +4,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+
 
 namespace BinanceAPI.ViewModels
 {
@@ -39,6 +41,28 @@ namespace BinanceAPI.ViewModels
             {
                 balance = Math.Round(value, 2);
                 RaisePropertyChangedEvent("Balance");
+            }
+        }
+
+        private string balanceCoin;
+        public string BalanceCoin
+        {
+            get { return balanceCoin; }
+            set
+            {
+                balanceCoin = value;
+                RaisePropertyChangedEvent("BalanceCoin");
+            }
+        }
+
+        private decimal balanceCoinTotal;
+        public decimal BalanceCoinTotal
+        {
+            get { return balanceCoinTotal; }
+            set
+            {
+                balanceCoinTotal = Math.Round(value, 3);
+                RaisePropertyChangedEvent("BalanceCoinTotal");
             }
         }
 
@@ -201,6 +225,17 @@ namespace BinanceAPI.ViewModels
             {
                 tradingTrades = value;
                 RaisePropertyChangedEvent("TradingTrades");
+            }
+        }
+
+        private Button stopBotButton;
+        public Button StopBotButton
+        {
+            get { return stopBotButton; }
+            set
+            {
+                stopBotButton = value;
+                RaisePropertyChangedEvent("StopBotButton");
             }
         }
 

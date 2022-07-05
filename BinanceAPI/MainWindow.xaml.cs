@@ -104,6 +104,12 @@ namespace BinanceAPI
             Info.ContextMenu.IsOpen = true;
         }
 
+        private void Trades_Click(object sender, RoutedEventArgs e)
+        {
+            Trades.ContextMenu.PlacementTarget = sender as Button;
+            Trades.ContextMenu.IsOpen = true;
+        }
+
         private void Menu_ClickBD(object sender, RoutedEventArgs routedEventArgs)
         {
 
@@ -363,14 +369,23 @@ namespace BinanceAPI
 
         private void Info_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            // Get the button and check for nulls
             if (!(sender is Button button) || button.ContextMenu == null)
                 return;
-            // Set the placement target of the ContextMenu to the button
+
             button.ContextMenu.PlacementTarget = button;
-            // Open the ContextMenu
+
             button.ContextMenu.IsOpen = true;
             e.Handled = true;
+        }
+
+        private void Orders_Click(object sender, RoutedEventArgs e)
+        {
+            new AllOrders { Left = Left + Width * 1.01, Top = Top }.Show();
+        }
+
+        private void Trade_Click(object sender, RoutedEventArgs e)
+        {
+            new AllTrades { Left = Left + Width * 1.01, Top = Top }.Show();
         }
     }
 }

@@ -151,7 +151,7 @@ namespace BinanceAPI.View
             StopBot.Visibility = Visibility.Visible;
         }
 
-        private void StopBot_Click(object sender, RoutedEventArgs e)
+        public void StopBot_Click(object sender, RoutedEventArgs e)
         {
             StartBot.Visibility = Visibility.Visible;
             StopBot.Visibility = Visibility.Hidden;

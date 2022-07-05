@@ -393,14 +393,15 @@ namespace BinanceAPI
                     Width = 740,
                 };
 
-                var userControl = new UserControl
+                TradingUserControl userControl = new TradingUserControl
                 {
-                    Content = new TradingUserControl(),
                 };
 
                 TradeWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
                 TradeWindow.StackForControl.Children.Add(userControl);
                 TradeWindow.Show();
+                Selection.SelectedSymbol.StopBotButton = userControl.StopBot;
+                
             }
             else
             {

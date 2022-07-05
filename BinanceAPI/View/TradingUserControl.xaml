@@ -54,9 +54,17 @@
             </TextBlock.Style>
         </TextBlock>
 
-        <StackPanel>
+        <StackPanel x:Name="MainPanel">
             <Grid Width="265" HorizontalAlignment="Left"  Margin="0,-20,0,0" Height="241">
-                <TextBlock x:Name="Balance" Text="{Binding SelectedSymbol.Balance, StringFormat='Дост.{0} USDT'}" Margin="13,70,60,127" Foreground="#FFB2BCC8"/>
+                <TextBlock x:Name="Balance" Margin="13,70,60,127" Foreground="#FFB2BCC8">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Дост. {0} USDT / {2} {1}">
+                            <Binding Path="SelectedSymbol.Balance" />
+                            <Binding Path="SelectedSymbol.BalanceCoin" />
+                            <Binding Path="SelectedSymbol.BalanceCoinTotal" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
                 <TextBox x:Name="PriceLimitBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.TradingPrice}" Margin="10,87,0,124" HorizontalAlignment="Left" Width="190" Height="25">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -103,7 +111,7 @@
                     </TextBox.Resources>
                 </TextBox>
                 <TextBlock x:Name="SizeBotBlock" Text="Size" Margin="13,93,209,127" Foreground="#7f8c9c" Visibility="Hidden"/>
-                <TextBlock x:Name="DeltaBotBlock" Text="Delta(%)" Margin="13,130,199,89" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBlock x:Name="DeltaBotBlock" Text="Delta(units)" Margin="13,130,199,89" Foreground="#7f8c9c" Visibility="Hidden"/>
                 <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,167,199,49" Foreground="#7f8c9c" Visibility="Hidden"/>
             </Grid>
             <StackPanel Orientation="Horizontal" Height="50" Margin="0,-70,0,100" Width="277" HorizontalAlignment="Left">
@@ -244,7 +252,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Width="130">
+                        <GridViewColumn Width="150">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="Txt" Text="{Binding Time}" Foreground="#afb5be" />
@@ -254,7 +262,7 @@
                         <GridViewColumn Width="50">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button x:Name="DeleteOrder"  VerticalAlignment="Top" Margin="0,0,0,0" FontSize="25" BorderBrush="{x:Null}" Content="{Binding Id}" Command="{Binding }" Click="DeleteOrder_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20">
+                                    <Button x:Name="DeleteOrder"  VerticalAlignment="Top" Margin="0,0,0,0" BorderBrush="{x:Null}" Content="{Binding Id}" FontSize="1" Click="DeleteOrder_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20">
                                         <Button.Background>
                                             <ImageBrush ImageSource="/View/bin.png"/>
                                         </Button.Background>

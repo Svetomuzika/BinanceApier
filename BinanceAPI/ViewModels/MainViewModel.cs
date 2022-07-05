@@ -18,6 +18,7 @@ using BinanceAPI.Model;
 using BinanceAPI.View;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Collections.Generic;
 
 namespace BinanceAPI.ViewModels
 {
@@ -26,7 +27,7 @@ namespace BinanceAPI.ViewModels
         private BinanceSocketClient socketClient;
         private BinanceClient client;
 
-        private BinanceClient binanceClient;
+        public BinanceClient binanceClient;
         private BinanceSocketClient binanceSocketClient;
 
         public string searchMain;
@@ -198,7 +199,7 @@ namespace BinanceAPI.ViewModels
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
             StartBotCommand = new DelegateCommand(async (o) => await StartBot());
-            StopBotCommand = new DelegateCommand(async (o) => await StopBot());
+            //StopBotCommand = new DelegateCommand(async (o) => await StopBot());
         }
 
         private async Task GetAllSymbols()
@@ -674,44 +675,38 @@ namespace BinanceAPI.ViewModels
             Task.Run(() => Cancel(id));
         }
 
-        bool flag = false;
-
+        public ObservableCollection<LimitBot> Bots = new ObservableCollection<LimitBot>();
         public async Task StartBot()
         {
-            flag = true;
-            await Flag();
+            Bots.Add(new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime));
+            Console.WriteLine(Bots.Count);
         }
 
-        public async Task StopBot()
-        {
-            flag = false;
-        }
+        //private async Task Flag()
+        //{
+        //    if (flag)
+        //    {
+        //        var price = SelectedSymbol.Price - SelectedSymbol.BotDelta;
+        //        var buy = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, SelectedSymbol.BotSize, price: price, timeInForce: TimeInForce.GoodTillCanceled);
+        //        Console.WriteLine("BuyAgain");
 
-        private async Task Flag()
-        {
-            if (flag)
-            {
-                var price = SelectedSymbol.Price - SelectedSymbol.BotDelta;
-                var buy = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, SelectedSymbol.BotSize, price: price, timeInForce: TimeInForce.GoodTillCanceled);
-                Console.WriteLine("BuyAgain");
+        //        await Task.Delay((int)SelectedSymbol.BotTime * 1000);
 
-                await Task.Delay((int)SelectedSymbol.BotTime * 1000);
+        //        var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol, buy.Data.Id);
 
-                var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol, buy.Data.Id);
+        //        if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
+        //        {
+        //            await StopBot();
+        //            Selection.SelectedSymbol.StopBotButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+        //            Console.WriteLine("Kupleno");
+        //        }
 
-                if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
-                {
-                    await StopBot();
-                    Selection.SelectedSymbol.StopBotButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-                    Console.WriteLine("Kupleno");
-                }
+        //        await binanceClient.SpotApi.Trading.CancelOrderAsync(SelectedSymbol.Symbol, buy.Data.Id);
+        //        Console.WriteLine("CancelAgain");
 
-                await binanceClient.SpotApi.Trading.CancelOrderAsync(SelectedSymbol.Symbol, buy.Data.Id);
-                Console.WriteLine("CancelAgain");
-
-                await Flag();
-            }
-        }
+        //        await Flag();
+        //    }
+        //}
     }
 }
 

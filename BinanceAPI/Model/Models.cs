@@ -80,6 +80,11 @@ namespace BinanceAPI.Model
         public static string Name { get; set; }
     }
 
+    public static class BotsList
+    {
+        public static ObservableCollection<LimitBot> botsList = new ObservableCollection<LimitBot>();
+    }
+
     //class All : ObservableObject
     //{
     //    public static ObservableCollection<BinanceSymbolViewModel> allPrices;

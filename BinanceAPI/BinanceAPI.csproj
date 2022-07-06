@@ -140,6 +140,9 @@
     <Compile Include="View\AggTradeUserControl.xaml.cs">
       <DependentUpon>AggTradeUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\AllBots.xaml.cs">
+      <DependentUpon>AllBots.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AllOrders.xaml.cs">
       <DependentUpon>AllOrders.xaml</DependentUpon>
     </Compile>
@@ -182,6 +185,10 @@
       <DependentUpon>AllTickers.xaml</DependentUpon>
     </Compile>
     <Page Include="View\AggTradeUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AllBots.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

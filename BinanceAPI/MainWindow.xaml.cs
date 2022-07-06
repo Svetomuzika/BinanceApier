@@ -387,5 +387,10 @@ namespace BinanceAPI
         {
             new AllTrades { Left = Left + Width * 1.01, Top = Top }.Show();
         }
+
+        private void Bots_Click(object sender, RoutedEventArgs e)
+        {
+            new AllBots { Left = Left + Width * 1.01, Top = Top }.Show();
+        }
     }
 }

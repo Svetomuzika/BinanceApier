@@ -75,6 +75,7 @@
                     <ContextMenu x:Name="tradesButton" Placement="Bottom" Style="{StaticResource CustomMenuStyle}">
                         <MenuItem Header="Orders" FontSize="15" Click="Orders_Click"/>
                         <MenuItem Header="Trades" FontSize="15" Click="Trade_Click"/>
+                        <MenuItem Header="Bots" FontSize="15" Click="Bots_Click"/>
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>

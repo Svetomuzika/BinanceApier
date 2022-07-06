@@ -675,11 +675,11 @@ namespace BinanceAPI.ViewModels
             Task.Run(() => Cancel(id));
         }
 
-        public ObservableCollection<LimitBot> Bots = new ObservableCollection<LimitBot>();
+        //public ObservableCollection<LimitBot> Bots = new ObservableCollection<LimitBot>();
         public async Task StartBot()
         {
-            Bots.Add(new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime));
-            Console.WriteLine(Bots.Count);
+            BotsList.botsList.Add(new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime));
+            Console.WriteLine(BotsList.botsList.Count);
         }
 
         //private async Task Flag()

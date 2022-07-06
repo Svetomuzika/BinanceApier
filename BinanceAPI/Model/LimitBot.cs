@@ -11,18 +11,20 @@ namespace BinanceAPI.Model
     public class LimitBot
     {
         private MainViewModel funcsClass;
-        private BinanceSymbolViewModel symbol;
-        private decimal size;
-        private decimal delta;
-        private decimal time;
+        public BinanceSymbolViewModel Symbol { get; set; }
+        public decimal Size { get; set; }
+        public decimal Delta { get; set; }
+        public decimal Time { get; set; }
+        public decimal Price { get; set; }
+
         private bool isPaused;
-        
+
         public LimitBot(MainViewModel funcsClass, BinanceSymbolViewModel symbol, decimal size, decimal delta, decimal time)
         {
-            this.symbol = symbol;
-            this.size = size;
-            this.delta = delta;
-            this.time = time;
+            Symbol = symbol;
+            Size = size;
+            Delta = delta;
+            Time = time;
             this.funcsClass = funcsClass;
             Task.Run(() => Update());
         }
@@ -31,20 +33,20 @@ namespace BinanceAPI.Model
         {
             if (!isPaused)
             {
-                var price = symbol.Price - delta;
-                var buy = await funcsClass.binanceClient.SpotApi.Trading.PlaceOrderAsync(symbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, size, price: price, timeInForce: TimeInForce.GoodTillCanceled);
-                Console.WriteLine($"Покупка снова по -{delta}");
+                Price = Symbol.Price - Delta;
+                var buy = await funcsClass.binanceClient.SpotApi.Trading.PlaceOrderAsync(Symbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, Size, price: Price, timeInForce: TimeInForce.GoodTillCanceled);
+                Console.WriteLine($"Покупка снова по -{Delta}");
 
-                await Task.Delay((int)time * 1000);
+                await Task.Delay((int)Time * 1000);
 
-                var result = await funcsClass.binanceClient.SpotApi.Trading.GetOrdersAsync(symbol.Symbol, buy.Data.Id);
+                var result = await funcsClass.binanceClient.SpotApi.Trading.GetOrdersAsync(Symbol.Symbol, buy.Data.Id);
 
                 if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
                 {
                     StopBot();
                 }
 
-                await funcsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(symbol.Symbol, buy.Data.Id);
+                await funcsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(Symbol.Symbol, buy.Data.Id);
                 Console.WriteLine("Отмена");
 
                 await Update();
@@ -65,7 +67,7 @@ namespace BinanceAPI.Model
 
         private void StopBot()
         {
-            funcsClass.Bots.Remove(this);
+            BotsList.botsList.Remove(this);
         }
     }
 }

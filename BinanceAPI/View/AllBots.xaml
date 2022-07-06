@@ -7,7 +7,7 @@
         xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
-        Title="AllBots" Height="280" Width="640">
+        Title="AllBots" Height="280" Width="380">
 
     <Window.DataContext>
         <local1:MainViewModel/>
@@ -25,41 +25,70 @@
     </Window.Resources>
 
     <Grid>
-        <ListView x:Name="BotsListView" FontSize="15" Height="262" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Margin="0,-8,0,222">
+            <TextBlock Foreground="#7d8594" Text="Ticker" FontSize="15" Margin="10,7,50,0" RenderTransformOrigin="0.936,0.587" Width="49" Height="38"/>
+            <TextBlock Foreground="#7d8594" Text="Size" FontSize="15" Margin="0,7,15,0" Height="38"/>
+            <TextBlock Foreground="#7d8594" Text="Delta(unit)" FontSize="15" Margin="20,7,-10,0" Width="72" Height="38"/>
+            <TextBlock Foreground="#7d8594" Text="Time(s)" FontSize="15" Margin="20,7,-12,0" Width="59" Height="38"/>
+        </StackPanel>
+        <ListView x:Name="BotsListView" FontSize="15" Height="220" VerticalAlignment="Center" Margin="0,40,0,0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="90">
+                    <GridViewColumn Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Symbol.Symbol}" Foreground="#afb5be" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="70">
+                    <GridViewColumn Width="60">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Size}" Foreground="#afb5be" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="70">
+                    <GridViewColumn Width="85">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Delta}" Foreground="#afb5be" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="80">
+                    <GridViewColumn Width="70">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Time}" Foreground="#afb5be" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="70">
+                    <GridViewColumn Width="50">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock x:Name="Txt" Text="{Binding Price}" Foreground="#afb5be" />
+                                <Button x:Name="DeleteOrder"  VerticalAlignment="Top" Margin="0,0,0,0" FontSize="1" BorderBrush="{x:Null}" Content="{Binding Id}" Click="DeleteOrder_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20" FontWeight="Normal" Foreground="{x:Null}">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="/View/bin.png"/>
+                                    </Button.Background>
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="LightGray"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="LightGray"></Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

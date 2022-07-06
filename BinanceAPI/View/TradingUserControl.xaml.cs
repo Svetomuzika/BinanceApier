@@ -144,17 +144,5 @@ namespace BinanceAPI.View
 
             b.CancellOne((long)a.Content);
         }
-
-        private void StartBot_Click(object sender, RoutedEventArgs e)
-        {
-            StartBot.Visibility = Visibility.Hidden;
-            StopBot.Visibility = Visibility.Visible;
-        }
-
-        public void StopBot_Click(object sender, RoutedEventArgs e)
-        {
-            StartBot.Visibility = Visibility.Visible;
-            StopBot.Visibility = Visibility.Hidden;
-        }
     }
 }

@@ -399,9 +399,7 @@ namespace BinanceAPI
 
                 TradeWindow.Title = $"Trading({Selection.SelectedSymbol.Symbol})";
                 TradeWindow.StackForControl.Children.Add(userControl);
-                TradeWindow.Show();
-                Selection.SelectedSymbol.StopBotButton = userControl.StopBot;
-                
+                TradeWindow.Show();                
             }
             else
             {

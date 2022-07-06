@@ -31,6 +31,7 @@ namespace BinanceAPI.ViewModels
         private BinanceSocketClient binanceSocketClient;
 
         public string searchMain;
+
         public string SearchMain
         {
             get { return searchMain; }
@@ -198,7 +199,7 @@ namespace BinanceAPI.ViewModels
             AllCancelCommand = new DelegateCommand(async (o) => await AllCancel(o));
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
-            StartBotCommand = new DelegateCommand(async (o) => await StartBot());
+            StartBotCommand = new DelegateCommand(async (o) => StartBot());
             //StopBotCommand = new DelegateCommand(async (o) => await StopBot());
         }
 
@@ -676,9 +677,12 @@ namespace BinanceAPI.ViewModels
         }
 
         //public ObservableCollection<LimitBot> Bots = new ObservableCollection<LimitBot>();
-        public async Task StartBot()
+
+        public int IdBot = 0;
+        public void StartBot()
         {
-            BotsList.botsList.Add(new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime));
+            BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime, IdBot));
+            IdBot++;
             Console.WriteLine(BotsList.botsList.Count);
         }
 

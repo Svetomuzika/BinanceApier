@@ -1,4 +1,5 @@
 ﻿using BinanceAPI.Model;
+using BinanceAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,6 +27,22 @@ namespace BinanceAPI.View
 
             bots = BotsList.botsList;
             BotsListView.ItemsSource = bots;
+        }
+
+        public void DeleteOrder_Click(object sender, RoutedEventArgs e)
+        {
+            Button a = (Button)e.Source;
+
+            foreach (var i in BotsList.botsList)
+            {
+                if (i.Id == (int)a.Content)
+                {
+                    Task.Run(() => i.StopBotAsync());
+                    Console.WriteLine("удаление");
+                    BotsList.botsList.Remove(i);
+                    return;
+                }
+            }
         }
     }
 }

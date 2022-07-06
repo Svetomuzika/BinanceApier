@@ -16,15 +16,19 @@ namespace BinanceAPI.Model
         public decimal Delta { get; set; }
         public decimal Time { get; set; }
         public decimal Price { get; set; }
+        public int Id { get; set; }
+        public long IdOrder { get; set; }
+
 
         private bool isPaused;
 
-        public LimitBot(MainViewModel funcsClass, BinanceSymbolViewModel symbol, decimal size, decimal delta, decimal time)
+        public LimitBot(MainViewModel funcsClass, BinanceSymbolViewModel symbol, decimal size, decimal delta, decimal time, int id)
         {
             Symbol = symbol;
             Size = size;
             Delta = delta;
             Time = time;
+            Id = id;
             this.funcsClass = funcsClass;
             Task.Run(() => Update());
         }
@@ -33,9 +37,11 @@ namespace BinanceAPI.Model
         {
             if (!isPaused)
             {
-                Price = Symbol.Price - Delta;
+                Price = Math.Round(Symbol.Price - Delta, 2);
                 var buy = await funcsClass.binanceClient.SpotApi.Trading.PlaceOrderAsync(Symbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, Size, price: Price, timeInForce: TimeInForce.GoodTillCanceled);
                 Console.WriteLine($"Покупка снова по -{Delta}");
+
+                IdOrder = buy.Data.Id;
 
                 await Task.Delay((int)Time * 1000);
 
@@ -43,7 +49,7 @@ namespace BinanceAPI.Model
 
                 if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
                 {
-                    StopBot();
+                    await StopBotAsync();
                 }
 
                 await funcsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(Symbol.Symbol, buy.Data.Id);
@@ -65,9 +71,12 @@ namespace BinanceAPI.Model
             }
         }
 
-        private void StopBot()
+        public async Task StopBotAsync()
         {
-            BotsList.botsList.Remove(this);
+            await funcsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(Symbol.Symbol, IdOrder);
+
+            isPaused = true;
+            Console.WriteLine(BotsList.botsList.Count);
         }
     }
 }

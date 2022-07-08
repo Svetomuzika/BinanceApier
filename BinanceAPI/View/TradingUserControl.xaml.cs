@@ -64,6 +64,8 @@ namespace BinanceAPI.View
             TimeBot.Visibility = Visibility.Hidden;
             TimeBotBlock.Visibility = Visibility.Hidden;
             BotPanel.Visibility = Visibility.Hidden;
+            SmartDeltaBot.Visibility = Visibility.Hidden;
+            SmartDeltaBotBlock.Visibility = Visibility.Hidden;
 
 
             Limit.Foreground = new BrushConverter().ConvertFromString("#f0b90b") as SolidColorBrush;
@@ -91,6 +93,8 @@ namespace BinanceAPI.View
             TimeBot.Visibility = Visibility.Hidden;
             TimeBotBlock.Visibility = Visibility.Hidden;
             BotPanel.Visibility = Visibility.Hidden;
+            SmartDeltaBot.Visibility = Visibility.Hidden;
+            SmartDeltaBotBlock.Visibility = Visibility.Hidden;
 
 
             Market.Foreground = new BrushConverter().ConvertFromString("#f0b90b") as SolidColorBrush;
@@ -119,6 +123,8 @@ namespace BinanceAPI.View
             TimeBot.Visibility = Visibility.Visible;
             TimeBotBlock.Visibility = Visibility.Visible;
             BotPanel.Visibility = Visibility.Visible;
+            SmartDeltaBot.Visibility = Visibility.Visible;
+            SmartDeltaBotBlock.Visibility = Visibility.Visible;
 
             Market.Foreground = new BrushConverter().ConvertFromString("#7f8c9c") as SolidColorBrush;
             Limit.Foreground = new BrushConverter().ConvertFromString("#7f8c9c") as SolidColorBrush;

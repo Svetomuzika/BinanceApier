@@ -164,6 +164,7 @@ namespace BinanceAPI.ViewModels
         public ICommand CallTradingStreamCommand { get; set; }
         public ICommand StartBotCommand { get; set; }
         public ICommand StopBotCommand { get; set; }
+        public ICommand CallTProperties { get; set; }
 
 
 
@@ -194,7 +195,7 @@ namespace BinanceAPI.ViewModels
                 }
             });
 
-            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols(), GetAllOrders(), TradingStream(), GetAllClients()));
+            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols(), GetAllOrders(), TradingStream(), GetAllClients(), GetProperties()));
 
             CallTradeStreamCommand = new DelegateCommand(async (o) => await GetTradeStream());
             CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream());
@@ -207,6 +208,7 @@ namespace BinanceAPI.ViewModels
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
             StartBotCommand = new DelegateCommand((o) => StartBot());
+            //CallTProperties = new DelegateCommand(async (o) => await GetProperties());
         }
 
         private async Task GetAllSymbols()
@@ -695,6 +697,19 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
 
             Clients = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Balances.Select(r => new BinanceSymbolViewModel(r.Asset, Math.Round(r.Available,3))));
+        }
+
+        private async Task GetProperties()
+        {
+            var result = await binanceClient.SpotApi.Account.GetUserAssetsAsync();
+            Console.WriteLine(result.Error.Message);
+
+            //Console.WriteLine(result.Data);
+
+            //foreach(var e in result.Data)
+            //{
+            //    Console.WriteLine(e.Name);
+            //}
         }
     }
 }

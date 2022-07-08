@@ -156,10 +156,16 @@
     <Compile Include="View\Level2UserControl.xaml.cs">
       <DependentUpon>Level2UserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\LimitBot.xaml.cs">
+      <DependentUpon>LimitBot.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NewWatchList.xaml.cs">
       <DependentUpon>NewWatchList.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\TradingOrdersViewModel.cs" />
+    <Compile Include="View\TickerProperties.xaml.cs">
+      <DependentUpon>TickerProperties.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TradeUserControl.xaml.cs">
       <DependentUpon>TradeUserControl.xaml</DependentUpon>
     </Compile>
@@ -212,7 +218,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\LimitBot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\NewWatchList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TickerProperties.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -320,6 +334,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\icons\start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\icons\settings.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

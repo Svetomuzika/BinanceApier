@@ -83,5 +83,10 @@ namespace BinanceAPI.View
                 }
             }
         }
+
+        public void SettingsBot_Click(object sender, RoutedEventArgs e)
+        {
+            new LimitBot { Left = Left + Width * 1.01, Top = Top }.Show();
+        }
     }
 }

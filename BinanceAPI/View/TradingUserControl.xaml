@@ -103,14 +103,14 @@
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
-                <TextBox x:Name="SmartDeltaBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotSmartDelta}" Margin="10,153,0,82" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                <TextBox x:Name="SmartDeltaBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotSmartDelta}" Margin="10,153,0,40" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
-                <TextBox x:Name="TimeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotTime}" Margin="10,186,0,40" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                <TextBox x:Name="TimeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotTime}" Margin="10,186,0,-2" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -118,9 +118,9 @@
                     </TextBox.Resources>
                 </TextBox>
                 <TextBlock x:Name="SizeBotBlock" Text="Size" Margin="13,93,209,127" Foreground="#7f8c9c" Visibility="Hidden"/>
-                <TextBlock x:Name="DeltaBotBlock" Text="Delta(units)" Margin="13,130,199,89" Foreground="#7f8c9c" Visibility="Hidden"/>
-                <TextBlock x:Name="SmartDeltaBotBlock" Text="SmartDelta(units)" Margin="13,167,156,89" Foreground="#7f8c9c" Visibility="Hidden"/>
-                <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,204,199,49" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBlock x:Name="DeltaBotBlock" Text="Delta(units)" Margin="13,130,188,89" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBlock x:Name="SmartDeltaBotBlock" Text="SmartDelta(units)" Margin="13,167,156,51" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,204,199,13" Foreground="#7f8c9c" Visibility="Hidden"/>
             </Grid>
             <StackPanel Orientation="Horizontal" Height="50" Margin="0,-70,0,100" Width="277" HorizontalAlignment="Left">
                 <Button x:Name="BuyLimit" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandLimit}" Content="Buy" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30">
@@ -154,9 +154,9 @@
                     </Button.Resources>
                 </Button>
             </StackPanel>
-            <StackPanel x:Name="BotPanel" Orientation="Horizontal" Height="50" 
+            <StackPanel x:Name="BotPanel" Orientation="Horizontal" Height="10" 
                         Margin="0,-130,0,100" Width="277" HorizontalAlignment="Left" Visibility="Hidden">
-                <Button x:Name="StartBot" Width="80" Margin="10,20,5,-40" Command="{Binding StartBotCommand}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">
+                <Button x:Name="StartBot" Width="80" Margin="10,20,5,-80" Command="{Binding StartBotCommand}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -164,14 +164,14 @@
                     </Button.Resources>
                 </Button>
             </StackPanel>
-            <Button x:Name="Cancel" Width="190" Margin="10,-112,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button x:Name="Cancel" Width="190" Margin="10,-100,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>
                     </Style>
                 </Button.Resources>
             </Button>
-            <Button x:Name="CancelMarket" Width="190" Margin="10,-164,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" >
+            <Button x:Name="CancelMarket" Width="190" Margin="10,-144,0,0" Command="{Binding AllCancelCommand}" Content="CancelAll" Background="#3FAFB5BE" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" Cursor="Hand" >
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>

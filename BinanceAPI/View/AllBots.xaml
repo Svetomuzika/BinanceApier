@@ -7,7 +7,7 @@
         xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
-        Title="AllBots" Height="280" Width="380">
+        Title="AllBots" Height="280" Width="420">
 
     <Window.DataContext>
         <local1:MainViewModel/>
@@ -55,6 +55,13 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    <GridViewColumn Width="85">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="Txt" Text="{Binding SmartDelta}" Foreground="#afb5be" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Width="70">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -65,7 +72,37 @@
                     <GridViewColumn Width="50">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button x:Name="DeleteOrder"  VerticalAlignment="Top" Margin="0,0,0,0" FontSize="1" BorderBrush="{x:Null}" Content="{Binding Id}" Click="DeleteOrder_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20" FontWeight="Normal" Foreground="{x:Null}">
+                                <Button x:Name="PauseBot"  VerticalAlignment="Top" Margin="0,0,0,0" FontSize="1" BorderBrush="{x:Null}" Content="{Binding Id}" Click="PauseBot_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20" FontWeight="Normal" Foreground="{x:Null}">
+                                    <Button.Background>
+                                        <ImageBrush x:Name="PauseIMG" ImageSource="/View/icons/pause.png"/>
+                                    </Button.Background>
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="LightGray"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="LightGray"></Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="DeleteOrder"  VerticalAlignment="Top" Margin="0,0,0,0" FontSize="1" BorderBrush="{x:Null}" Content="{Binding Id}" Click="DeleteBot_Click" Cursor="Hand" HorizontalAlignment="Right" RenderTransformOrigin="-0.48,-0.038" Height="20" Width="20" FontWeight="Normal" Foreground="{x:Null}">
                                     <Button.Background>
                                         <ImageBrush ImageSource="/View/bin.png"/>
                                     </Button.Background>

@@ -134,6 +134,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Bot.cs" />
     <Compile Include="Model\LimitBot.cs" />
     <Compile Include="Model\Models.cs" />
     <Compile Include="MVVM\DelegateCommand.cs" />
@@ -313,6 +314,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\bin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\icons\pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\icons\start.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

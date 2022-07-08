@@ -13,13 +13,14 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Resources;
 using System.Windows.Shapes;
 
 namespace BinanceAPI.View
 {
     public partial class AllBots : Window
     {
-        ObservableCollection<LimitBot> bots;
+        ObservableCollection<Bot> bots;
 
         public AllBots()
         {
@@ -29,7 +30,7 @@ namespace BinanceAPI.View
             BotsListView.ItemsSource = bots;
         }
 
-        public void DeleteOrder_Click(object sender, RoutedEventArgs e)
+        public void DeleteBot_Click(object sender, RoutedEventArgs e)
         {
             Button a = (Button)e.Source;
 
@@ -40,6 +41,44 @@ namespace BinanceAPI.View
                     Task.Run(() => i.StopBotAsync());
                     Console.WriteLine("удаление");
                     BotsList.botsList.Remove(i);
+                    return;
+                }
+            }
+        }
+
+        public void PauseBot_Click(object sender, RoutedEventArgs e)
+        {
+            Button a = (Button)e.Source;
+
+            foreach (var i in BotsList.botsList)
+            {
+                if (i.Id == (int)a.Content)
+                {
+                    if (!i.isPaused)
+                    {
+                        Uri resourceUri = new Uri("/View/icons/start.png", UriKind.Relative);
+                        StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+
+                        BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                        var brush = new ImageBrush();
+                        brush.ImageSource = temp;
+
+                        a.Background = brush;
+                    }
+                    else
+                    {
+                        Uri resourceUri = new Uri("/View/icons/pause.png", UriKind.Relative);
+                        StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+
+                        BitmapFrame temp = BitmapFrame.Create(streamInfo.Stream);
+                        var brush = new ImageBrush();
+                        brush.ImageSource = temp;
+
+                        a.Background = brush;
+                    }
+
+                    i.StartPauseBot();
+                    
                     return;
                 }
             }

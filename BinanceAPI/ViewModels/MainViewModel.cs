@@ -206,6 +206,7 @@ namespace BinanceAPI.ViewModels
             AllCancelCommand = new DelegateCommand(async (o) => await AllCancel(o));
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
+            StartBotCommand = new DelegateCommand((o) => StartBot());
         }
 
         private async Task GetAllSymbols()
@@ -684,7 +685,7 @@ namespace BinanceAPI.ViewModels
         public int IdBot = 0;
         public void StartBot()
         {
-            BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime, IdBot));
+            BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotSmartDelta, SelectedSymbol.BotTime, IdBot));
             IdBot++;
             Console.WriteLine(BotsList.botsList.Count);
         }
@@ -694,7 +695,6 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
 
             Clients = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Balances.Select(r => new BinanceSymbolViewModel(r.Asset, Math.Round(r.Available,3))));
-            Console.WriteLine(Clients.Count);
         }
     }
 }

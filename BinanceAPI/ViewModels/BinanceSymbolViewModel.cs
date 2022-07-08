@@ -155,6 +155,17 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private decimal botSmartDelta;
+        public decimal BotSmartDelta
+        {
+            get { return botSmartDelta; }
+            set
+            {
+                botSmartDelta = value;
+                RaisePropertyChangedEvent("BotSmartDelta");
+            }
+        }
+
         private decimal botTime;
         public decimal BotTime
         {

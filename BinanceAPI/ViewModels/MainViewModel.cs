@@ -684,6 +684,7 @@ namespace BinanceAPI.ViewModels
             BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime, IdBot));
             IdBot++;
             Console.WriteLine(BotsList.botsList.Count);
+
         }
 
         //private async Task Flag()

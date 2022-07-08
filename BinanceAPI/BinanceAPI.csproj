@@ -143,6 +143,9 @@
     <Compile Include="View\AllBots.xaml.cs">
       <DependentUpon>AllBots.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\AllClients.xaml.cs">
+      <DependentUpon>AllClients.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AllOrders.xaml.cs">
       <DependentUpon>AllOrders.xaml</DependentUpon>
     </Compile>
@@ -189,6 +192,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AllBots.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AllClients.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

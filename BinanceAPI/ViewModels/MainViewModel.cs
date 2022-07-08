@@ -15,10 +15,6 @@ using Binance.Net.Enums;
 using CryptoExchange.Net.Sockets;
 using Binance.Net.Objects.Models.Spot.Socket;
 using BinanceAPI.Model;
-using BinanceAPI.View;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Collections.Generic;
 
 namespace BinanceAPI.ViewModels
 {
@@ -119,6 +115,17 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private ObservableCollection<BinanceSymbolViewModel> clients;
+        public ObservableCollection<BinanceSymbolViewModel> Clients
+        {
+            get { return clients; }
+            set
+            {
+                clients = value;
+                RaisePropertyChangedEvent("Clients");
+            }
+        }
+
         private ObservableCollection<TradingOrdersViewModel> tradingAllTrders;
 
         public ObservableCollection<TradingOrdersViewModel> TradingAllTrades
@@ -187,7 +194,7 @@ namespace BinanceAPI.ViewModels
                 }
             });
 
-            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols(), GetAllOrders(), TradingStream()));
+            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols(), GetAllOrders(), TradingStream(), GetAllClients()));
 
             CallTradeStreamCommand = new DelegateCommand(async (o) => await GetTradeStream());
             CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream());
@@ -199,8 +206,6 @@ namespace BinanceAPI.ViewModels
             AllCancelCommand = new DelegateCommand(async (o) => await AllCancel(o));
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
-            StartBotCommand = new DelegateCommand(async (o) => StartBot());
-            //StopBotCommand = new DelegateCommand(async (o) => await StopBot());
         }
 
         private async Task GetAllSymbols()
@@ -676,42 +681,21 @@ namespace BinanceAPI.ViewModels
             Task.Run(() => Cancel(id));
         }
 
-        //public ObservableCollection<LimitBot> Bots = new ObservableCollection<LimitBot>();
-
         public int IdBot = 0;
         public void StartBot()
         {
             BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotTime, IdBot));
             IdBot++;
             Console.WriteLine(BotsList.botsList.Count);
-
         }
 
-        //private async Task Flag()
-        //{
-        //    if (flag)
-        //    {
-        //        var price = SelectedSymbol.Price - SelectedSymbol.BotDelta;
-        //        var buy = await binanceClient.SpotApi.Trading.PlaceOrderAsync(SelectedSymbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, SelectedSymbol.BotSize, price: price, timeInForce: TimeInForce.GoodTillCanceled);
-        //        Console.WriteLine("BuyAgain");
+        private async Task GetAllClients()
+        {
+            var result = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
 
-        //        await Task.Delay((int)SelectedSymbol.BotTime * 1000);
-
-        //        var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol, buy.Data.Id);
-
-        //        if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
-        //        {
-        //            await StopBot();
-        //            Selection.SelectedSymbol.StopBotButton.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
-        //            Console.WriteLine("Kupleno");
-        //        }
-
-        //        await binanceClient.SpotApi.Trading.CancelOrderAsync(SelectedSymbol.Symbol, buy.Data.Id);
-        //        Console.WriteLine("CancelAgain");
-
-        //        await Flag();
-        //    }
-        //}
+            Clients = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Balances.Select(r => new BinanceSymbolViewModel(r.Asset, Math.Round(r.Available,3))));
+            Console.WriteLine(Clients.Count);
+        }
     }
 }
 

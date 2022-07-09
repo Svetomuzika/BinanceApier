@@ -35,7 +35,7 @@ namespace BinanceAPI.View
                     Console.WriteLine(SmartDeltaBot.Text);
                     Console.WriteLine(TimeBot.Text);
                     i.Size = decimal.Parse(SizeBot.Text.ToString());
-                    //i.Delta = Decimal.Parse(DeltaBot.Text);
+                    i.Delta = Decimal.Parse(DeltaBot.Text);
                     //i.SmartDelta = Decimal.Parse(SmartDeltaBot.Text);
                     //i.Time = Decimal.Parse(TimeBot.Text);
                     return;

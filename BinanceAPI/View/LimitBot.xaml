@@ -25,28 +25,28 @@
     </Window.Resources>
 
     <Grid>
-        <TextBox x:Name="SizeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotSize}" Margin="10,-180,0,0" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
+        <TextBox x:Name="SizeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="10,-180,0,0" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="5"/>
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <TextBox x:Name="DeltaBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotDelta}" Margin="10,-20,0,82" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
+        <TextBox x:Name="DeltaBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="10,-20,0,82" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="5"/>
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <TextBox x:Name="SmartDeltaBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotSmartDelta}" Margin="10,15,0,40" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
+        <TextBox x:Name="SmartDeltaBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="10,15,0,40" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="5"/>
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <TextBox x:Name="TimeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotTime}" Margin="10,50,0,-2" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
+        <TextBox x:Name="TimeBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Margin="10,50,0,-2" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Visible">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="5"/>
@@ -59,7 +59,7 @@
         <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,125,139,77" Foreground="#7f8c9c" Visibility="Visible"/>
         <StackPanel x:Name="BotPanel" Orientation="Horizontal" Height="10" 
                         Margin="0,0,0,-10" Width="277" HorizontalAlignment="Left" Visibility="Visible">
-            <Button x:Name="StartBot" Width="80" Margin="10,20,5,-110" Command="{Binding StartBotCommand}" Content="OK" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">
+            <Button x:Name="StartBot" Width="80" Margin="10,20,5,-110" Content="OK" Click="ChangeBotSettings_Click" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">
                 <Button.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"/>

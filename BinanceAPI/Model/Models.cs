@@ -55,7 +55,7 @@ namespace BinanceAPI.Model
 
     }
 
-    static class CloseStream
+    public static class CloseStream
     {
         public static string ClosedWindowName = null;
 
@@ -82,6 +82,11 @@ namespace BinanceAPI.Model
 
     public static class BotsList
     {
-        public static ObservableCollection<Bot> botsList = new ObservableCollection<Bot>();
+        private static ObservableCollection<Bot> _botsList = new ObservableCollection<Bot>();
+        public static ObservableCollection<Bot> botsList
+        {
+            get { return _botsList; }
+            set { _botsList = value; }
+        }
     }
 }

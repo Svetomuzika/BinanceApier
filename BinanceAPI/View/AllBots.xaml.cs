@@ -20,14 +20,19 @@ namespace BinanceAPI.View
 {
     public partial class AllBots : Window
     {
-        ObservableCollection<Bot> bots;
+        private ObservableCollection<Bot> Bots { get; set; } = BotsList.botsList;
 
         public AllBots()
         {
             InitializeComponent();
 
-            bots = BotsList.botsList;
-            BotsListView.ItemsSource = bots;
+            Binding myBinding = new Binding
+            {
+                Source = BotsList.botsList,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            
+            BotsListView.SetBinding(ItemsControl.ItemsSourceProperty, myBinding);
         }
 
         public void DeleteBot_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
 ﻿using Binance.Net.Objects.Models.Spot;
+using BinanceApi.MVVM;
 using BinanceAPI.ViewModels;
 using CryptoExchange.Net.Objects;
 using System;
@@ -9,14 +10,54 @@ using System.Threading.Tasks;
 
 namespace BinanceAPI.Model
 {
-    public abstract class Bot
+    public abstract class Bot : ObservableObject
     {
         protected MainViewModel FuncsClass;
         public BinanceSymbolViewModel Symbol { get; set; }
-        public decimal Size { get; set; }
-        public decimal Delta { get; set; }
-        public decimal SmartDelta { get; set; }
-        public decimal Time { get; set; }
+
+        private decimal size;
+        public decimal Size
+        {
+            get { return size; }
+            set
+            {
+                size = value;
+                RaisePropertyChangedEvent("Size");
+            }
+        }
+
+        private decimal delta;
+        public decimal Delta 
+        {
+            get { return delta; }
+            set
+            {
+                delta = value;
+                RaisePropertyChangedEvent("Delta");
+            }
+        }
+
+        private decimal smartDelta;
+        public decimal SmartDelta
+        {
+            get { return smartDelta; }
+            set
+            {
+                smartDelta = value;
+                RaisePropertyChangedEvent("SmartDelta");
+            }
+        }
+
+        private decimal time;
+        public decimal Time
+        {
+            get { return time; }
+            set
+            {
+                time = value;
+                RaisePropertyChangedEvent("Time");
+            }
+        }
         public decimal Price { get; set; }
         public int Id { get; set; }
         public long IdOrder { get; set; }

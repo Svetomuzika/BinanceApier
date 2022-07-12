@@ -7,7 +7,7 @@
         xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
-        Title="AllBots" Height="280" Width="620">
+        Title="AllBots" Height="280" Width="620" Name="allBots">
 
     <Window.DataContext>
         <local1:MainViewModel/>
@@ -32,7 +32,7 @@
             <TextBlock Foreground="#7d8594" Text="SmartDelta" FontSize="15" Margin="20,7,-10,0" Width="77" Height="38"/>
             <TextBlock Foreground="#7d8594" Text="Time(s)" FontSize="15" Margin="20,7,-12,0" Width="59" Height="38"/>
         </StackPanel>
-        <ListView x:Name="BotsListView" FontSize="15" Height="220" VerticalAlignment="Center" Margin="0,40,0,0">
+        <ListView x:Name="BotsListView" DataContext="" FontSize="15" Height="220" VerticalAlignment="Center" Margin="0,40,0,0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="100">

@@ -7,7 +7,7 @@
         xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
-        Title="LimitBot" Height="250" Width="210">
+        Title="LimitBot" Height="280" Width="210">
 
     <Window.DataContext>
         <local1:MainViewModel/>
@@ -53,10 +53,10 @@
                 </Style>
             </TextBox.Resources>
         </TextBox>
-        <TextBlock x:Name="SizeBotBlock" Text="Size" Margin="13,8,172,193" Foreground="#7f8c9c" Visibility="Visible"/>
-        <TextBlock x:Name="DeltaBotBlock" Text="Delta(units)" Margin="13,48,130,154" Foreground="#7f8c9c" Visibility="Visible"/>
-        <TextBlock x:Name="SmartDeltaBotBlock" Text="SmartDelta(units)" Margin="13,88,98,116" Foreground="#7f8c9c" Visibility="Visible"/>
-        <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,125,139,77" Foreground="#7f8c9c" Visibility="Visible"/>
+        <TextBlock x:Name="SizeBotBlock" Text="Size" Margin="13,25,172,193" Foreground="#7f8c9c" Visibility="Visible"/>
+        <TextBlock x:Name="DeltaBotBlock" Text="Delta(units)" Margin="13,64,130,154" Foreground="#7f8c9c" Visibility="Visible"/>
+        <TextBlock x:Name="SmartDeltaBotBlock" Text="SmartDelta(units)" Margin="13,102,98,116" Foreground="#7f8c9c" Visibility="Visible"/>
+        <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,141,139,77" Foreground="#7f8c9c" Visibility="Visible"/>
         <StackPanel x:Name="BotPanel" Orientation="Horizontal" Height="10" 
                         Margin="0,0,0,-10" Width="277" HorizontalAlignment="Left" Visibility="Visible">
             <Button x:Name="StartBot" Width="80" Margin="10,20,5,-110" Content="OK" Click="ChangeBotSettings_Click" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">

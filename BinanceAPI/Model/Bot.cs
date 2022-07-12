@@ -23,7 +23,7 @@ namespace BinanceAPI.Model
         protected WebCallResult<BinancePlacedOrder> Order;
         public bool isPaused;
 
-        protected abstract Task Update();
+        public abstract Task Update();
 
         public void StartPauseBot()
         {

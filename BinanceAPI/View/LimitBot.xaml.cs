@@ -3,6 +3,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace BinanceAPI.View
 {
@@ -37,7 +38,8 @@ namespace BinanceAPI.View
                     i.Delta = decimal.Parse(d);
                     i.SmartDelta = decimal.Parse(sd);
                     i.Time = decimal.Parse(t);
-                    
+                    //i.Update();
+
                     return;
                 }
             }

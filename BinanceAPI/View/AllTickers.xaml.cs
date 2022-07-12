@@ -89,45 +89,6 @@ namespace BinanceAPI
             return lines;
         }
 
-        //public void AddNewTable(string ticker, string line)
-        //{
-        //    string str = string.Empty;
-
-        //    var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-        //    var relativePath = @"Model\BD.txt";
-        //    var fullPath = Path.Combine(appDir, relativePath);
-
-        //    using (StreamReader reader = new StreamReader(fullPath))
-        //    {
-        //        str = reader.ReadToEnd();
-        //    }
-
-        //    string newLine = line + "," + ticker;
-        //    str = str.Replace(line, newLine);
-
-        //    using (StreamWriter file = new StreamWriter(fullPath))
-        //    {
-        //        file.Write(str);
-        //    }
-        //}
-
-        //private void AddNewMenu(string name)
-        //{
-        //    var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-        //    var relativePath = @"Model\BD.txt";
-        //    var fullPath = Path.Combine(appDir, relativePath);
-
-        //    using (StreamWriter file = new StreamWriter(fullPath, true))
-        //    {
-        //        file.WriteLine(name);
-        //    }
-        //}
-
-        //public event Action<TradeWindow> NewLockWindowTrade;
-        //public event Action<TradeWindow> NewLockWindowLevel2;
-        //public event Action<TradeWindow> NewLockWindowAggTrade;
-        //public event Action<TradeWindow> NewLockWindowTrading;
-
         private void LeftClick(object sender, MouseButtonEventArgs e)
         {
             if (Lock.Locker)

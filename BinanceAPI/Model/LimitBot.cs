@@ -24,40 +24,44 @@ namespace BinanceAPI.Model
             Task.Run(() => Update());
         }
 
-        protected override async Task Update()
+        public override async Task Update()
         {
-            if (!isPaused && !isOrdered)
-            {
-                Price = Math.Round(Symbol.Price - Delta, 2);
-                if(Order == null)
-                {
-                    Order = await FuncsClass.binanceClient.SpotApi.Trading.PlaceOrderAsync(Symbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, Size, price: Price, timeInForce: TimeInForce.GoodTillCanceled);
-                    isOrdered = true;
-                    Console.WriteLine($"Покупка снова по -{Delta}");
-                }
-                
-                IdOrder = Order.Data.Id;
+            //if (!isPaused && !isOrdered)
+            //{
+            //    Price = Math.Round(Symbol.Price - Delta, 2);
+            //    if(Order == null)
+            //    {
+            //        Order = await FuncsClass.binanceClient.SpotApi.Trading.PlaceOrderAsync(Symbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, Size, price: Price, timeInForce: TimeInForce.GoodTillCanceled);
+            //        isOrdered = true;
+            //        Console.WriteLine($"Покупка снова по -{Delta}");
+            //    }
 
-                await Task.Delay((int)Time * 1000);
+            //    IdOrder = Order.Data.Id;
 
-                var result = await FuncsClass.binanceClient.SpotApi.Trading.GetOrdersAsync(Symbol.Symbol, Order.Data.Id);
+            //    await Task.Delay((int)Time * 1000);
 
-                if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
-                {
-                    await StopBotAsync();
-                }
+            //    var result = await FuncsClass.binanceClient.SpotApi.Trading.GetOrdersAsync(Symbol.Symbol, Order.Data.Id);
 
-                var lastPrice = Order.Data.Price + Delta;
-                if(!(lastPrice + SmartDelta > Symbol.Price && lastPrice - SmartDelta < Symbol.Price))
-                {
-                    await FuncsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(Symbol.Symbol, Order.Data.Id);
-                    isOrdered = false;
-                    Order = null;
-                    Console.WriteLine("Отмена");
-                }   
+            //    if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
+            //    {
+            //        await StopBotAsync();
+            //    }
 
-                await Update();
-            }
+            //    var lastPrice = Order.Data.Price + Delta;
+            //    if(!(lastPrice + SmartDelta > Symbol.Price && lastPrice - SmartDelta < Symbol.Price))
+            //    {
+            //        await FuncsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(Symbol.Symbol, Order.Data.Id);
+            //        isOrdered = false;
+            //        Order = null;
+            //        Console.WriteLine("Отмена");
+            //    }   
+
+            Console.WriteLine(Id);
+
+            await Task.Delay(3 * 500 * 2);
+
+            await Update();
+            //}
         }
     }
 }

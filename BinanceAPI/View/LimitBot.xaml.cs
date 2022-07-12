@@ -1,10 +1,9 @@
 ﻿using BinanceAPI.Model;
 using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace BinanceAPI.View
 {
@@ -30,14 +29,17 @@ namespace BinanceAPI.View
             {
                 if (i.Id == id)
                 {
-                    Console.WriteLine(SizeBot.Text);
-                    Console.WriteLine(DeltaBot.Text);
-                    Console.WriteLine(SmartDeltaBot.Text);
-                    Console.WriteLine(TimeBot.Text);
-                    i.Size = decimal.Parse(SizeBot.Text.ToString());
-                    i.Delta = Decimal.Parse(DeltaBot.Text);
-                    //i.SmartDelta = Decimal.Parse(SmartDeltaBot.Text);
-                    //i.Time = Decimal.Parse(TimeBot.Text);
+                    var s = SizeBot.Text.Replace('.', ',');
+                    var d = DeltaBot.Text.Replace('.', ',');
+                    var sd = SmartDeltaBot.Text.Replace('.', ',');
+                    var t = TimeBot.Text.Replace('.', ',');
+
+                    i.Size = decimal.Parse(s);
+                    i.Delta = decimal.Parse(d);
+                    i.SmartDelta = decimal.Parse(sd);
+                    i.Time = decimal.Parse(t);
+                    //i.Update();
+
                     return;
                 }
             }

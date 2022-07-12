@@ -50,8 +50,6 @@ namespace BinanceAPI.Model
                         if (Id == e.Id)
                         {
                             BotsList.botsList.Remove(e);
-                            BotsList.botsList.Add(e);
-                            var a = new ObservableCollection<int>();
                         }
                     }
                 }

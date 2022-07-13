@@ -44,7 +44,6 @@ namespace BinanceAPI.Model
                 {
                     await StopBotAsync();
                     Console.WriteLine(BotsList.botsList.Count);
-                    Console.WriteLine("обязано быть");
                     foreach (var e in BotsList.botsList)
                     {
                         if (Id == e.Id)

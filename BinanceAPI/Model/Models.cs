@@ -88,5 +88,7 @@ namespace BinanceAPI.Model
             get { return _botsList; }
             set { _botsList = value; }
         }
+
+        public static int IdBot = 0;
     }
 }

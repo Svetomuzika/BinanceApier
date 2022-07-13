@@ -684,11 +684,10 @@ namespace BinanceAPI.ViewModels
             Task.Run(() => Cancel(id));
         }
 
-        public int IdBot = 0;
         public void StartBot()
         {
-            BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotSmartDelta, SelectedSymbol.BotTime, IdBot));
-            IdBot++;
+            BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotSmartDelta, SelectedSymbol.BotTime, BotsList.IdBot));
+            BotsList.IdBot++;
             Console.WriteLine(BotsList.botsList.Count);
         }
 
@@ -702,7 +701,7 @@ namespace BinanceAPI.ViewModels
         private async Task GetProperties()
         {
             var result = await binanceClient.SpotApi.Account.GetUserAssetsAsync();
-            Console.WriteLine(result.Error.Message);
+            //Console.WriteLine(result.Error.Message);
 
             //Console.WriteLine(result.Data);
 

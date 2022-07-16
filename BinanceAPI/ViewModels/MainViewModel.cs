@@ -23,6 +23,7 @@ namespace BinanceAPI.ViewModels
         private BinanceSocketClient socketClient;
         private BinanceClient client;
 
+
         public BinanceClient binanceClient;
         private BinanceSocketClient binanceSocketClient;
 

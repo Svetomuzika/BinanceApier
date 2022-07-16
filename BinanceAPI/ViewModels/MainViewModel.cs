@@ -162,7 +162,8 @@ namespace BinanceAPI.ViewModels
         public ICommand SellCommandMarket { get; set; }
         public ICommand GetTradesCommand { get; set; }
         public ICommand CallTradingStreamCommand { get; set; }
-        public ICommand StartBotCommand { get; set; }
+        public ICommand StartBotLimitCommand { get; set; }
+        public ICommand StartBotFirstCommand { get; set; }
         public ICommand StopBotCommand { get; set; }
         public ICommand CallTProperties { get; set; }
 
@@ -207,7 +208,8 @@ namespace BinanceAPI.ViewModels
             AllCancelCommand = new DelegateCommand(async (o) => await AllCancel(o));
             GetTradesCommand = new DelegateCommand(async (o) => await GetTrades());
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
-            StartBotCommand = new DelegateCommand((o) => StartBot());
+            StartBotLimitCommand = new DelegateCommand((o) => StartLimitBot());
+            StartBotFirstCommand = new DelegateCommand((o) => StartFirstBot());
             //CallTProperties = new DelegateCommand(async (o) => await GetProperties());
         }
 
@@ -684,9 +686,16 @@ namespace BinanceAPI.ViewModels
             Task.Run(() => Cancel(id));
         }
 
-        public void StartBot()
+        public void StartLimitBot()
         {
             BotsList.botsList.Insert(0, new LimitBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotDelta, SelectedSymbol.BotSmartDelta, SelectedSymbol.BotTime, BotsList.IdBot));
+            BotsList.IdBot++;
+            Console.WriteLine(BotsList.botsList.Count);
+        }
+
+        public void StartFirstBot()
+        {
+            BotsList.botsList.Insert(0, new FirstBot(this, SelectedSymbol, SelectedSymbol.BotSize, SelectedSymbol.BotTime, BotsList.IdBot));
             BotsList.IdBot++;
             Console.WriteLine(BotsList.botsList.Count);
         }

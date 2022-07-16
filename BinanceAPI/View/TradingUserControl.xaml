@@ -39,7 +39,21 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBlock x:Name="Bot" Text="Bot" Margin="122,10,628,390" FontSize="15" MouseLeftButtonDown="Bot_MouseLeftButtonDown">
+        <TextBlock x:Name="Bot" Text="LmtBot" Margin="122,10,628,390" FontSize="15" MouseLeftButtonDown="Bot_MouseLeftButtonDown">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="true">
+                            <Setter Property="Foreground" Value="#7f8c9c"/>
+                        </Trigger>
+                        <Trigger Property ="IsMouseOver" Value="true">
+                            <Setter Property= "Foreground" Value="#f0b90b"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBlock x:Name="FirstBot" Text="FirstBot" Margin="183,10,575,427" FontSize="15" MouseLeftButtonDown="BotFirst_MouseLeftButtonDown">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>
@@ -121,6 +135,22 @@
                 <TextBlock x:Name="DeltaBotBlock" Text="Delta(units)" Margin="13,130,188,89" Foreground="#7f8c9c" Visibility="Hidden"/>
                 <TextBlock x:Name="SmartDeltaBotBlock" Text="SmartDelta(units)" Margin="13,167,156,51" Foreground="#7f8c9c" Visibility="Hidden"/>
                 <TextBlock x:Name="TimeBotBlock" Text="Time(sec)" Margin="13,204,199,13" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBox x:Name="SizeFirstBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotSize}" Margin="10,87,0,124" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBox x:Name="TimeFirstBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.BotTime}" Margin="10,120,0,82" PreviewTextInput="NumberValidationTextBoxAmountMarket" HorizontalAlignment="Left" Height="25" Width="190" Visibility="Hidden">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBlock x:Name="SizeFirstBotBlock" Text="Size" Margin="13,93,209,127" Foreground="#7f8c9c" Visibility="Hidden"/>
+                <TextBlock x:Name="TimeFirstBotBlock" Text="Time(sec)" Margin="13,130,188,89" Foreground="#7f8c9c" Visibility="Hidden"/>
             </Grid>
             <StackPanel Orientation="Horizontal" Height="50" Margin="0,-70,0,100" Width="277" HorizontalAlignment="Left">
                 <Button x:Name="BuyLimit" Width="80" Margin="10,0,5,5" Command="{Binding BuyCommandLimit}" Content="Buy" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30">
@@ -156,7 +186,17 @@
             </StackPanel>
             <StackPanel x:Name="BotPanel" Orientation="Horizontal" Height="10" 
                         Margin="0,-130,0,100" Width="277" HorizontalAlignment="Left" Visibility="Hidden">
-                <Button x:Name="StartBot" Width="80" Margin="10,20,5,-80" Command="{Binding StartBotCommand}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">
+                <Button x:Name="StartBot" Width="80" Margin="10,20,5,-80" Command="{Binding StartBotLimitCommand}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+            <StackPanel x:Name="BotFirstPanel" Orientation="Horizontal" Height="10" 
+                        Margin="0,-130,0,100" Width="277" HorizontalAlignment="Left" Visibility="Hidden">
+                <Button x:Name="StartFirstBot" Width="80" Margin="10,-120,5,-80" Command="{Binding StartBotFirstCommand}" Content="Start" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif" Height="30" Cursor="Hand">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>

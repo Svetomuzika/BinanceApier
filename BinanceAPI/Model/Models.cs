@@ -90,5 +90,13 @@ namespace BinanceAPI.Model
         }
 
         public static int IdBot = 0;
+
+        public static void Delete()
+        {
+            _botsList.Clear();
+            botsList.Clear();
+        }
+
+        public static AllBots AllBotsWindow;
     }
 }

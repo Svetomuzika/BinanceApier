@@ -33,6 +33,7 @@ namespace BinanceAPI.View
             };
             
             BotsListView.SetBinding(ItemsControl.ItemsSourceProperty, myBinding);
+            BotsList.AllBotsWindow = this;
         }
 
         public void DeleteBot_Click(object sender, RoutedEventArgs e)
@@ -50,6 +51,22 @@ namespace BinanceAPI.View
                 }
             }
         }
+
+        public void DeleteBot_Click(int id)
+        {
+            foreach (var i in BotsList.botsList)
+            {
+                if (i.Id == id)
+                {
+                    Task.Run(() => i.StopBotAsync());
+                    Console.WriteLine("удаление)");
+                    Console.WriteLine(id);
+                    BotsList.botsList.Remove(i);
+                    return;
+                }
+            }
+        }
+
 
         public void PauseBot_Click(object sender, RoutedEventArgs e)
         {

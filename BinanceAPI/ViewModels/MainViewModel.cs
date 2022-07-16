@@ -22,12 +22,10 @@ namespace BinanceAPI.ViewModels
     {
         private BinanceSocketClient socketClient;
         private BinanceClient client;
-
         public BinanceClient binanceClient;
         private BinanceSocketClient binanceSocketClient;
 
         public string searchMain;
-
         public string SearchMain
         {
             get { return searchMain; }

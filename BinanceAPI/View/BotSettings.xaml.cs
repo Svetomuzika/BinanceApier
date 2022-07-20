@@ -7,13 +7,31 @@ using System.Threading.Tasks;
 
 namespace BinanceAPI.View
 {
-    public partial class LimitBot : Window
+    public partial class BotSettings : Window
     {
         private int id;
-        public LimitBot(int id)
+        private int firstbot;
+        public BotSettings(int id)
         {
             this.id = id;
             InitializeComponent();
+        }
+
+        public BotSettings(int id, int firstBot)
+        {
+            this.id = id;
+            firstbot = firstBot;
+            InitializeComponent();
+
+            DeltaBot.Visibility = Visibility.Hidden;
+            DeltaBotBlock.Visibility = Visibility.Hidden;
+            SmartDeltaBot.Visibility = Visibility.Hidden;
+            SmartDeltaBotBlock.Visibility = Visibility.Hidden;
+            TimeBot.Visibility = Visibility.Hidden;
+            TimeBotBlock.Visibility = Visibility.Hidden;
+            TimeFirstBot.Visibility = Visibility.Visible;
+            TimeFirstBotBlock.Visibility = Visibility.Visible;
+            StartBot.Margin = new Thickness(10, -130, 5, -110);
         }
 
         private void NumberValidationTextBoxAmountMarket(object sender, TextCompositionEventArgs e)
@@ -27,7 +45,7 @@ namespace BinanceAPI.View
         {
             foreach (var i in BotsList.botsList)
             {
-                if (i.Id == id)
+                if (i.Id == id && firstbot == 0)
                 {
                     var s = SizeBot.Text.Replace('.', ',');
                     var d = DeltaBot.Text.Replace('.', ',');
@@ -41,6 +59,14 @@ namespace BinanceAPI.View
                     //i.Update();
 
                     return;
+                }
+                else
+                {
+                    var s = SizeBot.Text.Replace('.', ',');
+                    var t = TimeFirstBot.Text.Replace('.', ',');
+
+                    i.Size = decimal.Parse(s);
+                    i.Time = decimal.Parse(t);
                 }
             }
         }

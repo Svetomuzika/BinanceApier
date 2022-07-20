@@ -157,8 +157,8 @@
     <Compile Include="View\Level2UserControl.xaml.cs">
       <DependentUpon>Level2UserControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\LimitBot.xaml.cs">
-      <DependentUpon>LimitBot.xaml</DependentUpon>
+    <Compile Include="View\BotSettings.xaml.cs">
+      <DependentUpon>BotSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\NewWatchList.xaml.cs">
       <DependentUpon>NewWatchList.xaml</DependentUpon>
@@ -219,7 +219,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\LimitBot.xaml">
+    <Page Include="View\BotSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

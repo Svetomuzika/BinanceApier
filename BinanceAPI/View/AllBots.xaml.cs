@@ -109,7 +109,27 @@ namespace BinanceAPI.View
         public void SettingsBot_Click(object sender, RoutedEventArgs e)
         {
             Button a = (Button)e.Source;
-            new LimitBot((int)a.Content) { Left = Left + Width * 1.01, Top = Top }.Show();
+            foreach(var i in BotsList.botsList)
+            {
+                if (i.Id == (int)a.Content && i.GetType().ToString() == "BinanceAPI.Model.FirstBot")
+                {
+                    NewSettingFirstBot(i.Id);
+                }
+                else if(i.Id == (int)a.Content && i.GetType().ToString() == "BinanceAPI.Model.LimitBot")
+                {
+                    NewSettingLimitBot(i.Id);
+                }
+            }
+        }
+
+        public void NewSettingFirstBot(int id)
+        {
+            new BotSettings(id, 1) { Left = Left + Width * 1.01, Top = Top }.Show();
+        }
+
+        public void NewSettingLimitBot(int id)
+        {
+            new BotSettings(id) { Left = Left + Width * 1.01, Top = Top }.Show();
         }
     }
 }

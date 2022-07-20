@@ -1,6 +1,8 @@
 ﻿using Binance.Net.Enums;
 using BinanceAPI.ViewModels;
+using BinanceAPI.View;
 using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

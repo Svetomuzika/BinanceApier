@@ -84,7 +84,6 @@ namespace BinanceAPI.Model
             await FuncsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(Symbol.Symbol, IdOrder);
             Order = null;
             isPaused = true;
-            Console.WriteLine(BotsList.botsList.Count);
         }
     }
 }

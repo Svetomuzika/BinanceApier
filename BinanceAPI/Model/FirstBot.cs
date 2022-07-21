@@ -27,31 +27,35 @@ namespace BinanceAPI.Model
         public override async Task Update()
         {
             if (!isPaused)
-            {
-                Price = Symbol.Price;
+            {   
                 if (Order == null)
                 {
+                    Price = Symbol.Price;
                     Order = await FuncsClass.binanceClient.SpotApi.Trading.PlaceOrderAsync(Symbol.Symbol, OrderSide.Buy, SpotOrderType.Limit, Size, price: Price, timeInForce: TimeInForce.GoodTillCanceled);
-                    Console.WriteLine($"Покупка снова по -{Delta}");
                 }
 
                 IdOrder = Order.Data.Id;
 
-                await Task.Delay((int)Time * 1000);
+                
 
                 var result = await FuncsClass.binanceClient.SpotApi.Trading.GetOrdersAsync(Symbol.Symbol, Order.Data.Id);
 
                 if (result.Data.FirstOrDefault().Status.ToString() == "Filled")
                 {
-                    Console.WriteLine("clear");
-                    var a = BotsList.AllBotsWindow;
-                    Console.WriteLine("clear1");
-                    //a.BotsListView.Items.Remove();
-                    return;
+                    await StopBotAsync();
+                    Console.WriteLine(BotsList.botsList.Count);
+                    foreach (var e in BotsList.botsList)
+                    {
+                        if (Id == e.Id)
+                        {
+                            BotsList.botsList.Remove(e);
+                        }
+                    }
                 }
 
-                var lastPrice = Order.Data.Price + Delta;
-                if (!(lastPrice + SmartDelta > Symbol.Price && lastPrice - SmartDelta < Symbol.Price))
+                await Task.Delay((int)Time * 1000);
+
+                if (Price != Symbol.Price)
                 {
                     await FuncsClass.binanceClient.SpotApi.Trading.CancelOrderAsync(Symbol.Symbol, Order.Data.Id);
                     Order = null;

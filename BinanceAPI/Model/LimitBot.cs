@@ -1,4 +1,5 @@
 ﻿using Binance.Net.Enums;
+using BinanceAPI.View;
 using BinanceAPI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BinanceAPI.Model
 {
@@ -44,11 +46,15 @@ namespace BinanceAPI.Model
                 {
                     await StopBotAsync();
                     Console.WriteLine(BotsList.botsList.Count);
+
                     foreach (var e in BotsList.botsList)
                     {
                         if (Id == e.Id)
                         {
-                            BotsList.botsList.Remove(e);
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                BotsList.botsList.Remove(e);
+                            });
                         }
                     }
                 }

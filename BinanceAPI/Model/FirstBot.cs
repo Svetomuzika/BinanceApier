@@ -44,11 +44,15 @@ namespace BinanceAPI.Model
                 {
                     await StopBotAsync();
                     Console.WriteLine(BotsList.botsList.Count);
+
                     foreach (var e in BotsList.botsList)
                     {
                         if (Id == e.Id)
                         {
-                            BotsList.botsList.Remove(e);
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                BotsList.botsList.Remove(e);
+                            });
                         }
                     }
                 }

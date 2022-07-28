@@ -1,5 +1,6 @@
 ﻿using BinanceApi.MVVM;
 using System;
+using System.Windows;
 
 namespace BinanceApi.ViewModels
 {
@@ -14,6 +15,17 @@ namespace BinanceApi.ViewModels
             {
                 orderPrice = value;
                 RaisePropertyChangedEvent("OrderPrice");
+            }
+        }
+
+        private Thickness backgroundSize;
+        public Thickness BackgroundSize
+        {
+            get { return backgroundSize; }
+            set
+            {
+                backgroundSize = value;
+                RaisePropertyChangedEvent("BackgroundSize");
             }
         }
 

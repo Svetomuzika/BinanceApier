@@ -6,16 +6,16 @@
              xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="886" Width="424">
-    
+
     <UserControl.DataContext>
         <local2:MainViewModel/>
     </UserControl.DataContext>
     <Grid Margin="10,0,8,0">
         <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding AllOrdersAsks}" SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="0,35,-34,0" Foreground="#FF4EFF00" Height="402" VerticalAlignment="Top" BorderBrush="Transparent">
             <ListView.View>
-                <GridView >
-                    <GridViewColumn Width="175">
-                        <GridViewColumn.CellTemplate>
+                <GridView>
+                    <GridViewColumn Width="175" x:Name="Column">
+                        <GridViewColumn.CellTemplate >
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding OrderPrice}" Foreground = "#e74359" />
                             </DataTemplate>
@@ -24,7 +24,7 @@
                     <GridViewColumn Width="85">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock x:Name="Txt" Text="{Binding OrderQPrice}" Foreground="#afb5be" />
+                                <TextBlock x:Name="SizeAsks" Text="{Binding OrderQPrice}" Foreground="#afb5be"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -35,11 +35,21 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
+                    <GridViewColumn Width="1" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="Txt" TextAlignment="Right" Margin="{Binding BackgroundSize}" Foreground="Transparent" Background="#3F716363"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
 
         <ListView Grid.Row="0" x:Name="SelectorNew1" ItemsSource="{Binding AllOrdersBids}" SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="0,466,0,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="402.04" HorizontalAlignment="Left" Width="453"   >
+            <ListView.Background>
+                <ImageBrush/>
+            </ListView.Background>
             <ListView.View>
                 <GridView >
                     <GridViewColumn Width="175">
@@ -60,6 +70,13 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding OrderSum}" Foreground="#afb5be" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="1" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="Txt" TextAlignment="Right" Margin="{Binding BackgroundSize}" Foreground="Transparent" Background="#3F716363"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

@@ -151,6 +151,8 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private decimal Full = 0;
+
         public ICommand CallTradeStreamCommand { get; set; }
         public ICommand CallTradeHistoryCommand { get; set; }
         public ICommand CallOrderStreamCommand { get; set; }
@@ -369,30 +371,58 @@ namespace BinanceAPI.ViewModels
             socketClient = new BinanceSocketClient();
 
             var result = await client.SpotApi.ExchangeData.GetOrderBookAsync(SelectedSymbol.Symbol, 15);
+
             AllOrdersAsks = new ObservableCollection<OrderViewModel>(result.Data.Asks.Reverse().Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList());
+            AllOrdersBids = new ObservableCollection<OrderViewModel>(result.Data.Bids.Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList());
 
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
             CancellationToken token = cancelTokenSource.Token;
 
             var subscribeResultAsks = await socketClient.SpotStreams.SubscribeToPartialOrderBookUpdatesAsync(SelectedSymbol.Symbol, 20, 1000, data =>
             {
+                Full = 0;
 
-                var newArr = data.Data.Asks.Select(r => new OrderViewModel(r.Price, r.Quantity)).Reverse().ToList();
+                var newArrAsks = data.Data.Asks.Select(r => new OrderViewModel(r.Price, r.Quantity)).Reverse().ToList();
+                var newArrBids = data.Data.Bids.OrderByDescending(p => p.Price).Where(p => p.Quantity != 0).Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList();
+
                 for (var i = 0; i < 15; i++)
                 {
-                    AllOrdersAsks[i].OrderPrice = newArr[i + 5].OrderPrice;
-                    AllOrdersAsks[i].OrderQPrice = Math.Round(newArr[i + 5].OrderQPrice, 5);
+                    Full = AllOrdersAsks[i].OrderQPrice > Full ? AllOrdersAsks[i].OrderQPrice : Full;
+                    Full = AllOrdersBids[i].OrderQPrice > Full ? AllOrdersBids[i].OrderQPrice : Full;
+                }
 
-                    var sum = Math.Round(newArr[i+5].OrderPrice * newArr[i + 5].OrderQPrice, 5).ToString();
-                    var b = 14 - sum.Length;
+                for (var i = 0; i < 15; i++)
+                {
+                    AllOrdersAsks[i].OrderPrice = newArrAsks[i + 5].OrderPrice;
+                    AllOrdersAsks[i].OrderQPrice = Math.Round(newArrAsks[i + 5].OrderQPrice, 5);
+
+                    AllOrdersBids[i].OrderPrice = newArrBids[i].OrderPrice;
+                    AllOrdersBids[i].OrderQPrice = Math.Round(newArrBids[i].OrderQPrice, 5);
+
+                    var sumAsks = Math.Round(newArrAsks[i+5].OrderPrice * newArrAsks[i + 5].OrderQPrice, 5).ToString();
+                    var b = 14 - sumAsks.Length;
                     for (int e = 1; e <= b; e++)
                     {
-                        sum = "  " + sum;
+                        sumAsks = "  " + sumAsks;
                     }
+                    sumAsks = sumAsks.Replace(",", ".");
 
-                    sum = sum.Replace(",", ".");
+                    var sumBids = Math.Round(newArrBids[i].OrderPrice * newArrBids[i].OrderQPrice, 5).ToString();
+                    var c = 14 - sumBids.Length;
+                    for (int e = 1; e <= c; e++)
+                    {
+                        sumBids = "  " + sumBids;
+                    }
+                    sumBids = sumBids.Replace(",", ".");
 
-                    AllOrdersAsks[i].OrderSum = sum;
+                    var coefAsks = (double)(AllOrdersAsks[i].OrderQPrice / Full) * (-367) - 33;
+                    var coefBids = (double)(AllOrdersBids[i].OrderQPrice / Full) * (-367) - 33;
+
+                    AllOrdersAsks[i].BackgroundSize = new Thickness(coefAsks, 0, 32, 0);
+                    AllOrdersAsks[i].OrderSum = sumAsks;
+
+                    AllOrdersBids[i].BackgroundSize = new Thickness(coefBids, 0, 32, 0);
+                    AllOrdersBids[i].OrderSum = sumBids;
                 }
 
                 if (CloseStream.ClosedStream)
@@ -406,47 +436,57 @@ namespace BinanceAPI.ViewModels
             }, token);
         }
 
-        public async Task GetOrderStreamBids()
-        {
-            var mainSymbol = SelectedSymbol.Symbol;
-            client = new BinanceClient();
-            socketClient = new BinanceSocketClient();
+        //public async Task GetOrderStreamBids()
+        //{
+        //    var mainSymbol = SelectedSymbol.Symbol;
+        //    client = new BinanceClient();
+        //    socketClient = new BinanceSocketClient();
 
-            var result = await client.SpotApi.ExchangeData.GetOrderBookAsync(SelectedSymbol.Symbol, 15);
-            AllOrdersBids = new ObservableCollection<OrderViewModel>(result.Data.Bids.Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList());
+        //    var result = await client.SpotApi.ExchangeData.GetOrderBookAsync(SelectedSymbol.Symbol, 15);
+        //    AllOrdersBids = new ObservableCollection<OrderViewModel>(result.Data.Bids.Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList());
 
-            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
-            CancellationToken token = cancelTokenSource.Token;
+        //    CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+        //    CancellationToken token = cancelTokenSource.Token;
 
-            var subscribeResultBids = await socketClient.SpotStreams.SubscribeToPartialOrderBookUpdatesAsync(SelectedSymbol.Symbol, 20, 1000, data =>
-            {
-                var newArr = data.Data.Bids.OrderByDescending(p => p.Price).Where(p => p.Quantity != 0).Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList();
-                
-                for (var i = 0; i < 15; i++)
-                {
-                    AllOrdersBids[i].OrderPrice = newArr[i].OrderPrice;
-                    AllOrdersBids[i].OrderQPrice = Math.Round(newArr[i].OrderQPrice, 5);
+        //    var subscribeResultBids = await socketClient.SpotStreams.SubscribeToPartialOrderBookUpdatesAsync(SelectedSymbol.Symbol, 20, 1000, data =>
+        //    {
+        //        FullBids = 0;
+        //        var newArrBids = data.Data.Bids.OrderByDescending(p => p.Price).Where(p => p.Quantity != 0).Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList();
 
-                    var sum = Math.Round(newArr[i].OrderPrice * newArr[i].OrderQPrice, 5).ToString();
-                    var b = 14 - sum.Length;
-                    for (int e = 1; e <= b; e++)
-                    {
-                        sum = "  " + sum;
-                    }
+        //        for (var i = 0; i < 15; i++)
+        //        {
+        //            FullBids = AllOrdersBids[i].OrderQPrice > FullBids ? AllOrdersBids[i].OrderQPrice : FullBids;
+        //        }
 
-                    AllOrdersBids[i].OrderSum = sum.Replace(",", ".");
-                }
+        //        for (var i = 0; i < 15; i++)
+        //        {
+        //            AllOrdersBids[i].OrderPrice = newArrBids[i].OrderPrice;
+        //            AllOrdersBids[i].OrderQPrice = Math.Round(newArrBids[i].OrderQPrice, 5);
 
-                if (CloseStream.ClosedStream)
-                {
-                    if (CloseStream.ClosedWindowName.Contains(mainSymbol))
-                    {
-                        cancelTokenSource.Cancel();
-                        cancelTokenSource.Dispose();
-                    }
-                }
-            }, token);
-        }
+        //            var sum = Math.Round(newArrBids[i].OrderPrice * newArrBids[i].OrderQPrice, 5).ToString();
+        //            var b = 14 - sum.Length;
+        //            for (int e = 1; e <= b; e++)
+        //            {
+        //                sum = "  " + sum;
+        //            }
+
+        //            var full = FullBids > FullAsks ? FullBids : FullAsks;
+        //            var coef = (double)(AllOrdersBids[i].OrderQPrice / full) * (-367) - 33;
+
+        //            AllOrdersBids[i].BackgroundSize = new Thickness(coef, 0, 32, 0);
+        //            AllOrdersBids[i].OrderSum = sum.Replace(",", ".");
+        //        }
+
+        //        if (CloseStream.ClosedStream)
+        //        {
+        //            if (CloseStream.ClosedWindowName.Contains(mainSymbol))
+        //            {
+        //                cancelTokenSource.Cancel();
+        //                cancelTokenSource.Dispose();
+        //            }
+        //        }
+        //    }, token);
+        //}
 
         private async Task GetLastTrade()
         {
@@ -646,7 +686,7 @@ namespace BinanceAPI.ViewModels
         {
             if (SelectedSymbol != null)
             {
-                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetOrderStreamBids(), GetTrades() , GetBalance()));
+                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetTrades() , GetBalance()));
             }
         }
 

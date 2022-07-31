@@ -7,7 +7,7 @@
         xmlns:local1="clr-namespace:BinanceAPI.ViewModels"
         mc:Ignorable="d"
         Style="{DynamicResource  CustomWindowStyle}"
-        Title="AllBots" Height="280" Width="620" Name="allBots">
+        Title="AllBots" Height="280" Width="710" Name="allBots">
 
     <Window.DataContext>
         <local1:MainViewModel/>
@@ -39,6 +39,13 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Symbol.Symbol}" Foreground="#afb5be" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="90">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock x:Name="Txt" Text="{Binding Name}" Foreground="#afb5be" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

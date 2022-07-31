@@ -339,5 +339,11 @@
   <ItemGroup>
     <Resource Include="View\icons\settings.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\icons\filter.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\icons\filter24.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

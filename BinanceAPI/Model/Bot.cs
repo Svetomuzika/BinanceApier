@@ -15,6 +15,17 @@ namespace BinanceAPI.Model
         protected MainViewModel FuncsClass;
         public BinanceSymbolViewModel Symbol { get; set; }
 
+        private string name;
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                name = value;
+                RaisePropertyChangedEvent("Name");
+            }
+        }
+
         private decimal size;
         public decimal Size
         {

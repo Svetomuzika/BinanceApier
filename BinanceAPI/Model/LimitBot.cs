@@ -21,6 +21,7 @@ namespace BinanceAPI.Model
             SmartDelta = smartDelta;
             Time = time;
             Id = id;
+            Name = "LimitBot";
             FuncsClass = funcsClass;
             Task.Run(() => Update());
         }

@@ -44,6 +44,17 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private decimal filterSize = 0;
+        public decimal FilterSize
+        {
+            get { return filterSize; }
+            set
+            {
+                filterSize = value;
+                RaisePropertyChangedEvent("FilterSize");
+            }
+        }
+
         private string balanceCoin;
         public string BalanceCoin
         {
@@ -236,17 +247,6 @@ namespace BinanceAPI.ViewModels
             {
                 tradingTrades = value;
                 RaisePropertyChangedEvent("TradingTrades");
-            }
-        }
-
-        private Button stopBotButton;
-        public Button StopBotButton
-        {
-            get { return stopBotButton; }
-            set
-            {
-                stopBotButton = value;
-                RaisePropertyChangedEvent("StopBotButton");
             }
         }
 

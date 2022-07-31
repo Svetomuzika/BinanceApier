@@ -20,6 +20,7 @@ namespace BinanceAPI.Model
             Size = size;
             Time = time;
             Id = id;
+            Name = "AggressBot";
             FuncsClass = funcsClass;
             Task.Run(() => Update());
         }

@@ -168,6 +168,7 @@ namespace BinanceAPI.ViewModels
         public ICommand StartBotFirstCommand { get; set; }
         public ICommand StopBotCommand { get; set; }
         public ICommand CallTProperties { get; set; }
+        public ICommand FilterTrades { get; set; }
 
 
 
@@ -212,6 +213,7 @@ namespace BinanceAPI.ViewModels
             CallTradeHistoryCommand = new DelegateCommand(async (o) => await GetTradeHistory());
             StartBotLimitCommand = new DelegateCommand((o) => StartLimitBot());
             StartBotFirstCommand = new DelegateCommand((o) => StartFirstBot());
+            FilterTrades = new DelegateCommand((o) => NewFilterTrades());
             //CallTProperties = new DelegateCommand(async (o) => await GetProperties());
         }
 
@@ -262,7 +264,8 @@ namespace BinanceAPI.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    symbol.AddTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
+                    if (data.Data.Quantity >= symbol.FilterSize)
+                        symbol.AddTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
 
                     if (CloseStream.ClosedStream)
                     {
@@ -776,6 +779,11 @@ namespace BinanceAPI.ViewModels
             //{
             //    Console.WriteLine(e.Name);
             //}
+        }
+
+        private void NewFilterTrades()
+        {
+
         }
     }
 }

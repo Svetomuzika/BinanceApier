@@ -55,6 +55,39 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private bool filterTradesAll = true;
+        public bool FilterTradesAll
+        {
+            get { return filterTradesAll; }
+            set
+            {
+                filterTradesAll = value;
+                RaisePropertyChangedEvent("FilterTradesAll");
+            }
+        }
+
+        private bool filterTradesBuy;
+        public bool FilterTradesBuy
+        {
+            get { return filterTradesBuy; }
+            set
+            {
+                filterTradesBuy = value;
+                RaisePropertyChangedEvent("FilterTradesBuy");
+            }
+        }
+
+        private bool filterTradesSell;
+        public bool FilterTradesSell
+        {
+            get { return filterTradesSell; }
+            set
+            {
+                filterTradesSell = value;
+                RaisePropertyChangedEvent("FilterTradesSell");
+            }
+        }
+
         private string balanceCoin;
         public string BalanceCoin
         {

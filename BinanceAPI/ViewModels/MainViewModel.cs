@@ -170,8 +170,6 @@ namespace BinanceAPI.ViewModels
         public ICommand CallTProperties { get; set; }
         public ICommand FilterTrades { get; set; }
 
-
-
         public bool SymbolIsSelected
         {
             get { return SelectedSymbol != null; }
@@ -264,8 +262,14 @@ namespace BinanceAPI.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    if (data.Data.Quantity >= symbol.FilterSize)
+                    if (data.Data.Quantity >= symbol.FilterSize && symbol.FilterTradesAll == true)
+                    {
                         symbol.AddTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
+                    }
+                    else if (data.Data.Quantity >= symbol.FilterSize && data.Data.BuyerIsMaker != symbol.FilterTradesBuy)
+                    {
+                        symbol.AddTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
+                    }
 
                     if (CloseStream.ClosedStream)
                     {
@@ -783,7 +787,7 @@ namespace BinanceAPI.ViewModels
 
         private void NewFilterTrades()
         {
-
+            selectedSymbol.FilterSize = 0;
         }
     }
 }

@@ -42,15 +42,27 @@
                 <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="20,5,12,0" Width="46" HorizontalAlignment="Right"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" Visibility="Hidden" x:Name="FilterPanel">
-                <TextBox x:Name="SizeFirstBot" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.FilterSize, UpdateSourceTrigger=LostFocus}" Margin="10,10,0,0" HorizontalAlignment="Left" Height="25" Width="190">
+                <TextBox x:Name="SizeFilterBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.FilterSize, UpdateSourceTrigger=LostFocus, Mode=TwoWay}" Margin="10,10,0,0" HorizontalAlignment="Left" Height="25" Width="190">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="5"/>
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
-                <TextBlock x:Name="TimeBotBlock" Text="Size" Margin="12,-20,0,10" Foreground="#7f8c9c" HorizontalAlignment="Left"/>
-                <Button x:Name="BuyLimit" Width="80" Margin="10,0,5,5" Content="OK" Command="{Binding FilterTrades}" HorizontalAlignment="Left" Background="#0ecb81" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Cursor="Hand">
+                <TextBlock x:Name="SizeFilterBlock" Text="Size" Margin="12,-20,0,10" Foreground="#7f8c9c" HorizontalAlignment="Left"/>
+                <StackPanel x:Name="stackPanel" Orientation="Horizontal" Margin="220,-40,0,0">
+                    <RadioButton GroupName="Languages" Content="All" Width="50" IsChecked="{Binding SelectedSymbol.FilterTradesAll}"/>
+                    <RadioButton GroupName="Languages" Content="Buy"  Width="50"  IsChecked="{Binding SelectedSymbol.FilterTradesBuy}"/>
+                    <RadioButton GroupName="Languages" Content="Sell"  Width="40" IsChecked="{Binding SelectedSymbol.FilterTradesSell}"/>
+                </StackPanel>
+                <Button x:Name="Ok" Width="80" Margin="10,0,5,5" Content="OK" HorizontalAlignment="Left" Background="#7f8c9c" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button x:Name="Sbros" Width="80" Margin="120,-35,5,5" Content="Отмена" Command="{Binding FilterTrades}" HorizontalAlignment="Left" Background="#7f8c9c" FontSize="15" FontFamily="Microsoft Sans Serif"  Height="30" Cursor="Hand" Click="Sbros_Click">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="5"/>
@@ -64,7 +76,7 @@
                         <GridViewColumn Width="140">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="Txt" Text="{Binding TradePrice}" Foreground = "{Binding TradeColor}" />
+                                    <TextBlock x:Name="Txt" Text="{Binding TradePrice}" Foreground ="{Binding TradeColor}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

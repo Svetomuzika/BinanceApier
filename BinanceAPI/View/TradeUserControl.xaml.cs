@@ -34,7 +34,13 @@ namespace BinanceAPI.View
                 FilterFlag = false;
                 SelectorNew.Margin = new Thickness(0, -80, 0, 0);
             }
+        }
 
+        private void Sbros_Click(object sender, RoutedEventArgs e)
+        {
+            FilterPanel.Visibility = Visibility.Hidden;
+            FilterFlag = false;
+            SelectorNew.Margin = new Thickness(0, -80, 0, 0);   
         }
     }
 }

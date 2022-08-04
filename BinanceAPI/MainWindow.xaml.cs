@@ -395,5 +395,10 @@ namespace BinanceAPI
         {
             new AllClients { Left = Left + Width * 1.01, Top = Top }.Show();
         }
+
+        private void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            new LoginApi { Left = Left + Width * 1.01, Top = Top }.Show();
+        }
     }
 }

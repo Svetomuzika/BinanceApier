@@ -151,6 +151,30 @@ namespace BinanceAPI.ViewModels
             }
         }
 
+        private string connectionStatus = "Offline";
+
+        public string ConnectionStatus
+        {
+            get { return connectionStatus; }
+            set
+            {
+                connectionStatus = value;
+                RaisePropertyChangedEvent("ConnectionStatus");
+            }
+        }
+
+        private string connectionStatusColor = "red";
+
+        public string ConnectionStatusColor
+        {
+            get { return connectionStatusColor; }
+            set
+            {
+                connectionStatusColor = value;
+                RaisePropertyChangedEvent("ConnectionStatusColor");
+            }
+        }
+
         private decimal Full = 0;
 
         public ICommand CallTradeStreamCommand { get; set; }
@@ -169,18 +193,25 @@ namespace BinanceAPI.ViewModels
         public ICommand StopBotCommand { get; set; }
         public ICommand CallTProperties { get; set; }
         public ICommand FilterTrades { get; set; }
+        public ICommand AccountInfo { get; set; }
 
         public bool SymbolIsSelected
         {
             get { return SelectedSymbol != null; }
         }
 
+        string testKey1 = "AU8ovgGXuLShglvZLyoEcjE3MrE7RaH3PPoESHRX4lrztsAdtvpfYSjXqkfhwogD";
+        string testKey2 = "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh";
+
+        public string ApiKey { get; set; }
+        public string ApiSecret { get; set; }
+
         public MainViewModel()
         {
             binanceClient = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("AU8ovgGXuLShglvZLyoEcjE3MrE7RaH3PPoESHRX4lrztsAdtvpfYSjXqkfhwogD",
-                        "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh"),
+                ApiCredentials = new ApiCredentials(testKey1,
+                        testKey2),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.TestNet.RestClientAddress
@@ -189,8 +220,8 @@ namespace BinanceAPI.ViewModels
 
             binanceSocketClient = new BinanceSocketClient(new BinanceSocketClientOptions
             {
-                ApiCredentials = new ApiCredentials("AU8ovgGXuLShglvZLyoEcjE3MrE7RaH3PPoESHRX4lrztsAdtvpfYSjXqkfhwogD",
-                    "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh"),
+                ApiCredentials = new ApiCredentials(testKey1,
+                        testKey2),
                 SpotStreamsOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.TestNet.SocketClientAddress
@@ -212,6 +243,7 @@ namespace BinanceAPI.ViewModels
             StartBotLimitCommand = new DelegateCommand((o) => StartLimitBot());
             StartBotFirstCommand = new DelegateCommand((o) => StartFirstBot());
             FilterTrades = new DelegateCommand((o) => NewFilterTrades());
+            AccountInfo = new DelegateCommand(async (o) => await GetAccountInfo());
             //CallTProperties = new DelegateCommand(async (o) => await GetProperties());
         }
 
@@ -731,11 +763,6 @@ namespace BinanceAPI.ViewModels
             await GetTradeStream();
         }
 
-        public async Task CallTradeHistory()
-        {
-            await GetTradeHistory();
-        }
-
         public async Task CallOrderStream()
         {
             await GetLastTrade();
@@ -788,6 +815,73 @@ namespace BinanceAPI.ViewModels
         private void NewFilterTrades()
         {
             selectedSymbol.FilterSize = 0;
+        }
+
+        public async Task GetAccountInfo()
+        {
+            Console.WriteLine("start");
+            //if (ApiKey != string.Empty && ApiSecret != string.Empty)
+            {
+                Console.WriteLine("start1");
+                binanceClient = new BinanceClient(new BinanceClientOptions
+                {
+                    ApiCredentials = new ApiCredentials("AU8ovgGXuLShglvZLyoEcjE3MrE7RaH3PPoESHRX4lrztsAdtvpfYSjXqkfhwogD",
+                        "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh"),
+                    SpotApiOptions = new BinanceApiClientOptions
+                    {
+                        BaseAddress = BinanceApiAddresses.TestNet.RestClientAddress
+                    }
+                });
+                //binanceSocketClient = new BinanceSocketClient(new BinanceSocketClientOptions
+                //{
+                //    ApiCredentials = new ApiCredentials(ApiKey,
+                //            ApiSecret),
+                //    SpotStreamsOptions = new BinanceApiClientOptions
+                //    {
+                //        BaseAddress = BinanceApiAddresses.TestNet.SocketClientAddress
+                //    }
+                //});
+            }
+
+            var result = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
+
+            if (result.Success)
+            {
+                Console.WriteLine("start2");
+
+                ConnectionStatus = "Connecting.";
+                ConnectionStatusColor = "orange";
+
+                Console.WriteLine("start3");
+
+                await Task.Delay(550);
+
+                ConnectionStatus = "Connecting..";
+                ConnectionStatusColor = "orange";
+
+                await Task.Delay(550);
+
+                ConnectionStatus = "Connected";
+                ConnectionStatusColor = "green";
+
+            }
+            else
+            {
+                Console.WriteLine("start5");
+
+                ConnectionStatus = "Connecting.";
+                ConnectionStatusColor = "orange";
+
+                await Task.Delay(550);
+
+                ConnectionStatus = "Connecting..";
+                ConnectionStatusColor = "orange";
+
+                await Task.Delay(550);
+
+                ConnectionStatus = "Offline";
+                ConnectionStatusColor = "red";
+            }
         }
     }
 }

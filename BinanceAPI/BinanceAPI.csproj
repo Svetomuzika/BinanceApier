@@ -160,6 +160,9 @@
     <Compile Include="View\BotSettings.xaml.cs">
       <DependentUpon>BotSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\LoginApi.xaml.cs">
+      <DependentUpon>LoginApi.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NewWatchList.xaml.cs">
       <DependentUpon>NewWatchList.xaml</DependentUpon>
     </Compile>
@@ -220,6 +223,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BotSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LoginApi.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

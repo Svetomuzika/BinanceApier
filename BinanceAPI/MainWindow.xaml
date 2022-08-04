@@ -80,13 +80,13 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            <Button x:Name="Connect" Content="Connection" Margin="0,0,0,2" Width="85" Height="30" FontSize="15" VerticalAlignment="Top" Click="Connect_Click" Cursor="Hand" Command="{Binding AccountInfo}">
+            <Button x:Name="Connect" Content="Connection" Margin="0,0,0,2" Width="85" Height="30" FontSize="15" VerticalAlignment="Top" Click="Connect_Click" Cursor="Hand">
             </Button>
         </StackPanel>
         <Border BorderBrush="#3a3a3a" BorderThickness="1" Height="1" VerticalAlignment="Top" Width="400" Margin="0,30,0,0"/>
         <TextBlock x:Name="Connection" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" Width="378" Foreground="Red">
             <TextBlock Text="Connection :" />
-            <TextBlock Text="{Binding ConnectionStatus}"  Foreground="{Binding ConnectionStatusColor}"/>
+            <TextBlock x:Name="ConnectionTextBlock" Text="Offline"  Foreground="red"/>
         </TextBlock>
     </Grid>
 </Window>

@@ -15,6 +15,7 @@ namespace BinanceAPI.View
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
             //Main.MainWindow.Activate();
+            //Task.Run(() => Main.MainWindow.ConnectingSucces());
         }
     }
 }

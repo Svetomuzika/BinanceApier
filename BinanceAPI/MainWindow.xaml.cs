@@ -14,6 +14,7 @@ using System.Windows.Input;
 using BinanceAPI.Model;
 using BinanceAPI.View;
 using System.Reflection;
+using System.Windows.Media;
 
 namespace BinanceAPI
 {
@@ -86,6 +87,8 @@ namespace BinanceAPI
 
                 newMenuItem.Click += Menu_ClickBD;
             }
+
+            Trades.IsEnabled = false;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -399,6 +402,41 @@ namespace BinanceAPI
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
             new LoginApi { Left = Left + Width * 1.01, Top = Top }.Show();
+        }
+
+        public async Task ConnectingSucces()
+        {
+            ConnectionTextBlock.Text = "Connecting.";
+            ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Orange);
+
+            await Task.Delay(550);
+
+            ConnectionTextBlock.Text = "Connecting..";
+            ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Orange);
+
+            await Task.Delay(550);
+
+            ConnectionTextBlock.Text = "Connected";
+            ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Green);
+
+            Trades.IsEnabled = true;
+            Api.TradingButtonEnable = true;
+        }
+
+        public async Task ConnectingError()
+        {
+            ConnectionTextBlock.Text = "Connecting.";
+            ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Orange);
+
+            await Task.Delay(550);
+
+            ConnectionTextBlock.Text = "Connecting..";
+            ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Orange);
+
+            await Task.Delay(550);
+
+            ConnectionTextBlock.Text = "Offline";
+            ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Red);
         }
     }
 }

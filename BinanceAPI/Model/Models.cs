@@ -99,4 +99,12 @@ namespace BinanceAPI.Model
 
         public static AllBots AllBotsWindow;
     }
+
+    public static class Api
+    {
+        public static string ApiKey = "AU8ovgGXuLShglvZLyoEcjE3MrE7RaH3PPoESHRX4lrztsAdtvpfYSjXqkfhwogD";
+        public static string ApiSecret = "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh";
+
+        public static bool TradingButtonEnable = false;
+    }
 }

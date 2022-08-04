@@ -68,6 +68,8 @@ namespace BinanceAPI
                 ContextMenuItem5.Items.Add(addNewMenuItem);
                 addNewMenuItem.Click += AddNewMenuItem_Click;
             }
+
+            ContextMenuItem4.IsEnabled = Api.TradingButtonEnable;
         }
 
         public List<string> NewTable()

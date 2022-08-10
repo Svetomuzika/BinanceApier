@@ -50,8 +50,25 @@ namespace BinanceAPI.ViewModels
             get { return filterSize; }
             set
             {
-                filterSize = value;
-                RaisePropertyChangedEvent("FilterSize");
+                if (filterSize != value)
+                {
+                    filterSize = value;
+                    RaisePropertyChangedEvent("FilterSize");
+                }
+            }
+        }
+
+        private decimal filterSizeLevel = 0;
+        public decimal FilterSizeLevel
+        {
+            get { return filterSizeLevel; }
+            set
+            {
+                if (filterSizeLevel != value)
+                {
+                    filterSizeLevel = value;
+                    RaisePropertyChangedEvent("FilterSizeLevel");
+                }
             }
         }
 

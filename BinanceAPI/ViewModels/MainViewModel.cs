@@ -399,6 +399,7 @@ namespace BinanceAPI.ViewModels
         public async Task GetOrderStreamAsks()
         {
             var mainSymbol = SelectedSymbol.Symbol;
+            var symbol = SelectedSymbol;
             client = new BinanceClient();
             socketClient = new BinanceSocketClient();
 
@@ -421,6 +422,24 @@ namespace BinanceAPI.ViewModels
                 {
                     Full = AllOrdersAsks[i].OrderQPrice > Full ? AllOrdersAsks[i].OrderQPrice : Full;
                     Full = AllOrdersBids[i].OrderQPrice > Full ? AllOrdersBids[i].OrderQPrice : Full;
+                    
+                    if (symbol.FilterSizeLevel != 0)
+                    {
+                        if (AllOrdersAsks[i].OrderQPrice >= symbol.FilterSizeLevel)
+                            AllOrdersAsks[i].FilterLevelColor = new Thickness(-230, 0, 170, 0);
+                        else
+                            AllOrdersAsks[i].FilterLevelColor = new Thickness(0, 0, 0, 0);
+
+                        if (AllOrdersBids[i].OrderQPrice >= symbol.FilterSizeLevel)
+                            allOrdersBids[i].FilterLevelColor = new Thickness(-230, 0, 170, 0);
+                        else
+                            AllOrdersBids[i].FilterLevelColor = new Thickness(0, 0, 0, 0);
+                    }
+                    else
+                    {
+                        AllOrdersAsks[i].FilterLevelColor = new Thickness(0, 0, 0, 0);
+                        AllOrdersBids[i].FilterLevelColor = new Thickness(0, 0, 0, 0);
+                    }
                 }
 
                 for (var i = 0; i < 15; i++)
@@ -467,59 +486,6 @@ namespace BinanceAPI.ViewModels
                 }
             }, token);
         }
-
-        //public async Task GetOrderStreamBids()
-        //{
-        //    var mainSymbol = SelectedSymbol.Symbol;
-        //    client = new BinanceClient();
-        //    socketClient = new BinanceSocketClient();
-
-        //    var result = await client.SpotApi.ExchangeData.GetOrderBookAsync(SelectedSymbol.Symbol, 15);
-        //    AllOrdersBids = new ObservableCollection<OrderViewModel>(result.Data.Bids.Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList());
-
-        //    CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
-        //    CancellationToken token = cancelTokenSource.Token;
-
-        //    var subscribeResultBids = await socketClient.SpotStreams.SubscribeToPartialOrderBookUpdatesAsync(SelectedSymbol.Symbol, 20, 1000, data =>
-        //    {
-        //        FullBids = 0;
-        //        var newArrBids = data.Data.Bids.OrderByDescending(p => p.Price).Where(p => p.Quantity != 0).Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList();
-
-        //        for (var i = 0; i < 15; i++)
-        //        {
-        //            FullBids = AllOrdersBids[i].OrderQPrice > FullBids ? AllOrdersBids[i].OrderQPrice : FullBids;
-        //        }
-
-        //        for (var i = 0; i < 15; i++)
-        //        {
-        //            AllOrdersBids[i].OrderPrice = newArrBids[i].OrderPrice;
-        //            AllOrdersBids[i].OrderQPrice = Math.Round(newArrBids[i].OrderQPrice, 5);
-
-        //            var sum = Math.Round(newArrBids[i].OrderPrice * newArrBids[i].OrderQPrice, 5).ToString();
-        //            var b = 14 - sum.Length;
-        //            for (int e = 1; e <= b; e++)
-        //            {
-        //                sum = "  " + sum;
-        //            }
-
-        //            var full = FullBids > FullAsks ? FullBids : FullAsks;
-        //            var coef = (double)(AllOrdersBids[i].OrderQPrice / full) * (-367) - 33;
-
-        //            AllOrdersBids[i].BackgroundSize = new Thickness(coef, 0, 32, 0);
-        //            AllOrdersBids[i].OrderSum = sum.Replace(",", ".");
-        //        }
-
-        //        if (CloseStream.ClosedStream)
-        //        {
-        //            if (CloseStream.ClosedWindowName.Contains(mainSymbol))
-        //            {
-        //                cancelTokenSource.Cancel();
-        //                cancelTokenSource.Dispose();
-        //            }
-        //        }
-        //    }, token);
-        //}
-
         private async Task GetLastTrade()
         {
             var mainSymbol = Selection.SelectedSymbol;
@@ -707,7 +673,6 @@ namespace BinanceAPI.ViewModels
         private async Task GetTrades()
         {
             var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol);
-            var symbol = AllPrices.SingleOrDefault(a => a.Symbol == SelectedSymbol.Symbol);
 
             SelectedSymbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() != "Filled" && a.Status.ToString() != "Canceled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
             SelectedSymbol.TradingTrades = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() == "Filled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
@@ -812,10 +777,10 @@ namespace BinanceAPI.ViewModels
 
         public async Task GetAccountInfo()
         {
-            Api.ApiKey = ApiKey;
-            Api.ApiSecret = ApiSecret;
+            //Api.ApiKey = ApiKey;
+            //Api.ApiSecret = ApiSecret;
 
-            if (Api.ApiKey != null && Api.ApiSecret != null)
+            if (Api.ApiKey != null && Api.ApiSecret != null && Api.ApiKey != string.Empty && Api.ApiSecret != string.Empty)
             {
                 binanceClient = new BinanceClient(new BinanceClientOptions
                 {

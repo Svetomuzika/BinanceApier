@@ -15,6 +15,8 @@ using BinanceAPI.Model;
 using BinanceAPI.View;
 using System.Reflection;
 using System.Windows.Media;
+using System.Windows.Data;
+using System.Xml.Linq;
 
 namespace BinanceAPI
 {
@@ -418,6 +420,12 @@ namespace BinanceAPI
 
             ConnectionTextBlock.Text = "Connected";
             ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Green);
+
+            Binding myBinding = new Binding();
+            myBinding.Source = new MainViewModel();
+            myBinding.Path = new PropertyPath("TradingAllOrders.Count");
+            myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            BindingOperations.SetBinding(ActualOrdersCount, TextBlock.TextProperty, myBinding);
 
             Trades.IsEnabled = true;
             Api.TradingButtonEnable = true;

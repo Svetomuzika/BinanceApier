@@ -88,6 +88,10 @@
             <TextBlock Text="Connection :" />
             <TextBlock x:Name="ConnectionTextBlock" Text="Offline"  Foreground="red"/>
         </TextBlock>
+        <TextBlock x:Name="Orders" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,160,0,0" Width="378" Foreground="Red">
+            <TextBlock Text="Active Orders :" />
+            <TextBlock x:Name="ActualOrdersCount" Text="0"/>
+        </TextBlock>
     </Grid>
 </Window>
     

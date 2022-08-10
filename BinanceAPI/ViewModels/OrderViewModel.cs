@@ -29,6 +29,17 @@ namespace BinanceApi.ViewModels
             }
         }
 
+        private Thickness filterLevelColor;
+        public Thickness FilterLevelColor
+        {
+            get { return filterLevelColor; }
+            set
+            {
+                filterLevelColor = value;
+                RaisePropertyChangedEvent("FilterLevelColor");
+            }
+        }
+
         private decimal orderQPrice;
         public decimal OrderQPrice
         {

@@ -90,7 +90,7 @@ namespace BinanceAPI
                 newMenuItem.Click += Menu_ClickBD;
             }
 
-            Trades.IsEnabled = false;
+            //Trades.IsEnabled = false;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

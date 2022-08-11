@@ -32,7 +32,7 @@ namespace BinanceAPI.View
             {
                 FilterPanel.Visibility = Visibility.Hidden;
                 FilterFlag = false;
-                SelectorNew.Margin = new Thickness(0, -80, 0, 0);
+                SelectorNew.Margin = new Thickness(0, -50, 0, 0);
             }
         }
     }

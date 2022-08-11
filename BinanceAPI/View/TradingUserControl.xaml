@@ -53,7 +53,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBlock x:Name="FirstBot" Text="AggressBot" Margin="183,10,575,427" FontSize="15" MouseLeftButtonDown="BotFirst_MouseLeftButtonDown">
+        <TextBlock x:Name="FirstBot" Text="AggressBot" Margin="183,10,557,427" FontSize="15" MouseLeftButtonDown="BotFirst_MouseLeftButtonDown">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Style.Triggers>

@@ -56,7 +56,7 @@
                     <RadioButton GroupName="Languages" Content="Sell"  Width="40" IsChecked="{Binding SelectedSymbol.FilterTradesSell}"/>
                 </StackPanel>
             </StackPanel>
-            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="0,-80,0,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="381">
+            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.Trades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="0,-50,0,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="381">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Width="140">

@@ -25,7 +25,15 @@
     </Window.Resources>
 
     <Grid>
-        <ListView x:Name="OrdersList" ItemsSource="{Binding TradingAllTrades}" FontSize="15" Height="262" VerticalAlignment="Center" >
+        <StackPanel x:Name='Hat' Orientation="Horizontal">
+            <TextBlock Foreground="#7d8594" Text="Ticker" FontSize="15" Margin="10,0,0,0"/>
+            <TextBlock Foreground="#7d8594" Text="Side" FontSize="15" Margin="50,0,0,0"/>
+            <TextBlock Foreground="#7d8594" Text="Price" FontSize="15" Margin="33,0,0,0"/>
+            <TextBlock Foreground="#7d8594" Text="Quantity" FontSize="15" Margin="62,0,0,0"/>
+            <TextBlock Foreground="#7d8594" Text="Status" FontSize="15" Margin="24,0,0,0"/>
+            <TextBlock Foreground="#7d8594" Text="Date" FontSize="15" Margin="30,0,0,0"/>
+        </StackPanel>
+        <ListView x:Name="OrdersList" ItemsSource="{Binding TradingAllTrades}" FontSize="15" Height="230" VerticalAlignment="Center" Margin="0,30,0,0" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="90">
@@ -35,7 +43,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="70">
+                    <GridViewColumn Width="60">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Side}" Foreground="#afb5be" />
@@ -63,7 +71,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Width="150">
+                    <GridViewColumn Width="180">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock x:Name="Txt" Text="{Binding Time}" Foreground="#afb5be" />

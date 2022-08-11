@@ -20,8 +20,8 @@ namespace BinanceAPI.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        private BinanceSocketClient socketClient;
-        private BinanceClient client;
+        private BinanceSocketClient socketClient = new BinanceSocketClient();
+        private BinanceClient client = new BinanceClient();
 
 
         public BinanceClient binanceClient;
@@ -258,9 +258,8 @@ namespace BinanceAPI.ViewModels
 
         private async Task GetNewSymbols()
         {
-            client = new BinanceClient();
             var result = await client.SpotApi.ExchangeData.GetPricesAsync();
-            
+
             AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
             FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
         }
@@ -269,9 +268,6 @@ namespace BinanceAPI.ViewModels
         public async Task GetTradeStream()
         {
             SelectedSymbol = Selection.SelectedSymbol;
-
-            client = new BinanceClient();
-            socketClient = new BinanceSocketClient();
             
             var result = await client.SpotApi.ExchangeData.GetRecentTradesAsync(SelectedSymbol.Symbol, 1000);
             SelectedSymbol.Trades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.BaseQuantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
@@ -283,7 +279,6 @@ namespace BinanceAPI.ViewModels
             var subscribeResult = await socketClient.SpotStreams.SubscribeToTradeUpdatesAsync(SelectedSymbol.Symbol, data =>
             {
                 var symbol = mainSymbol;
-                //var symbol = AllPrices.SingleOrDefault(a => a.Symbol == mainSymbol.Symbol);
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -590,9 +585,10 @@ namespace BinanceAPI.ViewModels
             else Console.WriteLine(result.Error);
         }
 
-        public async Task Cancel(long id)
+        public async Task Cancel(long id, string symbol)
         {
-            var result = await binanceClient.SpotApi.Trading.CancelOrderAsync(Selection.SelectedSymbol.Symbol, id);
+            var result = await binanceClient.SpotApi.Trading.CancelOrderAsync(symbol, id);
+
             if (result.Success)
                 Console.WriteLine("OneCanceled!!!");
             else Console.WriteLine(result.Error);
@@ -667,7 +663,7 @@ namespace BinanceAPI.ViewModels
             var result = await binanceClient.SpotApi.Trading.GetOpenOrdersAsync();
 
             TradingAllTrades = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() == "Filled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
-            TradingAllOrders = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() != "Filled" && a.Status.ToString() != "Canceled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
+            TradingAllOrders = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() != "Filled" && a.Status.ToString() != "Canceled").Select(o => new TradingOrdersViewModel(o.Quantity, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
         }
 
         private async Task GetTrades()
@@ -731,9 +727,14 @@ namespace BinanceAPI.ViewModels
             await GetAggTradeStream();
         }
 
+        public void CancellOne(long id, string symbol)
+        {
+            Task.Run(() => Cancel(id, symbol));
+        }
+
         public void CancellOne(long id)
         {
-            Task.Run(() => Cancel(id));
+            Task.Run(() => Cancel(id, Selection.SelectedSymbol.Symbol));
         }
 
         public void StartLimitBot()

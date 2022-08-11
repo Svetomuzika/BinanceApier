@@ -85,7 +85,7 @@
         </StackPanel>
         <Border BorderBrush="#3a3a3a" BorderThickness="1" Height="1" VerticalAlignment="Top" Width="400" Margin="0,30,0,0"/>
         <TextBlock x:Name="Connection" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0" Width="378" Foreground="Red">
-            <TextBlock Text="Connection :" />
+            <TextBlock Text="Status :" />
             <TextBlock x:Name="ConnectionTextBlock" Text="Offline"  Foreground="red"/>
         </TextBlock>
         <TextBlock x:Name="Orders" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,160,0,0" Width="378" Foreground="Red">

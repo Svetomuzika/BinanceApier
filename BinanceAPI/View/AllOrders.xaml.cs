@@ -16,7 +16,10 @@ namespace BinanceAPI.View
             var b = new MainViewModel();
             Button a = (Button)e.Source;
 
-            b.CancellOne((long)a.Content);
+            var content = a.Content.ToString().Split(',');
+
+
+            b.CancellOne(long.Parse(content[0]) , content[1]);
         }
     }
 }

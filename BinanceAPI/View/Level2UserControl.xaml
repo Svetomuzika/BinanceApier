@@ -45,7 +45,7 @@
                     <GridViewColumn Width="1" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock x:Name="Txt" TextAlignment="Right" Margin="{Binding FilterLevelColor}" Foreground="Transparent" Background="#50FF0000"/>
+                                <TextBlock x:Name="Txt" TextAlignment="Right" Margin="{Binding FilterLevelColor}" Foreground="Transparent" Background="#206666ff"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -90,7 +90,7 @@
                     <GridViewColumn Width="1" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock x:Name="Txt" TextAlignment="Right" Margin="{Binding FilterLevelColor}" Foreground="Transparent" Background="#50FF0000"/>
+                                <TextBlock x:Name="Txt" TextAlignment="Right" Margin="{Binding FilterLevelColor}" Foreground="Transparent" Background="#206666ff"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

@@ -9,6 +9,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace BinanceAPI.Model
@@ -106,5 +107,10 @@ namespace BinanceAPI.Model
         public static string ApiSecret = "2Pf23BjqUErU79ZMOrMNd5CRJEsA2PhD3U8HRGUMUmgZe3mDtGgZCeQWXlkSlgbh";
 
         public static bool TradingButtonEnable = false;
+    }
+
+    public static class WindowsBD
+    {
+        public static WindowCollection LastWindows;
     }
 }

@@ -71,7 +71,7 @@ namespace BinanceApi.ViewModels
             DateTime date1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
             var color = tradeColor ? "#e74359" : "#0fb172";
 
-            this.tradePrice = tradePrice;
+            this.tradePrice = Math.Round(tradePrice, 5);
             this.tradeQPrice = tradeQPrice;
             this.tradeTime = date1.AddHours(5).ToString("dd.MM.yyyy HH:mm");
             this.tradeColor = color;

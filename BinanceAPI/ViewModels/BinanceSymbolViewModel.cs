@@ -94,17 +94,6 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        private bool filterTradesSell;
-        public bool FilterTradesSell
-        {
-            get { return filterTradesSell; }
-            set
-            {
-                filterTradesSell = value;
-                RaisePropertyChangedEvent("FilterTradesSell");
-            }
-        }
-
         private string balanceCoin;
         public string BalanceCoin
         {
@@ -238,17 +227,6 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        private ObservableCollection<OrderViewModel> orders;
-        public ObservableCollection<OrderViewModel> Orders
-        {
-            get { return orders; }
-            set
-            {
-                orders = value;
-                RaisePropertyChangedEvent("Orders");
-            }
-        }
-
         private decimal tradingPrice;
         public decimal TradingPrice
         {
@@ -262,7 +240,7 @@ namespace BinanceAPI.ViewModels
 
         public void AddHistoryTrade(TradeViewModel trade)
         {
-            Trades.Add(trade);
+            AggTrades.Add(trade);
             RaisePropertyChangedEvent("AddHistoryTrade");
         }
 

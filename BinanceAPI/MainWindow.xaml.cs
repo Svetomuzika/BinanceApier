@@ -17,6 +17,10 @@ using System.Reflection;
 using System.Windows.Media;
 using System.Windows.Data;
 using System.Xml.Linq;
+using CryptoExchange.Net.CommonObjects;
+using System.Windows.Shapes;
+using Path = System.IO.Path;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BinanceAPI
 {
@@ -89,18 +93,12 @@ namespace BinanceAPI
 
                 newMenuItem.Click += Menu_ClickBD;
             }
-
             //Trades.IsEnabled = false;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             new AllTickers { Left = Left + Width * 1.01, Top = Top }.Show();
-        }
-
-        private void MenuItem_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void Info_Click(object sender, RoutedEventArgs e)
@@ -429,6 +427,14 @@ namespace BinanceAPI
 
             Trades.IsEnabled = true;
             Api.TradingButtonEnable = true;
+
+            foreach(Window e in App.Current.Windows)
+            {
+                if (e.Title == "Login")
+                    e.Close();
+            }
+
+            GetOldWindows();
         }
 
         public async Task ConnectingError()
@@ -445,6 +451,162 @@ namespace BinanceAPI
 
             ConnectionTextBlock.Text = "Offline";
             ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            var windows = App.Current.Windows;
+
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BDSamples.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamWriter newFile = new StreamWriter(fullPath)) { }
+
+            foreach (Window i in windows)
+            {
+                var str = i.Title + "." + i.Left + "." + i.Top;
+
+                using (StreamWriter file = new StreamWriter(fullPath, true))
+                {
+                    file.WriteLine(str);
+                }
+            }
+        }
+
+        private async void GetOldWindows()
+        {
+            string symbol;
+            var lines = GetLinesBDSamples();
+            var mainViewModel = new MainViewModel();
+            var allTickers = new AllTickers
+            {
+                Visibility = Visibility.Hidden
+            };
+            await Task.Delay(2300);
+
+            foreach (var line in lines)
+            {
+                var obj = line.Split('.');
+                var title = obj[0];
+                var left = double.Parse(obj[1]);
+                var top = double.Parse(obj[2]);
+                int i = 0;
+
+                switch (title)
+                {
+                    case "Login":
+                        new LoginApi { Left = left, Top = top }.Show();
+                        break;
+                    case "AllOrders":
+                        new AllOrders { Left = left, Top = top }.Show();
+                        break;
+                    case "AllTrades":
+                        new AllTrades { Left = left, Top = top }.Show();
+                        break;
+                    case "AllBots":
+                        new AllBots { Left = left, Top = top }.Show();
+                        break;
+                    case "AllClients":
+                        new AllClients { Left = left, Top = top }.Show();
+                        break;
+                    case "Securities":
+                        new AllTickers { Left = left, Top = top }.Show();
+                        break;
+
+                    case string a when a.Contains("TradeStream"):
+                        symbol = a.Remove(0, 12);
+                        symbol = symbol.Remove(symbol.Length - 1);
+                        i = mainViewModel.FindSelectionAsync(symbol);
+                        allTickers.Selector.SelectedItem = allTickers.Selector.Items[i];
+                        await mainViewModel.GetTradeStream();
+
+                        TradeWindow TradeWindow = new TradeWindow
+                        {
+                            Left = left,
+                            Top = top
+                        };
+
+                        var userControl = new UserControl
+                        {
+                            Content = new TradeUserControl(),
+                        };
+
+                        TradeWindow.Title = a;
+                        TradeWindow.StackForControl.Children.Add(userControl);
+                        TradeWindow.Show();
+                        break;
+
+                    case string b when b.Contains("Level2"):
+                        symbol = b.Remove(0, 7);
+                        symbol = symbol.Remove(symbol.Length - 1);
+                        i = mainViewModel.FindSelectionAsync(symbol);
+                        allTickers.Selector.SelectedItem = allTickers.Selector.Items[i];
+                        await mainViewModel.GetLastTrade();
+
+                        TradeWindow TradeWindow1 = new TradeWindow
+                        {
+                            Left = left,
+                            Top = top,
+                            Height = 886,
+                            Width = 424,
+                        };
+
+                        var userControl1 = new UserControl
+                        {
+                            Content = new Level2UserControl(),
+                        };
+
+                        TradeWindow1.Title = b;
+                        TradeWindow1.StackForControl.Children.Add(userControl1);
+                        TradeWindow1.Show();
+                        break;
+
+                    case string c when c.Contains("Trading"):
+                        symbol = c.Remove(0, 8);
+                        symbol = symbol.Remove(symbol.Length - 1);
+                        i = mainViewModel.FindSelectionAsync(symbol);
+                        allTickers.Selector.SelectedItem = allTickers.Selector.Items[i];
+
+                        TradeWindow TradeWindow2 = new TradeWindow
+                        {
+                            Left = left,
+                            Top = top,
+                            Height = 473,
+                            Width = 740,
+                        };
+
+                        TradingUserControl userControl2 = new TradingUserControl();
+
+                        TradeWindow2.Title = c;
+                        TradeWindow2.StackForControl.Children.Add(userControl2);
+                        TradeWindow2.Show();
+                        break;
+
+                    default:
+                        break;
+                }
+                allTickers.Close();
+            }
+        }
+
+        private List<string> GetLinesBDSamples()
+        {
+            var lines = new List<string>();
+
+            var appDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
+            var relativePath = @"Model\BDSamples.txt";
+            var fullPath = Path.Combine(appDir, relativePath);
+
+            using (StreamReader reader = new StreamReader(fullPath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+            }
+            return lines;
         }
     }
 }

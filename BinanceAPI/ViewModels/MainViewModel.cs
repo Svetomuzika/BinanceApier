@@ -15,6 +15,8 @@ using Binance.Net.Enums;
 using CryptoExchange.Net.Sockets;
 using Binance.Net.Objects.Models.Spot.Socket;
 using BinanceAPI.Model;
+using CryptoExchange.Net.CommonObjects;
+using System.Windows.Markup;
 
 namespace BinanceAPI.ViewModels
 {
@@ -134,57 +136,23 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        private string listName;
-        public string ListName
-        {
-            get { return listName; }
-            set
-            {
-                listName = value;
-                NewListName.Name = value;
-                RaisePropertyChangedEvent("ListName");
-            }
-        }
-
-        private string connectionStatus = "Offline";
-        public string ConnectionStatus
-        {
-            get { return connectionStatus; }
-            set
-            {
-                connectionStatus = value;
-                RaisePropertyChangedEvent("ConnectionStatus");
-            }
-        }
-
-        private string connectionStatusColor = "red";
-        public string ConnectionStatusColor
-        {
-            get { return connectionStatusColor; }
-            set
-            {
-                connectionStatusColor = value;
-                RaisePropertyChangedEvent("ConnectionStatusColor");
-            }
-        }
-
         private decimal Full = 0;
 
         public ICommand CallTradeStreamCommand { get; set; }
         public ICommand CallTradeHistoryCommand { get; set; }
         public ICommand CallOrderStreamCommand { get; set; }
         public ICommand CallAggTradeStreamCommand { get; set; }
+        public ICommand CallAggTradeStreamCommand24 { get; set; }
+        public ICommand CallAggTradeStreamCommand48 { get; set; }
+        public ICommand CallAggTradeStreamCommand72 { get; set; }
         public ICommand AllCancelCommand { get; set; }
         public ICommand BuyCommandLimit { get; set; }
         public ICommand SellCommandLimit { get; set; }
         public ICommand BuyCommandMarket { get; set; }
         public ICommand SellCommandMarket { get; set; }
         public ICommand GetTradesCommand { get; set; }
-        public ICommand CallTradingStreamCommand { get; set; }
         public ICommand StartBotLimitCommand { get; set; }
         public ICommand StartBotFirstCommand { get; set; }
-        public ICommand StopBotCommand { get; set; }
-        public ICommand CallTProperties { get; set; }
         public ICommand FilterTrades { get; set; }
         public ICommand AccountInfo { get; set; }
 
@@ -225,7 +193,10 @@ namespace BinanceAPI.ViewModels
 
             CallTradeStreamCommand = new DelegateCommand(async (o) => await GetTradeStream());
             CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream());
-            CallAggTradeStreamCommand = new DelegateCommand(async (o) => await GetAggTradeStream());
+            CallAggTradeStreamCommand = new DelegateCommand(async (o) => await GetAggTradeStream(0));
+            CallAggTradeStreamCommand24 = new DelegateCommand(async (o) => await GetAggTradeStream(24));
+            CallAggTradeStreamCommand48 = new DelegateCommand(async (o) => await GetAggTradeStream(48));
+            CallAggTradeStreamCommand72 = new DelegateCommand(async (o) => await GetAggTradeStream(72));
             BuyCommandLimit = new DelegateCommand(async (o) => await BuyLimit(o));
             SellCommandLimit = new DelegateCommand(async (o) => await SellLimit(o));
             BuyCommandMarket = new DelegateCommand(async (o) => await BuyMarket(o));
@@ -330,7 +301,7 @@ namespace BinanceAPI.ViewModels
             DateTime lasttime = firstResult.Data.Last().TradeTime;
             DateTime firsttime = new DateTime(lasttime.Ticks - hour);
 
-            SelectedSymbol.Trades = new ObservableCollection<TradeViewModel>(firstResult.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker, 1)).Reverse().ToList());
+            SelectedSymbol.AggTrades = new ObservableCollection<TradeViewModel>(firstResult.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker, 1)).Reverse().ToList());
 
             for (var time = firsttime.Ticks; time > firsttime.Ticks - (hour * 130); time -= hour)
             {
@@ -344,10 +315,10 @@ namespace BinanceAPI.ViewModels
                     SelectedSymbol.AddHistoryTrade(new TradeViewModel(e.Price, e.Quantity, e.TradeTime, e.BuyerIsMaker, 1));
                 }
 
-                Console.WriteLine(SelectedSymbol.Trades.Count);
+                Console.WriteLine(SelectedSymbol.AggTrades.Count);
             }
 
-            Console.WriteLine("____" + SelectedSymbol.Trades.Count);
+            Console.WriteLine("____" + SelectedSymbol.AggTrades.Count);
 
             long currend = DateTime.Now.Ticks;
 
@@ -357,17 +328,53 @@ namespace BinanceAPI.ViewModels
         }
 
 
-        public async Task GetAggTradeStream()
+        public async Task GetAggTradeStream(int hours)
         {
-            SelectedSymbol = Selection.SelectedSymbol;
-
-            client = new BinanceClient();
-            socketClient = new BinanceSocketClient();
-
-            var result = await client.SpotApi.ExchangeData.GetAggregatedTradeHistoryAsync(SelectedSymbol.Symbol, limit: 1000);
-            SelectedSymbol.AggTrades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
+            //SelectedSymbol = Selection.SelectedSymbol;
             var mainSymbol = SelectedSymbol;
 
+            if(hours == 0)
+            {
+                var result = await client.SpotApi.ExchangeData.GetAggregatedTradeHistoryAsync(SelectedSymbol.Symbol, limit: 1000);
+                SelectedSymbol.AggTrades = new ObservableCollection<TradeViewModel>(result.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker)).Reverse().ToList());
+            }
+            else
+            {
+                var firstResult = await client.SpotApi.ExchangeData.GetAggregatedTradeHistoryAsync(SelectedSymbol.Symbol, limit: 1);
+                var hour = 6000000000;
+
+                long curr = DateTime.Now.Ticks;
+                DateTime lasttime = firstResult.Data.Last().TradeTime;
+                DateTime firsttime = new DateTime(lasttime.Ticks);
+
+                SelectedSymbol.AggTrades = new ObservableCollection<TradeViewModel>(firstResult.Data.Select(r => new TradeViewModel(r.Price, r.Quantity, r.TradeTime, r.BuyerIsMaker, 1)).Reverse().ToList());
+
+                for (var time = firsttime.Ticks; time > firsttime.Ticks - (hour * 1); time -= hour)
+                {
+                    var newLastTime = new DateTime(time);
+                    var newFirtTime = new DateTime(time - hour);
+
+
+                    Console.WriteLine(newFirtTime.Ticks);
+                    Console.WriteLine(newLastTime.Ticks);
+                    var result = await client.SpotApi.ExchangeData.GetAggregatedTradeHistoryAsync(SelectedSymbol.Symbol, startTime: newFirtTime, endTime: newLastTime);
+
+                    foreach (var e in result.Data.Reverse())
+                    {
+                        if (e.Quantity >= SelectedSymbol.FilterSize && SelectedSymbol.FilterTradesAll == true)
+                        {
+                            SelectedSymbol.AddHistoryTrade(new TradeViewModel(e.Price, e.Quantity, e.TradeTime, e.BuyerIsMaker, 1));
+                        }
+                        else if (e.Quantity >= SelectedSymbol.FilterSize && e.BuyerIsMaker != SelectedSymbol.FilterTradesBuy)
+                        {
+                            SelectedSymbol.AddHistoryTrade(new TradeViewModel(e.Price, e.Quantity, e.TradeTime, e.BuyerIsMaker, 1));
+                        }
+                    }
+                    Console.WriteLine(SelectedSymbol.AggTrades.Count);
+                }
+
+                Console.WriteLine("Finally");
+            }
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
             CancellationToken token = cancelTokenSource.Token;
 
@@ -377,7 +384,14 @@ namespace BinanceAPI.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    symbol.AddAggTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker));
+                    if (data.Data.Quantity >= symbol.FilterSize && symbol.FilterTradesAll == true)
+                    {
+                        symbol.AddAggTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker, 1));
+                    }
+                    else if (data.Data.Quantity >= symbol.FilterSize && data.Data.BuyerIsMaker != symbol.FilterTradesBuy)
+                    {
+                        symbol.AddAggTrade(new TradeViewModel(data.Data.Price, data.Data.Quantity, data.Data.TradeTime, data.Data.BuyerIsMaker, 1));
+                    }
 
                     if (CloseStream.ClosedStream)
                     {
@@ -481,7 +495,7 @@ namespace BinanceAPI.ViewModels
                 }
             }, token);
         }
-        private async Task GetLastTrade()
+        public async Task GetLastTrade()
         {
             var mainSymbol = Selection.SelectedSymbol;
             decimal sum = 0;
@@ -679,7 +693,7 @@ namespace BinanceAPI.ViewModels
         {
             if (SelectedSymbol != null)
             {
-                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetTrades() , GetBalance()));
+                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks()));
             }
         }
 
@@ -724,7 +738,7 @@ namespace BinanceAPI.ViewModels
 
         public async Task CallAggTradeStream()
         {
-            await GetAggTradeStream();
+            await GetAggTradeStream(0);
         }
 
         public void CancellOne(long id, string symbol)
@@ -805,7 +819,25 @@ namespace BinanceAPI.ViewModels
             else
             {
                 await Main.MainWindow.ConnectingError();
+                Console.WriteLine(result.Error.Message);
             }
+        }
+
+        public int FindSelectionAsync(string symbol)
+        {
+            var i = 0;
+            Task.Run(() => GetNewSymbols());
+
+            foreach (var e in AllPrices)
+            {
+                if(e.Symbol == symbol)
+                {
+                    i = AllPrices.IndexOf(e);
+                    return i;
+                }
+            }
+            
+            return i;
         }
     }
 }

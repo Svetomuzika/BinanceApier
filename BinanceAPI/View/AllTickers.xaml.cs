@@ -49,6 +49,7 @@ namespace BinanceAPI
         public AllTickers()
         {
             InitializeComponent();
+            
 
             if (this.Title == "BinanceApi")
                 Main.AllTickers = this;
@@ -70,6 +71,7 @@ namespace BinanceAPI
             }
 
             ContextMenuItem4.IsEnabled = Api.TradingButtonEnable;
+
         }
 
         public List<string> NewTable()
@@ -218,10 +220,9 @@ namespace BinanceAPI
                     Width = 430,
                 };
 
-                var abc = new TradeUserControl();
+                var abc = new AggTradeUserControl();
                 abc.Width = 430;
                 abc.SelectorNew.Width = 430;
-                abc.Time.Width = 150;
                 abc.SelectorNew.Margin = new Thickness(-3, 0, 0, 0);
 
                 var userControl = new UserControl
@@ -254,6 +255,7 @@ namespace BinanceAPI
                 {
                     Left = Left + Width * 1.01,
                     Top = Top,
+                    Width = 415,
                 };
 
                 var userControl = new UserControl
@@ -312,6 +314,14 @@ namespace BinanceAPI
                 Lock.LockedWindow.Width = 740;
                 Lock.LockedWindow.Height = 473;
             }
+        }
+
+        private async void GetNewSelectedItem()
+        {
+            await Task.Delay(2000);
+            Console.WriteLine(Selector.HasItems);
+            Selector.SelectedItem = Selector.Items[40];
+            Console.WriteLine(Selector.Items[40].ToString());
         }
     }
 }

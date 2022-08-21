@@ -352,5 +352,8 @@
   <ItemGroup>
     <Resource Include="View\icons\filter24.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Model\BDSamples.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

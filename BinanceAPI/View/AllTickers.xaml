@@ -68,17 +68,21 @@
 
         </StackPanel>
         <StackPanel x:Name="stack">
-            <ListView Height="407" Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}"  SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="LeftClick" Margin="0,38,0,0">
+            <ListView Height="407" Grid.Row="0" x:Name="Selector" ItemsSource="{Binding AllPrices}" SelectedItem="{Binding SelectedSymbol}" FontSize="17" Foreground="Black" OpacityMask="#FF040101" MouseLeftButtonUp="LeftClick" Margin="0,38,0,0">
                 <ListView.ContextMenu>
                     <ContextMenu>
                         <MenuItem x:Name="ContextMenuItem1" Header="TradeStream" Click="MenuItem_Click_Trades" Command="{Binding CallTradeStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem2" Header="Level 2" Click="MenuItem_Click_Orders" Command="{Binding CallOrderStreamCommand}"/>
-                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
+                        <MenuItem x:Name="ContextMenuItem3" Header="AggTradeStream">
+                            <MenuItem Header="1000" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand}"/>
+                            <MenuItem Header="24h" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand24}"/>
+                            <MenuItem Header="48h" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand48}"/>
+                            <MenuItem Header="72h" Click="MenuItem_Click_AggTrades" Command="{Binding CallAggTradeStreamCommand72}"/>
+                        </MenuItem>
                         <MenuItem x:Name="ContextMenuItem6" Header="TradeHistory" Click="MenuItem_Click_TradesHistory" Command="{Binding CallTradeHistoryCommand}"/>
                         <MenuItem x:Name="ContextMenuItem4" Header="Trading" Click="MenuItem_Click_Trading" Command="{Binding CallTradingStreamCommand}"/>
                         <MenuItem x:Name="ContextMenuItem7" Header="Properties" Click="MenuItem_Click_Properties" Command="{Binding CallTProperties}"/>
-                        
-                        
+
                         <MenuItem x:Name="ContextMenuItem5"  Header="Add to WatchList"/>
                     </ContextMenu>
                 </ListView.ContextMenu>

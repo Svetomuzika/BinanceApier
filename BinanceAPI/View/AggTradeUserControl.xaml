@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BinanceAPI.View" xmlns:local2="clr-namespace:BinanceAPI.ViewModels"
              mc:Ignorable="d" 
-            d:DesignHeight="709" d:DesignWidth="358">
+             Height="709" Width="415">
     <UserControl.DataContext>
         <local2:MainViewModel/>
     </UserControl.DataContext>
@@ -13,28 +13,67 @@
     <Grid Margin="0,0,-2,0" x:Name="grid">
         <StackPanel x:Name="mainStack">
             <StackPanel Orientation="Horizontal" Height="41">
+                <Button x:Name="FilterButton" VerticalAlignment="Top" Margin="0,10,0,0" FontSize="25" BorderBrush="{x:Null}"  Cursor="Hand"  Height="16" Width="20" Click="FilterButton_Click">
+                    <Button.Background>
+                        <ImageBrush ImageSource="icons/filter24.png"/>
+                    </Button.Background>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="LightGray"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="LightGray"></Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
                 <TextBlock Foreground="#7d8594" Text="Цена" FontSize="15" Margin="10,7,100,0" RenderTransformOrigin="0.936,0.587"/>
                 <TextBlock Foreground="#7d8594" Text="Количество" FontSize="15" Margin="0,5,40,0"/>
                 <TextBlock Foreground="#7d8594" Text="Время" FontSize="15" Margin="0,5,12,0"/>
             </StackPanel>
-            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.AggTrades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="-10,0,-10,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="359">
+            <StackPanel Orientation="Vertical" Visibility="Hidden" x:Name="FilterPanel">
+                <TextBox x:Name="SizeFilterBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Text="{Binding SelectedSymbol.FilterSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Delay= 3000}" Margin="10,10,0,0" HorizontalAlignment="Left" Height="25" Width="190">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <TextBlock x:Name="SizeFilterBlock" Text="Size" Margin="12,-20,0,10" Foreground="#7f8c9c" HorizontalAlignment="Left"/>
+                <StackPanel x:Name="stackPanel" Orientation="Horizontal" Margin="220,-40,0,0">
+                    <RadioButton GroupName="Languages" Content="All" Width="50" IsChecked="{Binding SelectedSymbol.FilterTradesAll}"/>
+                    <RadioButton GroupName="Languages" Content="Buy"  Width="50"  IsChecked="{Binding SelectedSymbol.FilterTradesBuy}"/>
+                    <RadioButton GroupName="Languages" Content="Sell"  Width="40" IsChecked="{Binding SelectedSymbol.FilterTradesSell}"/>
+                </StackPanel>
+            </StackPanel>
+            <ListView Grid.Row="0" x:Name="SelectorNew" ItemsSource="{Binding SelectedSymbol.AggTrades, UpdateSourceTrigger=PropertyChanged}"  SelectedItem="{Binding SelectedSymbol}" FontSize="15" OpacityMask="#FF040101" Margin="0,-50,0,0" Foreground="#FF16FF31" BorderBrush="Transparent" Height="660" Width="418">
                 <ListView.View>
                     <GridView >
-                        <GridViewColumn Width="170">
+                        <GridViewColumn Width="137">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="Txt" Text="{Binding TradePrice}" Foreground = "{Binding TradeColor}" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Width="90">
+                        <GridViewColumn Width="120">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="Txt" Text="{Binding TradeQPrice}" Foreground="#afb5be" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Width="155">
+                        <GridViewColumn Width="205">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock x:Name="Txt" Text="{Binding TradeTime}" Foreground="#afb5be" />

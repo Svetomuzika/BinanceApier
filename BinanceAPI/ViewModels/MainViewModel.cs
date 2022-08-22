@@ -213,7 +213,6 @@ namespace BinanceAPI.ViewModels
 
         private async Task GetAllSymbols()
         {
-            socketClient = new BinanceSocketClient();
             var subscribeResult = await socketClient.SpotStreams.SubscribeToAllTickerUpdatesAsync(data =>
             {
                 foreach (var ud in data.Data)
@@ -588,6 +587,7 @@ namespace BinanceAPI.ViewModels
                 Console.WriteLine("Succes!!! SellMarket");
             }
             else Console.WriteLine(result.Error);
+            Console.WriteLine(SelectedSymbol.Symbol);
         }
 
         public async Task AllCancel(object o)
@@ -693,7 +693,7 @@ namespace BinanceAPI.ViewModels
         {
             if (SelectedSymbol != null)
             {
-                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks()));
+                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetBalance()));
             }
         }
 
@@ -821,23 +821,6 @@ namespace BinanceAPI.ViewModels
                 await Main.MainWindow.ConnectingError();
                 Console.WriteLine(result.Error.Message);
             }
-        }
-
-        public int FindSelectionAsync(string symbol)
-        {
-            var i = 0;
-            Task.Run(() => GetNewSymbols());
-
-            foreach (var e in AllPrices)
-            {
-                if(e.Symbol == symbol)
-                {
-                    i = AllPrices.IndexOf(e);
-                    return i;
-                }
-            }
-            
-            return i;
         }
     }
 }

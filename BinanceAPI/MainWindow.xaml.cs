@@ -451,6 +451,8 @@ namespace BinanceAPI
 
             ConnectionTextBlock.Text = "Offline";
             ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Red);
+
+            GetOldWindows();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -476,14 +478,21 @@ namespace BinanceAPI
 
         private async void GetOldWindows()
         {
+            var client = new BinanceClient();
+            var result = await client.SpotApi.ExchangeData.GetPricesAsync();
+            var allPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
+
             string symbol;
             var lines = GetLinesBDSamples();
             var mainViewModel = new MainViewModel();
             var allTickers = new AllTickers
             {
-                Visibility = Visibility.Hidden
+                Visibility = Visibility.Hidden,
             };
-            await Task.Delay(2300);
+
+            allTickers.Selector.ItemsSource = allPrices;
+
+            await Task.Delay(2100);
 
             foreach (var line in lines)
             {
@@ -517,7 +526,8 @@ namespace BinanceAPI
                     case string a when a.Contains("TradeStream"):
                         symbol = a.Remove(0, 12);
                         symbol = symbol.Remove(symbol.Length - 1);
-                        i = mainViewModel.FindSelectionAsync(symbol);
+                        i = FindSelectionAsync(symbol, allPrices);
+
                         allTickers.Selector.SelectedItem = allTickers.Selector.Items[i];
                         await mainViewModel.GetTradeStream();
 
@@ -540,7 +550,8 @@ namespace BinanceAPI
                     case string b when b.Contains("Level2"):
                         symbol = b.Remove(0, 7);
                         symbol = symbol.Remove(symbol.Length - 1);
-                        i = mainViewModel.FindSelectionAsync(symbol);
+                        i = FindSelectionAsync(symbol, allPrices);
+
                         allTickers.Selector.SelectedItem = allTickers.Selector.Items[i];
                         await mainViewModel.GetLastTrade();
 
@@ -565,7 +576,8 @@ namespace BinanceAPI
                     case string c when c.Contains("Trading"):
                         symbol = c.Remove(0, 8);
                         symbol = symbol.Remove(symbol.Length - 1);
-                        i = mainViewModel.FindSelectionAsync(symbol);
+                        i = FindSelectionAsync(symbol, allPrices);
+
                         allTickers.Selector.SelectedItem = allTickers.Selector.Items[i];
 
                         TradeWindow TradeWindow2 = new TradeWindow
@@ -588,6 +600,15 @@ namespace BinanceAPI
                 }
                 allTickers.Close();
             }
+        }
+
+        public int FindSelectionAsync(string symbol, ObservableCollection<BinanceSymbolViewModel> allPrices)
+        {
+            foreach (var e in allPrices)
+                if (e.Symbol.Equals(symbol))
+                    return allPrices.IndexOf(e);
+
+            return 0;
         }
 
         private List<string> GetLinesBDSamples()

@@ -138,7 +138,7 @@ namespace BinanceAPI.ViewModels
             }
         }
 
-        private ObservableCollection<TradeViewModel> trades;
+        private ObservableCollection<TradeViewModel> trades = new ObservableCollection<TradeViewModel>();
         public ObservableCollection<TradeViewModel> Trades
         {
             get { return trades; }

@@ -64,7 +64,7 @@
             <Button x:Name="Info" Content="Info" Margin="0,0,0,2" Width="50" Height="30" FontSize="15" VerticalAlignment="Top" Click="Info_Click" ContextMenuOpening="Info_ContextMenuOpening" Cursor="Hand">
                 <Button.ContextMenu>
                     <ContextMenu x:Name="infoButton" Placement="Bottom" Style="{StaticResource CustomMenuStyle}">
-                        <MenuItem Header="Securities" FontSize="15" Click="MenuItem_Click"/>
+                        <MenuItem Header="Securities" FontSize="15" Click="MenuItem_Click" Command="{Binding CallNewSymbols}"/>
                         <MenuItem x:Name="Watchlists" Header="WatchLists" FontSize="15"/>
                         <!--<Separator Style="{StaticResource CustomSeparatorStyle}"/>-->
                     </ContextMenu>

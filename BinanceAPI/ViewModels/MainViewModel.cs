@@ -155,6 +155,7 @@ namespace BinanceAPI.ViewModels
         public ICommand StartBotFirstCommand { get; set; }
         public ICommand FilterTrades { get; set; }
         public ICommand AccountInfo { get; set; }
+        public ICommand CallNewSymbols { get; set; }
 
         public bool SymbolIsSelected
         {
@@ -163,6 +164,7 @@ namespace BinanceAPI.ViewModels
 
         public string ApiKey { get; set; } 
         public string ApiSecret { get; set; }
+        public bool WorkspaceToggleSwitch { get; set; }
 
         public MainViewModel()
         {
@@ -189,7 +191,7 @@ namespace BinanceAPI.ViewModels
                 });
             }
 
-            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllSymbols(), GetAllOrders(), TradingStream(), GetAllClients(), GetProperties()));
+            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllOrders(), TradingStream(), GetAllClients()));
 
             CallTradeStreamCommand = new DelegateCommand(async (o) => await GetTradeStream());
             CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream());
@@ -208,7 +210,7 @@ namespace BinanceAPI.ViewModels
             StartBotFirstCommand = new DelegateCommand((o) => StartFirstBot());
             FilterTrades = new DelegateCommand((o) => NewFilterTrades());
             AccountInfo = new DelegateCommand(async (o) => await GetAccountInfo());
-            //CallTProperties = new DelegateCommand(async (o) => await GetProperties());
+            //CallNewSymbols = new DelegateCommand(async (o) => await GetNewSymbols());
         }
 
         private async Task GetAllSymbols()
@@ -232,6 +234,8 @@ namespace BinanceAPI.ViewModels
 
             AllPrices = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
             FakeSymbol = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Select(r => new BinanceSymbolViewModel(r.Symbol, r.Price)).ToList().OrderByDescending(p => p.Price));
+
+            await GetAllSymbols();
         }
 
 
@@ -683,7 +687,7 @@ namespace BinanceAPI.ViewModels
         private async Task GetTrades()
         {
             var result = await binanceClient.SpotApi.Trading.GetOrdersAsync(SelectedSymbol.Symbol);
-
+            
             SelectedSymbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() != "Filled" && a.Status.ToString() != "Canceled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
             SelectedSymbol.TradingTrades = new ObservableCollection<TradingOrdersViewModel>(result.Data.OrderByDescending(d => d.CreateTime).Where(a => a.Status.ToString() == "Filled").Select(o => new TradingOrdersViewModel(o.QuantityFilled, o.Price, o.Side, o.Status, o.Symbol, o.CreateTime, o.Id)));
         }
@@ -693,7 +697,7 @@ namespace BinanceAPI.ViewModels
         {
             if (SelectedSymbol != null)
             {
-                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetBalance()));
+                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetBalance(), GetTrades()));
             }
         }
 
@@ -814,7 +818,7 @@ namespace BinanceAPI.ViewModels
 
             if (result.Success)
             {
-                await Main.MainWindow.ConnectingSucces();
+                await Main.MainWindow.ConnectingSucces(WorkspaceToggleSwitch);
             }
             else
             {

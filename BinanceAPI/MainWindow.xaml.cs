@@ -404,7 +404,7 @@ namespace BinanceAPI
             new LoginApi { Left = Left + Width * 1.01, Top = Top }.Show();
         }
 
-        public async Task ConnectingSucces()
+        public async Task ConnectingSucces(bool WorkspaceToggleSwitch)
         {
             ConnectionTextBlock.Text = "Connecting.";
             ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Orange);
@@ -434,7 +434,8 @@ namespace BinanceAPI
                     e.Close();
             }
 
-            GetOldWindows();
+            if (!WorkspaceToggleSwitch)
+                GetOldWindows();
         }
 
         public async Task ConnectingError()
@@ -452,7 +453,6 @@ namespace BinanceAPI
             ConnectionTextBlock.Text = "Offline";
             ConnectionTextBlock.Foreground = new SolidColorBrush(Colors.Red);
 
-            GetOldWindows();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -492,7 +492,7 @@ namespace BinanceAPI
 
             allTickers.Selector.ItemsSource = allPrices;
 
-            await Task.Delay(2100);
+            await Task.Delay(1500);
 
             foreach (var line in lines)
             {

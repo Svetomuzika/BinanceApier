@@ -73,10 +73,10 @@
             <Button x:Name="Trades" Content="Trades" Margin="0,0,0,2" Width="50" Height="30" FontSize="15" VerticalAlignment="Top" Click="Trades_Click" Cursor="Hand" ContextMenuOpening="Info_ContextMenuOpening">
                 <Button.ContextMenu>
                     <ContextMenu x:Name="tradesButton" Placement="Bottom" Style="{StaticResource CustomMenuStyle}">
-                        <MenuItem Header="Orders" FontSize="15" Click="Orders_Click"/>
-                        <MenuItem Header="Trades" FontSize="15" Click="Trade_Click"/>
+                        <MenuItem Header="Orders" FontSize="15" Click="Orders_Click" Command="{Binding CallAllOrders}"/>
+                        <MenuItem Header="Trades" FontSize="15" Click="Trade_Click" Command="{Binding CallAllOrders}"/>
                         <MenuItem Header="Bots" FontSize="15" Click="Bots_Click"/>
-                        <MenuItem Header="Clients" FontSize="15" Click="Clients_Click"/>
+                        <MenuItem Header="Clients" FontSize="15" Click="Clients_Click" Command="{Binding CallAllClients}"/>
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>

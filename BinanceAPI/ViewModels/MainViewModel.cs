@@ -156,11 +156,9 @@ namespace BinanceAPI.ViewModels
         public ICommand FilterTrades { get; set; }
         public ICommand AccountInfo { get; set; }
         public ICommand CallNewSymbols { get; set; }
-
-        public bool SymbolIsSelected
-        {
-            get { return SelectedSymbol != null; }
-        }
+        public ICommand CallAllOrders { get; set; }
+        public ICommand CallAllClients { get; set; }
+        public ICommand CallTradingStreamCommand { get; set; }
 
         public string ApiKey { get; set; } 
         public string ApiSecret { get; set; }
@@ -191,7 +189,7 @@ namespace BinanceAPI.ViewModels
                 });
             }
 
-            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllOrders(), TradingStream(), GetAllClients()));
+            Task.Run(async () => await Task.WhenAll(GetNewSymbols(), GetAllOrders(), GetAllClients()));
 
             CallTradeStreamCommand = new DelegateCommand(async (o) => await GetTradeStream());
             CallOrderStreamCommand = new DelegateCommand(async (o) => await CallOrderStream());
@@ -210,6 +208,9 @@ namespace BinanceAPI.ViewModels
             StartBotFirstCommand = new DelegateCommand((o) => StartFirstBot());
             FilterTrades = new DelegateCommand((o) => NewFilterTrades());
             AccountInfo = new DelegateCommand(async (o) => await GetAccountInfo());
+            CallTradingStreamCommand = new DelegateCommand(async (o) => await TradingStream());
+            //CallAllClients = new DelegateCommand(async (o) => await GetAllClients());
+            //CallAllOrders = new DelegateCommand(async (o) => await GetAccountInfo());
             //CallNewSymbols = new DelegateCommand(async (o) => await GetNewSymbols());
         }
 
@@ -410,11 +411,7 @@ namespace BinanceAPI.ViewModels
 
         public async Task GetOrderStreamAsks()
         {
-            var mainSymbol = SelectedSymbol.Symbol;
             var symbol = SelectedSymbol;
-            client = new BinanceClient();
-            socketClient = new BinanceSocketClient();
-
             var result = await client.SpotApi.ExchangeData.GetOrderBookAsync(SelectedSymbol.Symbol, 15);
 
             AllOrdersAsks = new ObservableCollection<OrderViewModel>(result.Data.Asks.Reverse().Select(r => new OrderViewModel(r.Price, r.Quantity)).ToList());
@@ -490,7 +487,7 @@ namespace BinanceAPI.ViewModels
 
                 if (CloseStream.ClosedStream)
                 {
-                    if (CloseStream.ClosedWindowName.Contains(mainSymbol))
+                    if (CloseStream.ClosedWindowName.Contains(symbol.Symbol))
                     {
                         cancelTokenSource.Cancel();
                         cancelTokenSource.Dispose();
@@ -645,6 +642,7 @@ namespace BinanceAPI.ViewModels
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    Console.WriteLine("Tradesssss");
                     TradingAllOrders = new ObservableCollection<TradingOrdersViewModel>(TradingAllOrders.Where(a => a.Id != id).Select(o => new TradingOrdersViewModel(o.ExecutedQuantity, o.Price, o.Side, o.Status, o.Symbol, o.DateTime, o.Id)));
                     TradingAllTrades.Insert(0, new TradingOrdersViewModel(orderUpdate.QuantityFilled, price, orderUpdate.Side, orderUpdate.Status, orderUpdate.Symbol, orderUpdate.CreateTime, orderUpdate.Id));
                     symbol.TradingOrders = new ObservableCollection<TradingOrdersViewModel>(symbol.TradingOrders.Where(a => a.Id != id).Select(o => new TradingOrdersViewModel(o.ExecutedQuantity, o.Price, o.Side, o.Status, o.Symbol, o.DateTime, o.Id)));
@@ -697,7 +695,7 @@ namespace BinanceAPI.ViewModels
         {
             if (SelectedSymbol != null)
             {
-                Task.Run(async () => await Task.WhenAll(GetOrderStreamAsks(), GetBalance(), GetTrades()));
+                Task.Run(async () => await Task.WhenAll(GetBalance(), GetTrades(), GetOrderStreamAsks()));
             }
         }
 
@@ -771,9 +769,12 @@ namespace BinanceAPI.ViewModels
 
         private async Task GetAllClients()
         {
+            Console.WriteLine("GetAllClients");
             var result = await binanceClient.SpotApi.Account.GetAccountInfoAsync();
 
             Clients = new ObservableCollection<BinanceSymbolViewModel>(result.Data.Balances.Select(r => new BinanceSymbolViewModel(r.Asset, Math.Round(r.Available,3))));
+
+            Console.WriteLine(Clients.Count());
         }
 
         private async Task GetProperties()
@@ -828,4 +829,3 @@ namespace BinanceAPI.ViewModels
         }
     }
 }
-

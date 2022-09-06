@@ -492,7 +492,7 @@ namespace BinanceAPI
 
             allTickers.Selector.ItemsSource = allPrices;
 
-            await Task.Delay(1500);
+            await Task.Delay(1000);
 
             foreach (var line in lines)
             {
@@ -553,7 +553,7 @@ namespace BinanceAPI
                         i = FindSelectionAsync(symbol, allPrices);
 
                         allTickers.Selector.SelectedItem = allTickers.Selector.Items[i];
-                        await mainViewModel.GetLastTrade();
+                        await mainViewModel.CallOrderStream();
 
                         TradeWindow TradeWindow1 = new TradeWindow
                         {

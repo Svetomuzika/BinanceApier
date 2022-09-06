@@ -1,3 +1,5 @@
-InsideTestLab.453,6.230,4
-Securities.857,6.230,4
-Trading(BTCUSDT).644,8.283,2
+InsideTestLab.102,4.102,4
+Securities.557,6.153,6
+TradeStream(BTCUSDT).875,2.153,6
+Securities.429,6.25,6
+Level2(BTCUSDT).747,2.25,6

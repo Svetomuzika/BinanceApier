@@ -355,5 +355,8 @@
   <ItemGroup>
     <Resource Include="Model\BDSamples.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Model\BDWorkspaces.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
